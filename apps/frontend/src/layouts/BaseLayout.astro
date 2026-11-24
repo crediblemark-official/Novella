@@ -1,0 +1,141 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  activeNav?: 'landing' | 'portal' | 'admin';
+}
+
+const {
+  title = 'Novella.id — Mitra Penerbitan Sastra Nusantara',
+  description = 'Penerbitan karya sastra Nusantara yang inklusif, terjangkau, dan profesional bagi penulis pemula, pelajar, dan masyarakat akar rumput.',
+  activeNav = 'landing'
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="id" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/images/logo.png" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="min-h-screen bg-white text-navy antialiased flex flex-col justify-between">
+    <!-- Top Navbar -->
+    <header class="sticky top-0 z-40 border-b border-slate-200/80 bg-white/95 backdrop-blur">
+      <div class="mx-auto flex max-w-5xl items-center justify-between px-4 py-3.5 sm:px-6">
+        <div class="flex items-center gap-6">
+          <a href="/" class="flex items-center focus:outline-none" aria-label="Beranda Novella.id">
+            <img src="/images/logo.png" alt="Novella.id Logo" class="h-9 w-auto object-contain" />
+          </a>
+          <nav class="hidden md:flex items-center gap-5 text-xs font-bold text-slate-600">
+            <a href="/#cara-kerja" class="transition-colors hover:text-navy">Cara Kerja</a>
+            <a href="/#buku-terbit" class="transition-colors hover:text-navy">Buku Terbit</a>
+            <a href="/#testimoni" class="transition-colors hover:text-navy">Testimoni</a>
+            <a
+              href="/portal"
+              class={`transition-colors ${activeNav === 'portal' ? 'text-orange font-extrabold' : 'hover:text-navy'}`}
+            >
+              Portal Penerbitan
+            </a>
+          </nav>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <a
+            href="/admin"
+            class={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold transition-colors ${
+              activeNav === 'admin'
+                ? 'border-navy bg-navy text-white'
+                : 'border-slate-300 bg-white text-slate-700 hover:border-navy hover:text-navy'
+            }`}
+          >
+            <span>Admin</span>
+            <span id="nav-admin-badge" class="rounded-full bg-orange px-1.5 py-0.2 text-[10px] font-extrabold text-white">...</span>
+          </a>
+
+          <a
+            href="/portal"
+            class="rounded-full bg-orange px-4 py-1.5 text-xs font-extrabold text-white shadow-sm transition-colors hover:bg-orange-hover"
+          >
+            Terbitkan Buku
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Slot -->
+    <main class="flex-grow">
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-100 bg-[#0D1C3D] py-10 text-white">
+      <div class="mx-auto max-w-5xl px-4 sm:px-6">
+        <div class="grid gap-8 sm:grid-cols-2 md:grid-cols-3">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="rounded bg-white/10 px-2 py-0.5 text-xs font-extrabold tracking-wider text-orange">NOVELLA.ID</span>
+            </div>
+            <p class="mt-3 text-xs leading-relaxed text-slate-300">
+              Mitra terpercaya penerbitan karya sastra Nusantara. Inklusif, transparan, dan terjangkau untuk seluruh lapisan penulis.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-400">Navigasi</h3>
+            <ul class="mt-3 space-y-2 text-xs text-slate-300">
+              <li><a href="/" class="hover:text-orange transition-colors">Beranda</a></li>
+              <li><a href="/portal" class="hover:text-orange transition-colors">Portal Pemesanan Mandiri</a></li>
+              <li><a href="/admin" class="hover:text-orange transition-colors">Dashboard Redaksi (Admin)</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-400">Alamat Resmi Redaksi</h3>
+            <p class="mt-3 text-xs leading-relaxed text-slate-300">
+              Jl. Paingan (Depan Universitas Sanata Dharma), Krodan, Maguwoharjo, Depok, Sleman, D.I. Yogyakarta
+            </p>
+            <p class="mt-2 text-xs text-slate-400">WhatsApp Redaksi: +62 812-3456-7890</p>
+          </div>
+        </div>
+
+        <div class="mt-8 border-t border-white/10 pt-6 text-center text-xs text-slate-400">
+          <p>© {new Date().getFullYear()} Novella.id. Seluruh hak cipta dilindungi undang-undang.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script is:inline>
+      // Load pending verification count for admin badge
+      async function updateAdminBadge() {
+        try {
+          const res = await fetch('http://localhost:3001/api/admin/kpi');
+          if (res.ok) {
+            const data = await res.json();
+            const badge = document.getElementById('nav-admin-badge');
+            if (badge) {
+              badge.textContent = String(data.waitingVerification ?? 0);
+            }
+          }
+        } catch {
+          const badge = document.getElementById('nav-admin-badge');
+          if (badge) badge.textContent = '0';
+        }
+      }
+      updateAdminBadge();
+    </script>
+  </body>
+</html>

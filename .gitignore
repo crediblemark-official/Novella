@@ -1,0 +1,11 @@
+node_modules/
+.dist/
+dist/
+.astro/
+*.log
+.env
+.env.local
+uploads/
+*.sqlite
+*.sqlite-journal
+.DS_Store

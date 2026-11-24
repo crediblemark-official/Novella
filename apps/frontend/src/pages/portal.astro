@@ -1,0 +1,1071 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Portal Penerbitan Mandiri — Novella.id" activeNav="portal">
+  <div class="min-h-[calc(100vh-64px)] bg-[#F1F5F9] px-4 py-8 sm:px-6">
+    <div class="mx-auto max-w-4xl">
+      <!-- User Profile Header & Status -->
+      <div id="author-bar" class="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+        <div class="flex items-center gap-3">
+          <div id="user-avatar" class="flex h-10 w-10 items-center justify-center rounded-full bg-navy text-xs font-extrabold text-white">
+            U
+          </div>
+          <div>
+            <p id="user-display-name" class="text-sm font-extrabold text-navy">Tamu Novella</p>
+            <p id="user-display-email" class="text-xs text-slate-500">Belum masuk akun Google</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button
+            id="toggle-history-btn"
+            type="button"
+            class="hidden rounded-full border border-slate-300 bg-white px-3.5 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50"
+          >
+            Riwayat Naskah (<span id="user-orders-count">0</span>)
+          </button>
+          <button
+            id="logout-btn"
+            type="button"
+            class="hidden rounded-full border border-rose-200 bg-rose-50 px-3.5 py-1.5 text-xs font-bold text-rose-700 hover:bg-rose-100"
+          >
+            Keluar
+          </button>
+        </div>
+      </div>
+
+      <!-- User Orders History Drawer / Box (Hidden by default) -->
+      <div id="history-box" class="mb-6 hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <h2 class="text-sm font-extrabold text-navy">Riwayat Naskah Saya</h2>
+          <button id="close-history-btn" class="text-xs font-bold text-slate-400 hover:text-navy">Tutup ✕</button>
+        </div>
+        <div id="history-list" class="mt-4 space-y-3">
+          <p class="text-xs text-slate-400">Memuat riwayat...</p>
+        </div>
+      </div>
+
+      <!-- Step Indicator -->
+      <div id="wizard-stepper" class="mb-6 flex items-center justify-center gap-2 sm:gap-4 text-xs font-bold">
+        <div class="step-pill flex items-center gap-2 rounded-full bg-navy px-3.5 py-1.5 text-white" data-step="1">
+          <span class="flex h-5 w-5 items-center justify-center rounded-full bg-white/20 text-[10px]">1</span>
+          <span>Hitung Biaya</span>
+        </div>
+        <span class="text-slate-300">──</span>
+        <div class="step-pill flex items-center gap-2 rounded-full bg-white px-3.5 py-1.5 text-slate-500 border border-slate-200" data-step="2">
+          <span class="flex h-5 w-5 items-center justify-center rounded-full bg-slate-100 text-[10px]">2</span>
+          <span>Detail Buku & Berkas</span>
+        </div>
+        <span class="text-slate-300">──</span>
+        <div class="step-pill flex items-center gap-2 rounded-full bg-white px-3.5 py-1.5 text-slate-500 border border-slate-200" data-step="3">
+          <span class="flex h-5 w-5 items-center justify-center rounded-full bg-slate-100 text-[10px]">3</span>
+          <span>Pembayaran & WA</span>
+        </div>
+      </div>
+
+      <!-- Step 0: Login & Profile Form (Modal/Card if not authenticated) -->
+      <div id="auth-card" class="mx-auto max-w-md rounded-3xl border border-slate-200 bg-white p-7 shadow-sm">
+        <div class="text-center">
+          <span class="rounded-full bg-orange/10 px-3 py-1 text-xs font-bold text-orange">Autentikasi Mandiri</span>
+          <h2 class="mt-3 text-xl font-extrabold text-navy">Masuk dengan Akun Google</h2>
+          <p class="mt-1 text-xs text-slate-500">Mulai langkah menerbitkan naskahmu dengan mudah dan aman.</p>
+        </div>
+
+        <div id="google-auth-trigger" class="mt-6">
+          <button
+            id="google-login-btn"
+            type="button"
+            class="flex w-full items-center justify-center gap-3 rounded-full border-2 border-slate-200 bg-white py-3 text-sm font-bold text-navy shadow-sm transition-all hover:border-navy hover:bg-slate-50"
+          >
+            <svg class="h-4 w-4" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+            </svg>
+            <span>Lanjutkan dengan Google</span>
+          </button>
+        </div>
+
+        <!-- Form Profil Wajib (Muncul setelah klik Google Login jika nomor hp / alamat belum terisi) -->
+        <form id="profile-complete-form" class="mt-6 hidden space-y-4">
+          <div class="rounded-xl bg-[#F1F5F9] p-3 text-xs text-slate-600">
+            <p class="font-bold text-navy">Lengkapi Data Pengiriman (Wajib)</p>
+            <p class="mt-0.5">Dibutuhkan untuk pengiriman eksemplar buku cetak ke alamatmu.</p>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-navy">Nomor WhatsApp Aktif</label>
+            <input
+              id="input-phone"
+              type="tel"
+              required
+              placeholder="Contoh: 081234567890"
+              class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm font-semibold focus:border-navy focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-navy">Alamat Lengkap Pengiriman</label>
+            <textarea
+              id="input-address"
+              rows="3"
+              required
+              placeholder="Jalan, RT/RW, Kelurahan, Kecamatan, Kota/Kabupaten, Kode Pos"
+              class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm font-semibold focus:border-navy focus:outline-none"
+            ></textarea>
+          </div>
+
+          <button
+            type="submit"
+            class="w-full rounded-full bg-orange py-2.5 text-sm font-extrabold text-white shadow-sm hover:bg-orange-hover"
+          >
+            Simpan & Buka Portal Kalkulator
+          </button>
+        </form>
+      </div>
+
+      <!-- Step 1: Kalkulator Biaya Mandiri -->
+      <div id="step-calc" class="hidden">
+        <div class="grid gap-6 lg:grid-cols-12">
+          <!-- Form Inputs -->
+          <div class="space-y-5 lg:col-span-7">
+            <!-- Jumlah Halaman -->
+            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h2 class="text-sm font-extrabold text-navy sm:text-base">1. Jumlah Halaman Buku</h2>
+                  <p class="text-xs text-slate-500">Paket dasar mencakup hingga 100 halaman.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button id="btn-page-minus" type="button" class="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-300 bg-slate-50 text-sm font-extrabold hover:bg-slate-100">−</button>
+                  <input id="input-pages" type="number" min="24" max="600" value="100" class="h-8 w-16 rounded-lg border border-navy text-center text-sm font-extrabold focus:outline-none" />
+                  <button id="btn-page-plus" type="button" class="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-300 bg-slate-50 text-sm font-extrabold hover:bg-slate-100">+</button>
+                </div>
+              </div>
+              <div class="mt-3 flex flex-wrap gap-2">
+                <button type="button" data-val="60" class="page-chip rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-bold text-slate-600">60 hal</button>
+                <button type="button" data-val="100" class="page-chip rounded-full border border-orange bg-orange px-3 py-1 text-xs font-bold text-white">100 hal (Paket)</button>
+                <button type="button" data-val="150" class="page-chip rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-bold text-slate-600">150 hal</button>
+                <button type="button" data-val="200" class="page-chip rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-bold text-slate-600">200 hal</button>
+                <button type="button" data-val="300" class="page-chip rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-bold text-slate-600">300 hal</button>
+              </div>
+            </div>
+
+            <!-- Jumlah Cetak -->
+            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h2 class="text-sm font-extrabold text-navy sm:text-base">2. Jumlah Cetak (Eksemplar)</h2>
+                  <p class="text-xs text-slate-500">Minimal cetak 5 eksemplar.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button id="btn-copy-minus" type="button" class="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-300 bg-slate-50 text-sm font-extrabold hover:bg-slate-100">−</button>
+                  <input id="input-copies" type="number" min="5" max="1000" value="5" class="h-8 w-16 rounded-lg border border-navy text-center text-sm font-extrabold focus:outline-none" />
+                  <button id="btn-copy-plus" type="button" class="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-300 bg-slate-50 text-sm font-extrabold hover:bg-slate-100">+</button>
+                </div>
+              </div>
+              <div class="mt-3 flex flex-wrap gap-2">
+                <button type="button" data-val="5" class="copy-chip rounded-full border border-navy bg-navy px-3.5 py-1 text-xs font-bold text-white">5 eks (Paket)</button>
+                <button type="button" data-val="10" class="copy-chip rounded-full border border-slate-200 bg-slate-50 px-3.5 py-1 text-xs font-bold text-slate-600">10 eks</button>
+                <button type="button" data-val="25" class="copy-chip rounded-full border border-slate-200 bg-slate-50 px-3.5 py-1 text-xs font-bold text-slate-600">25 eks</button>
+                <button type="button" data-val="50" class="copy-chip rounded-full border border-slate-200 bg-slate-50 px-3.5 py-1 text-xs font-bold text-slate-600">50 eks</button>
+                <button type="button" data-val="100" class="copy-chip rounded-full border border-slate-200 bg-slate-50 px-3.5 py-1 text-xs font-bold text-slate-600">100 eks</button>
+              </div>
+            </div>
+
+            <!-- Ukuran Buku -->
+            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+              <h2 class="text-sm font-extrabold text-navy sm:text-base">3. Ukuran Buku</h2>
+              <div class="mt-3 grid grid-cols-2 gap-2.5 sm:grid-cols-4">
+                <button type="button" data-size="A5" class="size-card rounded-xl border-2 border-orange bg-orange/10 p-3 text-left transition-colors">
+                  <p class="text-sm font-extrabold text-navy">A5</p>
+                  <p class="text-[11px] text-slate-600">14.8 × 21 cm</p>
+                  <p class="mt-1 text-[10px] font-bold text-orange">Standar Sastra</p>
+                </button>
+                <button type="button" data-size="Unesco" class="size-card rounded-xl border border-slate-200 bg-white p-3 text-left transition-colors">
+                  <p class="text-sm font-extrabold text-navy">Unesco</p>
+                  <p class="text-[11px] text-slate-600">15.5 × 23 cm</p>
+                  <p class="mt-1 text-[10px] font-bold text-slate-500">+Rp 2.000/eks</p>
+                </button>
+                <button type="button" data-size="B5" class="size-card rounded-xl border border-slate-200 bg-white p-3 text-left transition-colors">
+                  <p class="text-sm font-extrabold text-navy">B5</p>
+                  <p class="text-[11px] text-slate-600">17.6 × 25 cm</p>
+                  <p class="mt-1 text-[10px] font-bold text-slate-500">+Rp 5.000/eks</p>
+                </button>
+                <button type="button" data-size="A6 Saku" class="size-card rounded-xl border border-slate-200 bg-white p-3 text-left transition-colors">
+                  <p class="text-sm font-extrabold text-navy">A6 Saku</p>
+                  <p class="text-[11px] text-slate-600">10.5 × 14.8 cm</p>
+                  <p class="mt-1 text-[10px] font-bold text-slate-500">Standar Puisi</p>
+                </button>
+              </div>
+            </div>
+
+            <!-- Add-on Opsional -->
+            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+              <h2 class="text-sm font-extrabold text-navy sm:text-base">4. Add-on Tambahan (Opsional)</h2>
+              <div class="mt-3 grid gap-2.5 sm:grid-cols-2">
+                <button type="button" data-addon="ISBN Resmi" class="addon-btn flex items-center justify-between rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-left transition-all">
+                  <div>
+                    <p class="text-xs font-extrabold text-navy">ISBN Resmi & Barcode</p>
+                    <p class="text-[11px] font-bold text-orange">+Rp 75.000</p>
+                  </div>
+                  <span class="addon-check flex h-6 w-6 items-center justify-center rounded-full border border-slate-300 text-xs font-bold text-slate-400">+</span>
+                </button>
+
+                <button type="button" data-addon="Layout & Sampul" class="addon-btn flex items-center justify-between rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-left transition-all">
+                  <div>
+                    <p class="text-xs font-extrabold text-navy">Tata Letak & Desain Sampul</p>
+                    <p class="text-[11px] font-bold text-orange">+Rp 50.000</p>
+                  </div>
+                  <span class="addon-check flex h-6 w-6 items-center justify-center rounded-full border border-slate-300 text-xs font-bold text-slate-400">+</span>
+                </button>
+
+                <button type="button" data-addon="Proofreading" class="addon-btn flex items-center justify-between rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-left transition-all">
+                  <div>
+                    <p class="text-xs font-extrabold text-navy">Penyuntingan (Proofreading)</p>
+                    <p class="text-[11px] font-bold text-orange">+Rp 100.000</p>
+                  </div>
+                  <span class="addon-check flex h-6 w-6 items-center justify-center rounded-full border border-slate-300 text-xs font-bold text-slate-400">+</span>
+                </button>
+
+                <button type="button" data-addon="Pembatas Buku" class="addon-btn flex items-center justify-between rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-left transition-all">
+                  <div>
+                    <p class="text-xs font-extrabold text-navy">Pembatas Buku Custom</p>
+                    <p class="text-[11px] font-bold text-orange">+Rp 25.000</p>
+                  </div>
+                  <span class="addon-check flex h-6 w-6 items-center justify-center rounded-full border border-slate-300 text-xs font-bold text-slate-400">+</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sticky Live Summary Panel -->
+          <aside class="lg:col-span-5">
+            <div class="sticky top-20 rounded-3xl bg-navy p-6 text-white shadow-lg">
+              <span class="text-xs font-bold uppercase tracking-wider text-orange">Kalkulasi Biaya Real-Time</span>
+              <p id="summary-total" class="mt-1 text-3xl font-extrabold sm:text-4xl">Rp 150.000</p>
+              <p id="summary-perbook" class="mt-1 text-xs text-slate-300">Sekitar Rp 30.000 / buku</p>
+
+              <div class="mt-6 space-y-2.5 border-t border-white/10 pt-4 text-xs text-slate-200">
+                <div class="flex justify-between">
+                  <span>Paket Dasar (5 eks / 100 hal)</span>
+                  <span class="font-bold">Rp 150.000</span>
+                </div>
+                <div id="row-summary-copies" class="hidden justify-between">
+                  <span id="label-summary-copies">Tambahan cetak</span>
+                  <span id="val-summary-copies" class="font-bold text-orange">+ Rp 0</span>
+                </div>
+                <div id="row-summary-pages" class="hidden justify-between">
+                  <span id="label-summary-pages">Tambahan halaman</span>
+                  <span id="val-summary-pages" class="font-bold text-orange">+ Rp 0</span>
+                </div>
+                <div class="flex justify-between">
+                  <span id="label-summary-size">Ukuran: A5</span>
+                  <span id="val-summary-size" class="font-bold">Standar</span>
+                </div>
+                <div id="row-summary-addons" class="hidden border-t border-white/10 pt-2 space-y-1">
+                  <p class="text-[11px] text-slate-400">Add-on Terpilih:</p>
+                  <div id="list-summary-addons" class="space-y-1"></div>
+                </div>
+              </div>
+
+              <button
+                id="btn-goto-step-book"
+                type="button"
+                class="mt-6 flex w-full items-center justify-center rounded-full bg-orange py-3 text-sm font-extrabold text-white shadow-md transition-all hover:bg-orange-hover"
+              >
+                Lanjut: Isi Detail Buku & Berkas &rarr;
+              </button>
+            </div>
+          </aside>
+        </div>
+      </div>
+
+      <!-- Step 2: Form Detail Buku & Unggah Naskah -->
+      <div id="step-book" class="hidden mx-auto max-w-2xl rounded-3xl border border-slate-200 bg-white p-7 shadow-sm">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+          <div>
+            <h2 class="text-lg font-extrabold text-navy">Detail Buku & Unggah Naskah</h2>
+            <p class="text-xs text-slate-500">Lengkapi metadata dan berkas karya yang akan dicetak.</p>
+          </div>
+          <button id="btn-back-to-calc" type="button" class="text-xs font-bold text-slate-400 hover:text-navy">&larr; Kembali</button>
+        </div>
+
+        <form id="book-meta-form" class="mt-6 space-y-5">
+          <div>
+            <label class="block text-xs font-bold text-navy">Judul Buku <span class="text-rose-500">*</span></label>
+            <input
+              id="input-book-title"
+              type="text"
+              required
+              placeholder="Contoh: Lembayung Jogja"
+              class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm font-semibold focus:border-navy focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-navy">Kategori / Genre <span class="text-rose-500">*</span></label>
+            <select
+              id="select-book-category"
+              class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm font-semibold focus:border-navy focus:outline-none"
+            >
+              <option value="Novel">Novel</option>
+              <option value="Antologi Puisi">Antologi Puisi</option>
+              <option value="Kumpulan Cerpen">Kumpulan Cerpen</option>
+              <option value="Non-Fiksi">Non-Fiksi / Esai</option>
+              <option value="Memoar">Memoar / Biografi</option>
+              <option value="Lainnya">Lainnya</option>
+            </select>
+          </div>
+
+          <!-- Drag and Drop Upload Engine -->
+          <div>
+            <label class="block text-xs font-bold text-navy">Berkas Naskah Digital <span class="text-rose-500">*</span></label>
+            <div
+              id="dropzone"
+              class="mt-1.5 flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-[#F1F5F9]/50 p-6 text-center transition-colors hover:border-navy"
+            >
+              <svg class="h-8 w-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+              </svg>
+              <p class="mt-2 text-xs font-bold text-navy">Seret & letakkan naskah ke sini, atau <span class="text-orange underline cursor-pointer">Pilih File</span></p>
+              <p class="mt-1 text-[11px] text-slate-500">Mendukung format .pdf, .doc, .docx, .txt (Maksimal 50 MB)</p>
+              <input id="file-input" type="file" accept=".pdf,.doc,.docx,.txt" class="hidden" />
+            </div>
+
+            <!-- Upload Info & Progress -->
+            <div id="file-status-box" class="mt-3 hidden rounded-xl bg-slate-50 p-3 border border-slate-200">
+              <div class="flex items-center justify-between text-xs">
+                <span id="file-name-label" class="font-extrabold text-navy truncate max-w-[260px]">file.docx</span>
+                <span id="file-size-label" class="text-slate-500">0 KB</span>
+              </div>
+              <div id="upload-progress-bar-wrap" class="mt-2 hidden h-1.5 w-full rounded-full bg-slate-200 overflow-hidden">
+                <div id="upload-progress-bar" class="h-full bg-orange w-0 transition-all duration-300"></div>
+              </div>
+              <p id="file-upload-msg" class="mt-1 text-[11px] font-bold text-emerald-600">Siap diunggah</p>
+            </div>
+          </div>
+
+          <p id="book-form-error" class="text-xs font-bold text-rose-600 hidden"></p>
+
+          <button
+            type="submit"
+            class="w-full rounded-full bg-orange py-3 text-sm font-extrabold text-white shadow-md hover:bg-orange-hover"
+          >
+            Lanjut: Rincian Pembayaran &rarr;
+          </button>
+        </form>
+      </div>
+
+      <!-- Step 3: Pembayaran & Konfirmasi WA -->
+      <div id="step-pay" class="hidden mx-auto max-w-2xl rounded-3xl border border-slate-200 bg-white p-7 shadow-sm">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+          <div>
+            <h2 class="text-lg font-extrabold text-navy">Rincian Pembayaran & Rekening</h2>
+            <p class="text-xs text-slate-500">Transfer ke rekening resmi Novella.id untuk verifikasi naskah.</p>
+          </div>
+          <button id="btn-back-to-book" type="button" class="text-xs font-bold text-slate-400 hover:text-navy">&larr; Kembali</button>
+        </div>
+
+        <!-- Ringkasan Pesanan -->
+        <div class="mt-6 rounded-2xl bg-[#F1F5F9] p-4 text-xs space-y-2">
+          <div class="flex justify-between font-bold text-navy">
+            <span id="pay-book-title">Buku: -</span>
+            <span id="pay-total-badge" class="text-sm font-extrabold text-orange">Rp 150.000</span>
+          </div>
+          <p id="pay-specs" class="text-slate-600">100 hal · 5 eks · A5</p>
+          <p id="pay-addons" class="text-slate-500">Add-on: -</p>
+        </div>
+
+        <!-- Rekening Resmi Novella.id -->
+        <div class="mt-5 space-y-3">
+          <p class="text-xs font-bold text-navy">Nomor Rekening Resmi Penerbit Novella:</p>
+
+          <!-- BCA -->
+          <div class="flex items-center justify-between rounded-xl border border-slate-200 bg-white p-3 shadow-xs">
+            <div>
+              <p class="text-xs font-extrabold text-navy">Bank Central Asia (BCA)</p>
+              <p class="font-mono text-sm font-bold text-slate-800">8920-192-831</p>
+              <p class="text-[11px] text-slate-500">a.n. Penerbit Novella Nusantara</p>
+            </div>
+            <button
+              type="button"
+              class="copy-btn rounded-lg border border-slate-300 bg-slate-50 px-3 py-1.5 text-xs font-bold text-navy hover:bg-slate-100"
+              data-copy="8920192831"
+            >
+              Salin
+            </button>
+          </div>
+
+          <!-- Mandiri -->
+          <div class="flex items-center justify-between rounded-xl border border-slate-200 bg-white p-3 shadow-xs">
+            <div>
+              <p class="text-xs font-extrabold text-navy">Bank Mandiri</p>
+              <p class="font-mono text-sm font-bold text-slate-800">137-00-1829102-4</p>
+              <p class="text-[11px] text-slate-500">a.n. Penerbit Novella Nusantara</p>
+            </div>
+            <button
+              type="button"
+              class="copy-btn rounded-lg border border-slate-300 bg-slate-50 px-3 py-1.5 text-xs font-bold text-navy hover:bg-slate-100"
+              data-copy="1370018291024"
+            >
+              Salin
+            </button>
+          </div>
+        </div>
+
+        <!-- Tombol Aksi Utama -->
+        <div class="mt-8 space-y-3">
+          <button
+            id="btn-confirm-order"
+            type="button"
+            class="flex w-full items-center justify-center gap-2 rounded-full bg-emerald-600 py-3.5 text-sm font-extrabold text-white shadow-md hover:bg-emerald-700 transition-all hover:scale-[1.01]"
+          >
+            <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2z" />
+            </svg>
+            <span>Selesai & Konfirmasi ke WhatsApp Admin</span>
+          </button>
+
+          <div class="flex items-center justify-between pt-2">
+            <button
+              id="btn-withdraw-current"
+              type="button"
+              class="hidden text-xs font-bold text-rose-600 hover:underline"
+            >
+              Tarik Naskah Ini (Batalkan Pesanan)
+            </button>
+            <a href="/portal" class="text-xs font-bold text-slate-500 hover:text-navy">
+              Buat Pesanan Baru
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div
+    id="toast"
+    class="fixed bottom-5 right-5 z-50 hidden rounded-xl bg-navy px-4 py-2.5 text-xs font-bold text-white shadow-lg transition-all"
+  >
+    Nomor rekening berhasil disalin!
+  </div>
+
+  <script is:inline>
+    const API_BASE = 'http://localhost:3001/api';
+
+    // State
+    let currentUser = null;
+
+    let calcState = {
+      pages: 100,
+      copies: 5,
+      bookSize: 'A5',
+      addons: [],
+      total: 150000,
+      pricePerBook: 30000,
+    };
+
+    let bookState = {
+      title: '',
+      category: 'Novel',
+      file: null,
+      uploadedFileName: '',
+      uploadedFileOriginalName: '',
+      uploadedFileSize: 0,
+      uploadedFileMimeType: '',
+    };
+
+    // DOM Elements
+    const authCard = document.getElementById('auth-card');
+    const googleLoginBtn = document.getElementById('google-login-btn');
+    const profileForm = document.getElementById('profile-complete-form');
+    const userAvatar = document.getElementById('user-avatar');
+    const userDisplayName = document.getElementById('user-display-name');
+    const userDisplayEmail = document.getElementById('user-display-email');
+    const logoutBtn = document.getElementById('logout-btn');
+    const toggleHistoryBtn = document.getElementById('toggle-history-btn');
+    const historyBox = document.getElementById('history-box');
+    const historyList = document.getElementById('history-list');
+    const closeHistoryBtn = document.getElementById('close-history-btn');
+    const userOrdersCount = document.getElementById('user-orders-count');
+
+    const stepPills = document.querySelectorAll('.step-pill');
+    const stepCalc = document.getElementById('step-calc');
+    const stepBook = document.getElementById('step-book');
+    const stepPay = document.getElementById('step-pay');
+
+    // Calculator inputs
+    const inputPages = document.getElementById('input-pages');
+    const inputCopies = document.getElementById('input-copies');
+    const pageChips = document.querySelectorAll('.page-chip');
+    const copyChips = document.querySelectorAll('.copy-chip');
+    const sizeCards = document.querySelectorAll('.size-card');
+    const addonBtns = document.querySelectorAll('.addon-btn');
+
+    // Summary outputs
+    const summaryTotal = document.getElementById('summary-total');
+    const summaryPerbook = document.getElementById('summary-perbook');
+    const rowSummaryCopies = document.getElementById('row-summary-copies');
+    const labelSummaryCopies = document.getElementById('label-summary-copies');
+    const valSummaryCopies = document.getElementById('val-summary-copies');
+    const rowSummaryPages = document.getElementById('row-summary-pages');
+    const labelSummaryPages = document.getElementById('label-summary-pages');
+    const valSummaryPages = document.getElementById('val-summary-pages');
+    const labelSummarySize = document.getElementById('label-summary-size');
+    const valSummarySize = document.getElementById('val-summary-size');
+    const rowSummaryAddons = document.getElementById('row-summary-addons');
+    const listSummaryAddons = document.getElementById('list-summary-addons');
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      if (toast) {
+        toast.textContent = msg;
+        toast.classList.remove('hidden');
+        setTimeout(() => toast.classList.add('hidden'), 2500);
+      }
+    }
+
+    function formatRp(num) {
+      return 'Rp ' + Number(num || 0).toLocaleString('id-ID');
+    }
+
+    function setStep(step) {
+      authCard.classList.toggle('hidden', step !== 0);
+      stepCalc.classList.toggle('hidden', step !== 1);
+      stepBook.classList.toggle('hidden', step !== 2);
+      stepPay.classList.toggle('hidden', step !== 3);
+
+      stepPills.forEach((pill) => {
+        const s = Number(pill.getAttribute('data-step'));
+        const active = s === step;
+        pill.classList.toggle('bg-navy', active);
+        pill.classList.toggle('text-white', active);
+        pill.classList.toggle('border-navy', active);
+        pill.classList.toggle('bg-white', !active);
+        pill.classList.toggle('text-slate-500', !active);
+        pill.classList.toggle('border-slate-200', !active);
+      });
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Google Login Sim
+    googleLoginBtn.addEventListener('click', async () => {
+      // Simulate Google Sign-in payload
+      const mockEmail = 'penulis@gmail.com';
+      const mockName = 'Penulis Nusantara';
+
+      try {
+        const res = await fetch(`${API_BASE}/auth/google`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: mockEmail,
+            name: mockName,
+            avatar: 'PN',
+          }),
+        });
+
+        const data = await res.json();
+        currentUser = data.user;
+        updateUserUI();
+
+        if (!data.isProfileComplete) {
+          document.getElementById('google-auth-trigger').classList.add('hidden');
+          profileForm.classList.remove('hidden');
+        } else {
+          setStep(1);
+          loadAuthorOrders();
+        }
+      } catch (err) {
+        showToast('Gagal menghubungkan ke backend server.');
+      }
+    });
+
+    profileForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const phone = document.getElementById('input-phone').value.trim();
+      const address = document.getElementById('input-address').value.trim();
+
+      if (!phone || !address) {
+        showToast('Mohon lengkapi nomor WhatsApp dan alamat pengiriman.');
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/auth/profile`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: currentUser.email,
+            phone,
+            address,
+          }),
+        });
+        const data = await res.json();
+        currentUser = data.user;
+        updateUserUI();
+        setStep(1);
+        loadAuthorOrders();
+      } catch {
+        showToast('Gagal menyimpan profil.');
+      }
+    });
+
+    function updateUserUI() {
+      if (currentUser) {
+        userAvatar.textContent = currentUser.avatar || 'U';
+        userDisplayName.textContent = currentUser.name;
+        userDisplayEmail.textContent = currentUser.email + (currentUser.phone ? ` · ${currentUser.phone}` : '');
+        logoutBtn.classList.remove('hidden');
+        toggleHistoryBtn.classList.remove('hidden');
+      } else {
+        userAvatar.textContent = 'U';
+        userDisplayName.textContent = 'Tamu Novella';
+        userDisplayEmail.textContent = 'Belum masuk akun Google';
+        logoutBtn.classList.add('hidden');
+        toggleHistoryBtn.classList.add('hidden');
+      }
+    }
+
+    logoutBtn.addEventListener('click', () => {
+      currentUser = null;
+      updateUserUI();
+      document.getElementById('google-auth-trigger').classList.remove('hidden');
+      profileForm.classList.add('hidden');
+      historyBox.classList.add('hidden');
+      setStep(0);
+    });
+
+    // Author Orders History
+    toggleHistoryBtn.addEventListener('click', () => {
+      historyBox.classList.toggle('hidden');
+    });
+    closeHistoryBtn.addEventListener('click', () => {
+      historyBox.classList.add('hidden');
+    });
+
+    async function loadAuthorOrders() {
+      if (!currentUser?.email) return;
+      try {
+        const res = await fetch(`${API_BASE}/orders?email=${encodeURIComponent(currentUser.email)}`);
+        const orders = await res.json();
+        userOrdersCount.textContent = String(orders.length);
+
+        if (orders.length === 0) {
+          historyList.innerHTML = '<p class="text-xs text-slate-400">Belum ada pesanan yang dibuat.</p>';
+          return;
+        }
+
+        historyList.innerHTML = orders
+          .map((o) => {
+            const isPending = o.status === 'Menunggu Verifikasi';
+            const statusClass =
+              o.status === 'Menunggu Verifikasi'
+                ? 'bg-amber-100 text-amber-800'
+                : o.status === 'Diproses'
+                ? 'bg-blue-100 text-blue-800'
+                : o.status === 'Selesai'
+                ? 'bg-emerald-100 text-emerald-800'
+                : 'bg-rose-100 text-rose-800';
+
+            return `
+              <div class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50/50 p-3 text-xs">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="font-mono font-extrabold text-navy">${o.orderCode}</span>
+                    <span class="rounded-full px-2 py-0.5 font-bold ${statusClass}">${o.status}</span>
+                  </div>
+                  <p class="mt-1 font-bold text-slate-700">${o.bookTitle} (${o.category})</p>
+                  <p class="text-[11px] text-slate-500">${o.pages} hal · ${o.copies} eks · ${o.bookSize} · ${formatRp(o.totalPrice)}</p>
+                </div>
+                <div>
+                  ${
+                    isPending
+                      ? `<button onclick="window.withdrawAuthorOrder('${o.orderCode}')" class="rounded-lg border border-rose-300 bg-white px-3 py-1 font-bold text-rose-700 hover:bg-rose-50">Tarik Naskah</button>`
+                      : `<span class="text-[11px] text-slate-400">${o.status === 'Ditarik Penulis' ? 'Akses naskah ditutup' : 'Sedang diproses redaksi'}</span>`
+                  }
+                </div>
+              </div>
+            `;
+          })
+          .join('');
+      } catch (err) {
+        console.error('Failed to load orders', err);
+      }
+    }
+
+    // Exposed to window for onclick in rendered html
+    window.withdrawAuthorOrder = async function (code) {
+      if (!confirm(`Apakah Anda yakin ingin menarik naskah pesanan ${code}? Pesanan akan dibatalkan dan akses unduh redaksi otomatis ditutup.`)) {
+        return;
+      }
+      try {
+        const res = await fetch(`${API_BASE}/orders/${code}/withdraw`, { method: 'POST' });
+        const data = await res.json();
+        if (res.ok) {
+          showToast('Naskah berhasil ditarik!');
+          loadAuthorOrders();
+        } else {
+          showToast(data.error || 'Gagal menarik naskah.');
+        }
+      } catch {
+        showToast('Terjadi kesalahan saat membatalkan naskah.');
+      }
+    };
+
+    // Calculator updates
+    async function updateCalculator() {
+      try {
+        const res = await fetch(`${API_BASE}/orders/calculate`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            pages: calcState.pages,
+            copies: calcState.copies,
+            bookSize: calcState.bookSize,
+            addons: calcState.addons,
+          }),
+        });
+        const pricing = await res.json();
+        calcState.total = pricing.totalPrice;
+        calcState.pricePerBook = pricing.pricePerBook;
+
+        summaryTotal.textContent = formatRp(pricing.totalPrice);
+        summaryPerbook.textContent = `Sekitar ${formatRp(pricing.pricePerBook)} / buku`;
+
+        // Extra copies
+        if (pricing.extraCopies > 0) {
+          rowSummaryCopies.classList.remove('hidden');
+          rowSummaryCopies.classList.add('flex');
+          labelSummaryCopies.textContent = `Tambahan cetak (+${calcState.copies - 5} eks)`;
+          valSummaryCopies.textContent = `+ ${formatRp(pricing.extraCopies)}`;
+        } else {
+          rowSummaryCopies.classList.add('hidden');
+          rowSummaryCopies.classList.remove('flex');
+        }
+
+        // Extra pages
+        if (pricing.extraPages > 0) {
+          rowSummaryPages.classList.remove('hidden');
+          rowSummaryPages.classList.add('flex');
+          labelSummaryPages.textContent = `Tambahan halaman (+${calcState.pages - 100} hal)`;
+          valSummaryPages.textContent = `+ ${formatRp(pricing.extraPages)}`;
+        } else {
+          rowSummaryPages.classList.add('hidden');
+          rowSummaryPages.classList.remove('flex');
+        }
+
+        // Size
+        labelSummarySize.textContent = `Ukuran: ${calcState.bookSize}`;
+        valSummarySize.textContent = pricing.sizeCost > 0 ? `+ ${formatRp(pricing.sizeCost)}` : 'Standar';
+
+        // Addons
+        if (pricing.details.addonItems.length > 0) {
+          rowSummaryAddons.classList.remove('hidden');
+          listSummaryAddons.innerHTML = pricing.details.addonItems
+            .map((item) => `<div class="flex justify-between"><span>• ${item.name}</span><span class="font-bold">+ ${formatRp(item.price)}</span></div>`)
+            .join('');
+        } else {
+          rowSummaryAddons.classList.add('hidden');
+        }
+      } catch (err) {
+        console.error('Calculation error', err);
+      }
+    }
+
+    // Calculator event listeners
+    inputPages.addEventListener('input', () => {
+      calcState.pages = Math.max(24, Math.min(600, Number(inputPages.value) || 24));
+      updateCalculator();
+    });
+    document.getElementById('btn-page-minus').addEventListener('click', () => {
+      calcState.pages = Math.max(24, calcState.pages - 10);
+      inputPages.value = calcState.pages;
+      updateCalculator();
+    });
+    document.getElementById('btn-page-plus').addEventListener('click', () => {
+      calcState.pages = Math.min(600, calcState.pages + 10);
+      inputPages.value = calcState.pages;
+      updateCalculator();
+    });
+    pageChips.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        const val = Number(chip.getAttribute('data-val'));
+        calcState.pages = val;
+        inputPages.value = val;
+        pageChips.forEach((c) => {
+          const active = Number(c.getAttribute('data-val')) === val;
+          c.classList.toggle('bg-orange', active);
+          c.classList.toggle('text-white', active);
+          c.classList.toggle('border-orange', active);
+          c.classList.toggle('bg-slate-50', !active);
+          c.classList.toggle('text-slate-600', !active);
+        });
+        updateCalculator();
+      });
+    });
+
+    inputCopies.addEventListener('input', () => {
+      calcState.copies = Math.max(5, Math.min(1000, Number(inputCopies.value) || 5));
+      updateCalculator();
+    });
+    document.getElementById('btn-copy-minus').addEventListener('click', () => {
+      calcState.copies = Math.max(5, calcState.copies - 5);
+      inputCopies.value = calcState.copies;
+      updateCalculator();
+    });
+    document.getElementById('btn-copy-plus').addEventListener('click', () => {
+      calcState.copies = Math.min(1000, calcState.copies + 5);
+      inputCopies.value = calcState.copies;
+      updateCalculator();
+    });
+    copyChips.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        const val = Number(chip.getAttribute('data-val'));
+        calcState.copies = val;
+        inputCopies.value = val;
+        copyChips.forEach((c) => {
+          const active = Number(c.getAttribute('data-val')) === val;
+          c.classList.toggle('bg-navy', active);
+          c.classList.toggle('text-white', active);
+          c.classList.toggle('border-navy', active);
+          c.classList.toggle('bg-slate-50', !active);
+          c.classList.toggle('text-slate-600', !active);
+        });
+        updateCalculator();
+      });
+    });
+
+    sizeCards.forEach((card) => {
+      card.addEventListener('click', () => {
+        const size = card.getAttribute('data-size');
+        calcState.bookSize = size;
+        sizeCards.forEach((c) => {
+          const active = c.getAttribute('data-size') === size;
+          c.classList.toggle('border-2', active);
+          c.classList.toggle('border-orange', active);
+          c.classList.toggle('bg-orange/10', active);
+          c.classList.toggle('border', !active);
+          c.classList.toggle('border-slate-200', !active);
+          c.classList.toggle('bg-white', !active);
+        });
+        updateCalculator();
+      });
+    });
+
+    addonBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const addon = btn.getAttribute('data-addon');
+        const check = btn.querySelector('.addon-check');
+        const idx = calcState.addons.indexOf(addon);
+        if (idx >= 0) {
+          calcState.addons.splice(idx, 1);
+          btn.classList.remove('border-2', 'border-orange', 'bg-orange/10');
+          btn.classList.add('border', 'border-slate-200', 'bg-white');
+          check.textContent = '+';
+          check.classList.remove('bg-orange', 'border-orange', 'text-white');
+        } else {
+          calcState.addons.push(addon);
+          btn.classList.remove('border', 'border-slate-200', 'bg-white');
+          btn.classList.add('border-2', 'border-orange', 'bg-orange/10');
+          check.textContent = '✓';
+          check.classList.add('bg-orange', 'border-orange', 'text-white');
+        }
+        updateCalculator();
+      });
+    });
+
+    // Navigation buttons
+    document.getElementById('btn-goto-step-book').addEventListener('click', () => {
+      setStep(2);
+    });
+    document.getElementById('btn-back-to-calc').addEventListener('click', () => {
+      setStep(1);
+    });
+    document.getElementById('btn-back-to-book').addEventListener('click', () => {
+      setStep(2);
+    });
+
+    // Step 2: Drag and drop & File Upload
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('file-input');
+    const fileStatusBox = document.getElementById('file-status-box');
+    const fileNameLabel = document.getElementById('file-name-label');
+    const fileSizeLabel = document.getElementById('file-size-label');
+    const fileUploadMsg = document.getElementById('file-upload-msg');
+    const uploadProgressBarWrap = document.getElementById('upload-progress-bar-wrap');
+    const uploadProgressBar = document.getElementById('upload-progress-bar');
+    const bookFormError = document.getElementById('book-form-error');
+
+    dropzone.addEventListener('click', () => fileInput.click());
+    dropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropzone.classList.add('border-navy', 'bg-slate-100');
+    });
+    dropzone.addEventListener('dragleave', () => {
+      dropzone.classList.remove('border-navy', 'bg-slate-100');
+    });
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('border-navy', 'bg-slate-100');
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        handleFileSelect(e.dataTransfer.files[0]);
+      }
+    });
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files && fileInput.files[0]) {
+        handleFileSelect(fileInput.files[0]);
+      }
+    });
+
+    async function handleFileSelect(file) {
+      if (!file) return;
+
+      const ext = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+      if (!['.pdf', '.doc', '.docx', '.txt'].includes(ext)) {
+        showToast('Format berkas harus .pdf, .doc, .docx, atau .txt');
+        return;
+      }
+      if (file.size > 50 * 1024 * 1024) {
+        showToast('Ukuran berkas melebihi 50 MB.');
+        return;
+      }
+
+      bookState.file = file;
+      fileStatusBox.classList.remove('hidden');
+      fileNameLabel.textContent = file.name;
+      fileSizeLabel.textContent = `${Math.round(file.size / 1024)} KB`;
+      fileUploadMsg.textContent = 'Mengunggah naskah ke server...';
+      fileUploadMsg.className = 'mt-1 text-[11px] font-bold text-amber-600';
+      uploadProgressBarWrap.classList.remove('hidden');
+      uploadProgressBar.style.width = '30%';
+
+      // Upload immediately to backend
+      const formData = new FormData();
+      formData.append('file', file);
+
+      try {
+        uploadProgressBar.style.width = '70%';
+        const res = await fetch(`${API_BASE}/upload`, {
+          method: 'POST',
+          body: formData,
+        });
+        const data = await res.json();
+        if (res.ok) {
+          uploadProgressBar.style.width = '100%';
+          fileUploadMsg.textContent = '✓ Berkas berhasil diunggah dengan aman!';
+          fileUploadMsg.className = 'mt-1 text-[11px] font-bold text-emerald-600';
+
+          bookState.uploadedFileName = data.fileName;
+          bookState.uploadedFileOriginalName = data.fileOriginalName;
+          bookState.uploadedFileSize = data.fileSize;
+          bookState.uploadedFileMimeType = data.fileMimeType;
+        } else {
+          fileUploadMsg.textContent = data.error || 'Gagal mengunggah berkas.';
+          fileUploadMsg.className = 'mt-1 text-[11px] font-bold text-rose-600';
+        }
+      } catch (err) {
+        fileUploadMsg.textContent = 'Gagal menghubungi server upload.';
+        fileUploadMsg.className = 'mt-1 text-[11px] font-bold text-rose-600';
+      }
+    }
+
+    // Step 2 Form Submit
+    document.getElementById('book-meta-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      bookState.title = document.getElementById('input-book-title').value.trim();
+      bookState.category = document.getElementById('select-book-category').value;
+
+      if (!bookState.title) {
+        bookFormError.textContent = 'Judul buku wajib diisi.';
+        bookFormError.classList.remove('hidden');
+        return;
+      }
+      if (!bookState.uploadedFileName) {
+        bookFormError.textContent = 'Mohon unggah berkas naskah digital terlebih dahulu.';
+        bookFormError.classList.remove('hidden');
+        return;
+      }
+
+      bookFormError.classList.add('hidden');
+
+      // Setup Step 3 Display
+      document.getElementById('pay-book-title').textContent = `Buku: ${bookState.title} (${bookState.category})`;
+      document.getElementById('pay-total-badge').textContent = formatRp(calcState.total);
+      document.getElementById('pay-specs').textContent = `${calcState.pages} hal · ${calcState.copies} eks · ${calcState.bookSize}`;
+      document.getElementById('pay-addons').textContent = `Add-on: ${calcState.addons.length ? calcState.addons.join(', ') : '-'}`;
+
+      setStep(3);
+    });
+
+    // Copy Account Number
+    document.querySelectorAll('.copy-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const text = btn.getAttribute('data-copy');
+        navigator.clipboard.writeText(text);
+        showToast('Nomor rekening berhasil disalin!');
+      });
+    });
+
+    // Confirm Order & Open WhatsApp
+    document.getElementById('btn-confirm-order').addEventListener('click', async () => {
+      if (!currentUser) {
+        showToast('Sesi masuk berakhir. Silakan login kembali.');
+        setStep(0);
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/orders`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            authorName: currentUser.name,
+            authorEmail: currentUser.email,
+            authorPhone: currentUser.phone || '08123456789',
+            shippingAddress: currentUser.address || 'Alamat Penulis',
+            bookTitle: bookState.title,
+            category: bookState.category,
+            pages: calcState.pages,
+            copies: calcState.copies,
+            bookSize: calcState.bookSize,
+            addons: calcState.addons,
+            fileName: bookState.uploadedFileName,
+            fileOriginalName: bookState.uploadedFileOriginalName,
+            fileSize: bookState.uploadedFileSize,
+            fileMimeType: bookState.uploadedFileMimeType,
+          }),
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          createdOrder = data.order;
+          showToast(`Pesanan ${data.order.orderCode} berhasil disimpan! Membuka WhatsApp...`);
+
+          // Show withdraw button for newly created order
+          const withdrawBtn = document.getElementById('btn-withdraw-current');
+          withdrawBtn.classList.remove('hidden');
+          withdrawBtn.onclick = () => window.withdrawAuthorOrder(data.order.orderCode);
+
+          // Open WhatsApp in new tab
+          window.open(data.waUrl, '_blank');
+
+          // Refresh author history
+          loadAuthorOrders();
+        } else {
+          showToast(data.error || 'Gagal membuat pesanan.');
+        }
+      } catch (err) {
+        showToast('Terjadi kesalahan saat menyimpan pesanan.');
+      }
+    });
+
+    // Auto-initialize calculator
+    updateCalculator();
+  </script>
+</BaseLayout>
