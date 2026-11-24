@@ -1,5 +1,5 @@
 import { db } from './index';
-import { orders, users } from './schema';
+import { orders, user } from './schema';
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -18,36 +18,45 @@ export function runSeed() {
 
   // Clear existing to avoid duplicate on re-seed
   db.delete(orders).run();
-  db.delete(users).run();
+  db.delete(user).run();
 
-  // Seed sample users
-  db.insert(users).values([
+  // Seed sample users with Better Auth compliant schema
+  db.insert(user).values([
     {
+      id: 'usr_budi_01',
       name: 'Budi Santoso',
       email: 'budi@example.com',
-      avatar: 'BS',
+      emailVerified: true,
+      image: 'BS',
       phone: '08123456789',
       address: 'Jl. Kaliurang KM 9, Sleman, D.I. Yogyakarta',
-      createdAt: now - 86400000 * 2,
-      updatedAt: now - 86400000 * 2,
+      role: 'author',
+      createdAt: new Date(now - 86400000 * 2),
+      updatedAt: new Date(now - 86400000 * 2),
     },
     {
+      id: 'usr_siti_02',
       name: 'Siti Rahma',
       email: 'siti@example.com',
-      avatar: 'SR',
+      emailVerified: true,
+      image: 'SR',
       phone: '08567891234',
       address: 'Jl. Slamet Riyadi No. 45, Surakarta, Jawa Tengah',
-      createdAt: now - 86400000 * 5,
-      updatedAt: now - 86400000 * 3,
+      role: 'author',
+      createdAt: new Date(now - 86400000 * 5),
+      updatedAt: new Date(now - 86400000 * 3),
     },
     {
+      id: 'usr_ahmad_03',
       name: 'Ahmad R.',
       email: 'ahmad@example.com',
-      avatar: 'AR',
+      emailVerified: true,
+      image: 'AR',
       phone: '08198765432',
       address: 'Kebayoran Baru, Jakarta Selatan',
-      createdAt: now - 86400000 * 7,
-      updatedAt: now - 86400000 * 6,
+      role: 'author',
+      createdAt: new Date(now - 86400000 * 7),
+      updatedAt: new Date(now - 86400000 * 6),
     },
   ]).run();
 
@@ -121,7 +130,7 @@ export function runSeed() {
     },
   ]).run();
 
-  console.log('✅ Seed data successfully populated!');
+  console.log('✅ Seed data successfully populated with Better Auth schema!');
 }
 
 if (import.meta.main) {

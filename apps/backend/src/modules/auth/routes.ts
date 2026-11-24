@@ -1,6 +1,6 @@
 import { Elysia, t } from 'elysia';
 import { db } from '../../db';
-import { users } from '../../db/schema';
+import { user as userTable } from '../../db/schema';
 import { eq } from 'drizzle-orm';
 
 export const authModule = new Elysia({ prefix: '/api/auth' })
@@ -8,19 +8,21 @@ export const authModule = new Elysia({ prefix: '/api/auth' })
     '/google',
     ({ body }) => {
       const email = body.email.toLowerCase().trim();
-      let user = db.select().from(users).where(eq(users.email, email)).get();
+      let user = db.select().from(userTable).where(eq(userTable.email, email)).get();
 
-      const now = Date.now();
+      const now = new Date();
       if (!user) {
         user = db
-          .insert(users)
+          .insert(userTable)
           .values({
-            googleId: body.googleId || `g_${Date.now()}`,
+            id: body.googleId || `usr_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
             name: body.name,
             email,
-            avatar: body.avatar || body.name.split(' ').map((n) => n[0]).join('').substring(0, 2).toUpperCase(),
+            emailVerified: true,
+            image: body.avatar || body.name.split(' ').map((n) => n[0]).join('').substring(0, 2).toUpperCase(),
             phone: body.phone || null,
             address: body.address || null,
+            role: 'author',
             createdAt: now,
             updatedAt: now,
           })
@@ -49,7 +51,7 @@ export const authModule = new Elysia({ prefix: '/api/auth' })
     '/profile',
     ({ body, set }) => {
       const email = body.email.toLowerCase().trim();
-      const existing = db.select().from(users).where(eq(users.email, email)).get();
+      const existing = db.select().from(userTable).where(eq(userTable.email, email)).get();
 
       if (!existing) {
         set.status = 404;
@@ -57,13 +59,13 @@ export const authModule = new Elysia({ prefix: '/api/auth' })
       }
 
       const updated = db
-        .update(users)
+        .update(userTable)
         .set({
           phone: body.phone,
           address: body.address,
-          updatedAt: Date.now(),
+          updatedAt: new Date(),
         })
-        .where(eq(users.email, email))
+        .where(eq(userTable.email, email))
         .returning()
         .get();
 
@@ -89,7 +91,7 @@ export const authModule = new Elysia({ prefix: '/api/auth' })
         return { error: 'Parameter email wajib disertakan.' };
       }
 
-      const user = db.select().from(users).where(eq(users.email, email.toLowerCase().trim())).get();
+      const user = db.select().from(userTable).where(eq(userTable.email, email.toLowerCase().trim())).get();
       if (!user) {
         set.status = 404;
         return { error: 'Pengguna tidak ditemukan.' };

@@ -9,6 +9,8 @@ import { db } from './db';
 import { orders } from './db/schema';
 import { runSeed } from './db/seed';
 
+import { auth } from './auth';
+
 // Automatically seed if empty
 const count = db.select().from(orders).all().length;
 if (count === 0) {
@@ -42,6 +44,7 @@ export const app = new Elysia()
     runtime: 'Bun ' + Bun.version,
     documentation: '/swagger',
   }))
+  .all('/api/auth/*', ({ request }) => auth.handler(request))
   .use(authModule)
   .use(ordersModule)
   .use(uploadModule)
