@@ -14,6 +14,16 @@ export const auth = betterAuth({
     },
   }),
   baseURL: process.env.BETTER_AUTH_URL || 'http://localhost:3001',
+  trustedOrigins: [
+    'http://localhost:4321',
+    'http://localhost:3001',
+    'http://127.0.0.1:4321',
+    'http://127.0.0.1:3001',
+  ],
+  emailAndPassword: {
+    enabled: true,
+    autoSignIn: true,
+  },
   socialProviders: {
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID || 'mock-google-client-id',

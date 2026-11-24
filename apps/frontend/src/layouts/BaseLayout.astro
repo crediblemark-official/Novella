@@ -54,6 +54,11 @@ const {
         </div>
 
         <div class="flex items-center gap-3">
+          <div id="nav-user-pill" class="hidden items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-bold text-navy">
+            <span id="nav-user-avatar" class="flex h-5 w-5 items-center justify-center rounded-full bg-navy text-[10px] text-white">U</span>
+            <span id="nav-user-name" class="max-w-[120px] truncate">Penulis</span>
+          </div>
+
           <a
             href="/admin"
             class={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold transition-colors ${
@@ -119,10 +124,12 @@ const {
     </footer>
 
     <script is:inline>
+      const API_URL = 'http://localhost:3001/api';
+
       // Load pending verification count for admin badge
       async function updateAdminBadge() {
         try {
-          const res = await fetch('http://localhost:3001/api/admin/kpi');
+          const res = await fetch(`${API_URL}/admin/kpi`);
           if (res.ok) {
             const data = await res.json();
             const badge = document.getElementById('nav-admin-badge');
@@ -135,7 +142,30 @@ const {
           if (badge) badge.textContent = '0';
         }
       }
+
+      // Check active Better Auth session for user pill
+      async function checkNavSession() {
+        try {
+          const res = await fetch(`${API_URL}/auth/get-session`, { credentials: 'include' });
+          if (res.ok) {
+            const session = await res.json();
+            if (session && session.user) {
+              const pill = document.getElementById('nav-user-pill');
+              const name = document.getElementById('nav-user-name');
+              const avatar = document.getElementById('nav-user-avatar');
+              if (pill && name && avatar) {
+                pill.classList.remove('hidden');
+                pill.classList.add('flex');
+                name.textContent = session.user.name;
+                avatar.textContent = (session.user.name || 'U')[0].toUpperCase();
+              }
+            }
+          }
+        } catch {}
+      }
+
       updateAdminBadge();
+      checkNavSession();
     </script>
   </body>
 </html>

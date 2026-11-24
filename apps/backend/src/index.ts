@@ -21,10 +21,16 @@ if (count === 0) {
 export const app = new Elysia()
   .use(
     cors({
-      origin: true,
+      origin: [
+        'http://localhost:4321',
+        'http://127.0.0.1:4321',
+        'http://localhost:3001',
+        'http://127.0.0.1:3001',
+      ],
       credentials: true,
-      methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
-      allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+      methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Cookie'],
+      exposeHeaders: ['Set-Cookie'],
     })
   )
   .use(
@@ -44,7 +50,9 @@ export const app = new Elysia()
     runtime: 'Bun ' + Bun.version,
     documentation: '/swagger',
   }))
-  .all('/api/auth/*', ({ request }) => auth.handler(request))
+  .all('/api/auth/*', async ({ request }) => {
+    return await auth.handler(request);
+  })
   .use(authModule)
   .use(ordersModule)
   .use(uploadModule)
