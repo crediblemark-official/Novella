@@ -1,0 +1,27 @@
+services:
+  web:
+    image: ghcr.io/crediblemark-official/novella:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: novella-web
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DATABASE_URL=${DATABASE_URL}
+      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+      - BETTER_AUTH_URL=${BETTER_AUTH_URL}
+      - TRUSTED_ORIGINS=${TRUSTED_ORIGINS}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:-}
+      - UPLOADS_DIR=/app/uploads
+      - FRONTEND_DIST_DIR=/app/apps/frontend/dist
+    volumes:
+      - novella_uploads:/app/uploads
+
+volumes:
+  novella_uploads:
+    name: novella_uploads
