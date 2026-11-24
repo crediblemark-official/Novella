@@ -62,11 +62,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </div>
   </section>
 
-  <!-- Section "Bisa Terbitkan Apa Saja di Sini?" (Sesuai Referensi Gambar) -->
+  <!-- Section "Bisa Terbitkan Apa Saja di Sini?" (Khusus Karya Sastra Nusantara) -->
   <section class="border-t border-slate-100 bg-white py-12 sm:py-16">
     <div class="mx-auto max-w-5xl px-4 sm:px-6">
       <h2 class="text-2xl font-extrabold text-navy sm:text-3xl tracking-tight">
-        Bisa Terbitkan Apa Saja di Sini?
+        Bisa Terbitkan Karya Sastra Apa Saja di Sini?
       </h2>
       
       <p class="mt-5 text-base sm:text-xl font-medium leading-relaxed sm:leading-[2.3] text-slate-800">
@@ -86,22 +86,22 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <span>Sastra Puitis</span>
         </span> 
         mulai dari <strong class="font-extrabold text-[#3B49DF] tracking-tight"><span id="typewriter-puisi">Antologi Puisi & Syair</span><span class="animate-pulse font-normal text-slate-400">|</span></strong>, 
-        mencetak 
+        mementaskan 
         <span class="inline-flex items-center gap-1.5 rounded-md border border-emerald-300 bg-[#DCFCE7] px-2 py-0.5 text-xs sm:text-sm font-bold text-[#166534] align-baseline whitespace-nowrap shadow-xs">
           <svg class="h-4 w-4 text-[#15803D] inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
           </svg>
-          <span>Non-Fiksi & Riset</span>
+          <span>Naskah Lakon</span>
         </span> 
-        dengan <strong class="font-extrabold text-[#0D7A53] tracking-tight"><span id="typewriter-nonfiksi">Buku Ajar, Esai & Skripsi</span><span class="animate-pulse font-normal text-slate-400">|</span></strong>, 
+        dengan <strong class="font-extrabold text-[#0D7A53] tracking-tight"><span id="typewriter-drama">Drama, Teater & Monolog</span><span class="animate-pulse font-normal text-slate-400">|</span></strong>, 
         hingga mengabadikan 
         <span class="inline-flex items-center gap-1.5 rounded-md border border-yellow-300 bg-[#FEF9C3] px-2 py-0.5 text-xs sm:text-sm font-bold text-[#854D0E] align-baseline whitespace-nowrap shadow-xs">
           <svg class="h-4 w-4 text-[#A16207] inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
           </svg>
-          <span>Memoar & Kisah</span>
+          <span>Memoar Sastra</span>
         </span> 
-        seperti <strong class="font-extrabold text-[#8F3985] tracking-tight"><span id="typewriter-memoar">Catatan Hidup & Resep Warisan</span><span class="animate-pulse font-normal text-slate-400">|</span></strong>, 
+        seperti <strong class="font-extrabold text-[#8F3985] tracking-tight"><span id="typewriter-memoar">Catatan Hidup & Cerita Rakyat</span><span class="animate-pulse font-normal text-slate-400">|</span></strong>, 
         lengkap dengan paket 
         <span class="inline-flex items-center gap-1 rounded-md border border-amber-300 bg-[#FEF3C7] px-2 py-0.5 text-xs sm:text-sm font-extrabold text-[#B45309] align-baseline whitespace-nowrap shadow-xs">
           Mulai 5 Eksemplar
@@ -216,47 +216,52 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </section>
   )}
 
-  <!-- Testimoni Penulis -->
-  <section id="testimoni" class="border-t border-slate-100 bg-[#F1F5F9]/60 py-16">
-    <div class="mx-auto max-w-5xl px-4 sm:px-6">
-      <div class="text-center">
-        <h2 class="text-2xl font-extrabold text-navy sm:text-3xl">Cerita Mereka Bersama Novella.id</h2>
-        <p class="mt-1 text-xs text-slate-600 sm:text-sm">Keberanian memulai menerbitkan karya sastra Nusantara.</p>
+  <!-- [SEMENTARA DI-HIDE UNTUK FASE LAUNCHING]
+       Section Testimoni Penulis dinonaktifkan sementara karena penerbit baru akan launching perdana.
+       Dapat diaktifkan kembali setelah ada testimoni terbitan resmi dari penulis mitra.
+  -->
+  {false && (
+    <section id="testimoni" class="border-t border-slate-100 bg-[#F1F5F9]/60 py-16">
+      <div class="mx-auto max-w-5xl px-4 sm:px-6">
+        <div class="text-center">
+          <h2 class="text-2xl font-extrabold text-navy sm:text-3xl">Cerita Mereka Bersama Novella.id</h2>
+          <p class="mt-1 text-xs text-slate-600 sm:text-sm">Keberanian memulai menerbitkan karya sastra Nusantara.</p>
+        </div>
+
+        <div class="mt-10 grid gap-6 sm:grid-cols-3">
+          <div class="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm">
+            <p class="font-literary text-xs italic leading-relaxed text-slate-700">
+              "Awalnya ragu apakah antologi puisi tugas sekolah bisa jadi buku cetak rapi. Di Novella.id cuma Rp 150 ribu sudah dapat 5 eksemplar, adminnya ramah banget membantu!"
+            </p>
+            <div class="mt-5 border-t border-slate-100 pt-3">
+              <p class="text-xs font-extrabold text-navy">Ahmad R.</p>
+              <p class="text-[11px] text-slate-500">Pelajar SMA, Jakarta</p>
+            </div>
+          </div>
+
+          <div class="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm">
+            <p class="font-literary text-xs italic leading-relaxed text-slate-700">
+              "Proses mandirinya cepat, kalkulatornya transparan dan ada opsi ISBN resmi. Kumpulan naskah lakon saya kini jadi buku ber-ISBN yang beredar di komunitas sastra."
+            </p>
+            <div class="mt-5 border-t border-slate-100 pt-3">
+              <p class="text-xs font-extrabold text-navy">Dewi Anggraini</p>
+              <p class="text-[11px] text-slate-500">Mahasiswi Sastra, Yogyakarta</p>
+            </div>
+          </div>
+
+          <div class="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm">
+            <p class="font-literary text-xs italic leading-relaxed text-slate-700">
+              "Saya seorang ibu rumah tangga yang suka menulis cerpen dan cerita rakyat leluhur. Akhirnya bisa menghadiahkan buku cetak berwujud nyata untuk anak cucu."
+            </p>
+            <div class="mt-5 border-t border-slate-100 pt-3">
+              <p class="text-xs font-extrabold text-navy">Siti Rahma</p>
+              <p class="text-[11px] text-slate-500">Ibu Rumah Tangga, Surakarta</p>
+            </div>
+          </div>
+        </div>
       </div>
-
-      <div class="mt-10 grid gap-6 sm:grid-cols-3">
-        <div class="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm">
-          <p class="font-literary text-xs italic leading-relaxed text-slate-700">
-            "Awalnya ragu apakah puisi tugas sekolah bisa jadi buku cetak rapi. Di Novella.id cuma Rp 150 ribu sudah dapat 5 eksemplar, adminnya ramah banget membantu!"
-          </p>
-          <div class="mt-5 border-t border-slate-100 pt-3">
-            <p class="text-xs font-extrabold text-navy">Ahmad R.</p>
-            <p class="text-[11px] text-slate-500">Pelajar SMA, Jakarta</p>
-          </div>
-        </div>
-
-        <div class="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm">
-          <p class="font-literary text-xs italic leading-relaxed text-slate-700">
-            "Proses mandirinya cepat, kalkulatornya transparan dan ada opsi ISBN resmi. Skripsi sastra saya kini jadi buku ber-ISBN yang bisa disimpan di perpustakaan kampus."
-          </p>
-          <div class="mt-5 border-t border-slate-100 pt-3">
-            <p class="text-xs font-extrabold text-navy">Dewi Anggraini</p>
-            <p class="text-[11px] text-slate-500">Mahasiswi Sastra, Yogyakarta</p>
-          </div>
-        </div>
-
-        <div class="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm">
-          <p class="font-literary text-xs italic leading-relaxed text-slate-700">
-            "Saya seorang ibu rumah tangga yang suka menulis cerita dan resep keluarga. Akhirnya bisa menghadiahkan buku cetak berwujud nyata untuk anak cucu."
-          </p>
-          <div class="mt-5 border-t border-slate-100 pt-3">
-            <p class="text-xs font-extrabold text-navy">Siti Rahma</p>
-            <p class="text-[11px] text-slate-500">Ibu Rumah Tangga, Surakarta</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
+  )}
 
   <!-- Kutipan Sastra Nusantara & CTA Penutup -->
   <section class="bg-navy py-16 text-center text-white">
@@ -317,7 +322,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         const stagger = {
           'typewriter-fiksi': 1200,
           'typewriter-puisi': 2200,
-          'typewriter-nonfiksi': 3200,
+          'typewriter-drama': 3200,
           'typewriter-memoar': 4200,
         }[elementId] || 1500;
 
@@ -332,7 +337,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           'Novel & Cerpen',
           'Novelet Fantasi',
           'Roman Sejarah',
-          'Kumpulan Cerita Silat',
+          'Cerita Silat Klasik',
         ]);
 
         setupTypewriter('typewriter-puisi', [
@@ -342,18 +347,18 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           'Lirik Kidung Senja',
         ]);
 
-        setupTypewriter('typewriter-nonfiksi', [
-          'Buku Ajar, Esai & Skripsi',
-          'Monograf Akademik',
-          'Diktat Pembelajaran',
-          'Kritik Sastra & Budaya',
+        setupTypewriter('typewriter-drama', [
+          'Drama, Teater & Monolog',
+          'Lakon Sandiwara Panggung',
+          'Skenario Film Sastra',
+          'Kritik & Esai Sastra',
         ]);
 
         setupTypewriter('typewriter-memoar', [
-          'Catatan Hidup & Resep Warisan',
-          'Biografi Tokoh Daerah',
-          'Jurnal Perjalanan Nusantara',
-          'Kisah Pengabdian Desa',
+          'Catatan Hidup & Cerita Rakyat',
+          'Memoar Pengembaraan Sastra',
+          'Hikayat & Fabel Leluhur',
+          'Kisah Inspiratif Sastrawan',
         ]);
       });
     })();

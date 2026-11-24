@@ -23,6 +23,18 @@ export function runSeed() {
   // Seed sample users with Better Auth compliant schema
   db.insert(user).values([
     {
+      id: 'usr_admin_novella',
+      name: 'Tim Redaksi Novella',
+      email: 'admin@novella.id',
+      emailVerified: true,
+      image: 'AD',
+      phone: '081234567890',
+      address: 'Kantor Redaksi Novella.id, Maguwoharjo, Sleman, D.I. Yogyakarta',
+      role: 'admin',
+      createdAt: new Date(now),
+      updatedAt: new Date(now),
+    },
+    {
       id: 'usr_budi_01',
       name: 'Budi Santoso',
       email: 'budi@example.com',

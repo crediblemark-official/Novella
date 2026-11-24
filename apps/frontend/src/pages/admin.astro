@@ -3,28 +3,132 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout title="Dashboard Internal Redaksi — Novella.id" activeNav="admin">
-  <div class="min-h-[calc(100vh-64px)] bg-[#F1F5F9] px-4 py-8 sm:px-6">
-    <div class="mx-auto max-w-6xl">
-      <!-- Admin Header -->
-      <div class="flex flex-wrap items-center justify-between gap-4">
+  <!-- Auth Checking Spinner (Initial State) -->
+  <div id="admin-loading-screen" class="flex min-h-[calc(100vh-64px)] items-center justify-center bg-[#F1F5F9] px-4 py-12">
+    <div class="text-center">
+      <div class="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-slate-300 border-t-orange"></div>
+      <p class="mt-4 text-xs font-bold text-navy">Memverifikasi hak akses staf redaksi...</p>
+    </div>
+  </div>
+
+  <!-- Admin Auth Guard (Shown when unauthenticated or unauthorized) -->
+  <div id="admin-auth-guard" class="hidden min-h-[calc(100vh-64px)] items-center justify-center bg-[#F1F5F9] px-4 py-12 sm:px-6">
+    <div class="w-full max-w-md rounded-3xl border border-slate-200/90 bg-white p-7 sm:p-9 shadow-lg">
+      <div class="text-center">
+        <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-navy/10 text-navy shadow-inner">
+          <svg class="h-7 w-7 text-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+        </div>
+        <div class="mt-4 inline-flex items-center gap-1.5 rounded-full border border-orange/30 bg-orange/10 px-3 py-0.5 text-[11px] font-extrabold text-orange">
+          <span>Area Khusus Staf Redaksi</span>
+        </div>
+        <h1 class="mt-2 text-xl font-extrabold text-navy sm:text-2xl">Masuk Portal Redaksi</h1>
+        <p class="mt-1.5 text-xs leading-relaxed text-slate-500">
+          Dashboard manajemen naskah dilindungi secara ketat. Masuk dengan akun redaksi Novella.id untuk memproses pesanan.
+        </p>
+      </div>
+
+      <!-- Error Message Banner -->
+      <div id="auth-error-banner" class="mt-5 hidden rounded-xl border border-rose-200 bg-rose-50 p-3 text-xs font-bold text-rose-700">
+        Email atau kata sandi tidak valid.
+      </div>
+
+      <!-- Login Form -->
+      <form id="admin-login-form" class="mt-5 space-y-4">
         <div>
-          <div class="inline-flex items-center gap-2 rounded-full bg-navy/10 px-3 py-1 text-xs font-bold text-navy">
-            <span>Portal Internal Redaksi</span>
+          <label class="block text-xs font-bold text-navy">Email Staf Redaksi</label>
+          <input
+            id="admin-email"
+            type="email"
+            required
+            value="admin@novella.id"
+            placeholder="admin@novella.id"
+            class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-xs font-semibold text-navy focus:border-navy focus:outline-none"
+          />
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between">
+            <label class="block text-xs font-bold text-navy">Kata Sandi Redaksi</label>
           </div>
-          <h1 class="mt-2 text-2xl font-extrabold text-navy sm:text-3xl">Dashboard Manajemen Pesanan</h1>
-          <p class="text-xs text-slate-500">Pantau verifikasi naskah, status cetak, dan komunikasi penulis.</p>
+          <input
+            id="admin-password"
+            type="password"
+            required
+            value="AdminNovella2026!"
+            placeholder="••••••••••••"
+            class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-xs font-semibold text-navy focus:border-navy focus:outline-none"
+          />
         </div>
 
         <button
-          id="btn-refresh-admin"
-          type="button"
-          class="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 text-xs font-bold text-navy shadow-xs hover:bg-slate-50 transition-colors"
+          id="btn-admin-submit"
+          type="submit"
+          class="w-full rounded-full bg-navy py-3 text-xs font-extrabold text-white shadow-md transition-all hover:bg-slate-800 active:scale-[0.99]"
         >
-          <svg class="h-3.5 w-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-          </svg>
-          <span>Segarkan Data</span>
+          Masuk ke Dashboard
         </button>
+
+        <!-- Fast Demo Fill Button -->
+        <button
+          id="btn-fast-demo"
+          type="button"
+          class="w-full rounded-full border border-slate-200 bg-slate-50 py-2.5 text-xs font-bold text-slate-700 transition-colors hover:bg-slate-100"
+        >
+          ⚡ Masuk Cepat sebagai Redaksi Demo
+        </button>
+      </form>
+
+      <!-- Demo Credentials Notice -->
+      <div class="mt-6 border-t border-slate-100 pt-4 text-center">
+        <p class="text-[11px] text-slate-400">
+          Akun Demo Redaksi: <strong class="text-slate-600">admin@novella.id</strong> | Sandi: <strong class="text-slate-600">AdminNovella2026!</strong>
+        </p>
+        <a href="/" class="mt-3 inline-block text-xs font-bold text-orange hover:underline">
+          &larr; Kembali ke Beranda Penulis
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Protected Admin Dashboard Content (Hidden by default until authenticated) -->
+  <div id="admin-dashboard-content" class="hidden min-h-[calc(100vh-64px)] bg-[#F1F5F9] px-4 py-8 sm:px-6">
+    <div class="mx-auto max-w-6xl">
+      <!-- Admin Header with Identity & Logout -->
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <div class="inline-flex items-center gap-2 rounded-full bg-emerald-50 border border-emerald-200 px-3 py-1 text-xs font-bold text-emerald-800">
+            <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span id="admin-identity-label">Staf Redaksi Aktif: admin@novella.id</span>
+          </div>
+          <h1 class="mt-2 text-2xl font-extrabold text-navy sm:text-3xl">Dashboard Manajemen Pesanan</h1>
+          <p class="text-xs text-slate-500">Pantau verifikasi naskah sastra, status cetak, dan komunikasi penulis.</p>
+        </div>
+
+        <div class="flex items-center gap-2.5">
+          <button
+            id="btn-refresh-admin"
+            type="button"
+            class="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 text-xs font-bold text-navy shadow-xs hover:bg-slate-50 transition-colors"
+          >
+            <svg class="h-3.5 w-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            <span>Segarkan Data</span>
+          </button>
+
+          <button
+            id="btn-admin-logout"
+            type="button"
+            class="inline-flex items-center gap-1.5 rounded-full border border-rose-200 bg-rose-50 px-3.5 py-2 text-xs font-extrabold text-rose-700 hover:bg-rose-100 transition-colors"
+          >
+            <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            <span>Keluar</span>
+          </button>
+        </div>
       </div>
 
       <!-- KPI Top Bar Metrics -->
@@ -32,7 +136,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Pesanan Masuk</p>
           <p id="kpi-total-orders" class="mt-2 text-3xl font-extrabold text-navy">...</p>
-          <p class="mt-1 text-[11px] text-slate-500">Seluruh pesanan sejak sistem aktif</p>
+          <p class="mt-1 text-[11px] text-slate-500">Seluruh pesanan naskah sastra</p>
         </div>
 
         <div class="rounded-2xl border border-orange/40 bg-orange/5 p-5 shadow-sm">
@@ -104,10 +208,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
   <script is:inline>
     const API_BASE = 'http://localhost:3001/api';
+    const ADMIN_STORAGE_KEY = 'novella_admin_session';
 
     let allOrders = [];
     let activeFilter = 'ALL';
     let searchQuery = '';
+    let currentAdminToken = localStorage.getItem(ADMIN_STORAGE_KEY) || '';
+
+    const loadingScreen = document.getElementById('admin-loading-screen');
+    const authGuard = document.getElementById('admin-auth-guard');
+    const dashboardContent = document.getElementById('admin-dashboard-content');
+    const loginForm = document.getElementById('admin-login-form');
+    const authErrorBanner = document.getElementById('auth-error-banner');
+    const identityLabel = document.getElementById('admin-identity-label');
+    const logoutBtn = document.getElementById('btn-admin-logout');
+    const fastDemoBtn = document.getElementById('btn-fast-demo');
 
     const kpiTotalOrders = document.getElementById('kpi-total-orders');
     const kpiWaitingOrders = document.getElementById('kpi-waiting-orders');
@@ -128,6 +243,130 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
     function formatRp(num) {
       return 'Rp ' + Number(num || 0).toLocaleString('id-ID');
+    }
+
+    // Check if current user is an authorized admin
+    async function checkAdminAuth() {
+      try {
+        // 1. Verify via admin module
+        const headers = { 'Content-Type': 'application/json' };
+        if (currentAdminToken) {
+          headers['Authorization'] = `Bearer ${currentAdminToken}`;
+          headers['x-admin-token'] = currentAdminToken;
+        }
+
+        const res = await fetch(`${API_BASE}/admin/verify`, {
+          headers,
+          credentials: 'include',
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data.authenticated && data.user) {
+            grantAdminAccess(data.user);
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn('Admin check fallback:', err);
+      }
+
+      // If not authenticated as admin, show auth guard
+      denyAdminAccess();
+    }
+
+    function grantAdminAccess(user) {
+      if (loadingScreen) loadingScreen.classList.add('hidden');
+      if (authGuard) authGuard.classList.add('hidden');
+      if (dashboardContent) dashboardContent.classList.remove('hidden');
+
+      if (identityLabel) {
+        identityLabel.textContent = `Staf Redaksi: ${user.name || user.email}`;
+      }
+
+      fetchKPI();
+      fetchOrders();
+    }
+
+    function denyAdminAccess(errorMessage) {
+      if (loadingScreen) loadingScreen.classList.add('hidden');
+      if (dashboardContent) dashboardContent.classList.add('hidden');
+      if (authGuard) {
+        authGuard.classList.remove('hidden');
+        authGuard.classList.add('flex');
+      }
+
+      if (errorMessage && authErrorBanner) {
+        authErrorBanner.textContent = errorMessage;
+        authErrorBanner.classList.remove('hidden');
+      }
+    }
+
+    // Admin Login Execution
+    async function handleAdminLogin(email, password) {
+      const submitBtn = document.getElementById('btn-admin-submit');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Memverifikasi...';
+      }
+      if (authErrorBanner) authErrorBanner.classList.add('hidden');
+
+      try {
+        const res = await fetch(`${API_BASE}/admin/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ email, password }),
+        });
+
+        const data = await res.json();
+        if (res.ok && data.success) {
+          currentAdminToken = data.token;
+          localStorage.setItem(ADMIN_STORAGE_KEY, data.token);
+          grantAdminAccess(data.user);
+          showAdminToast('Berhasil masuk sebagai staf redaksi!');
+        } else {
+          denyAdminAccess(data.error || 'Autentikasi gagal. Periksa kembali email dan sandi redaksi.');
+        }
+      } catch (err) {
+        denyAdminAccess('Tidak dapat terhubung ke server backend.');
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Masuk ke Dashboard';
+        }
+      }
+    }
+
+    if (loginForm) {
+      loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('admin-email').value;
+        const password = document.getElementById('admin-password').value;
+        handleAdminLogin(email, password);
+      });
+    }
+
+    if (fastDemoBtn) {
+      fastDemoBtn.addEventListener('click', () => {
+        document.getElementById('admin-email').value = 'admin@novella.id';
+        document.getElementById('admin-password').value = 'AdminNovella2026!';
+        handleAdminLogin('admin@novella.id', 'AdminNovella2026!');
+      });
+    }
+
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', async () => {
+        try {
+          await fetch(`${API_BASE}/admin/logout`, { method: 'POST', credentials: 'include' });
+        } catch {}
+        localStorage.removeItem(ADMIN_STORAGE_KEY);
+        currentAdminToken = '';
+        showAdminToast('Sesi redaksi telah diakhiri.');
+        setTimeout(() => {
+          location.reload();
+        }, 500);
+      });
     }
 
     async function fetchKPI() {
@@ -184,7 +423,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         ordersTbody.innerHTML = `
           <tr>
             <td colspan="7" class="px-4 py-8 text-center text-slate-400">
-              Tidak ada pesanan yang sesuai filter.
+              Tidak ada pesanan sastra yang sesuai filter.
             </td>
           </tr>
         `;
@@ -215,7 +454,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           // WhatsApp Follow-up URL
           const waPhone = o.authorPhone.startsWith('0') ? '62' + o.authorPhone.slice(1) : o.authorPhone;
           const waMsg = encodeURIComponent(
-            `Halo Kak ${o.authorName}, kami dari tim redaksi Novella.id ingin menindaklanjuti pesanan naskah "${o.bookTitle}" (Kode: ${o.orderCode}). Ada yang bisa kami bantu?`
+            `Halo Kak ${o.authorName}, kami dari tim redaksi Novella.id ingin menindaklanjuti pesanan naskah sastra "${o.bookTitle}" (Kode: ${o.orderCode}). Ada yang bisa kami bantu?`
           );
           const waUrl = `https://wa.me/${waPhone}?text=${waMsg}`;
 
@@ -253,27 +492,34 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                       <option value="Menunggu Verifikasi" ${o.status === 'Menunggu Verifikasi' ? 'selected' : ''}>Menunggu Verifikasi</option>
                       <option value="Diproses" ${o.status === 'Diproses' ? 'selected' : ''}>Diproses</option>
                       <option value="Selesai" ${o.status === 'Selesai' ? 'selected' : ''}>Selesai</option>
+                      <option value="Ditarik Penulis" ${o.status === 'Ditarik Penulis' ? 'selected' : ''}>Ditarik Penulis</option>
                     </select>
                   `
                 }
               </td>
               <td class="px-4 py-3.5 text-right whitespace-nowrap">
-                <div class="inline-flex items-center gap-1.5">
+                <div class="flex items-center justify-end gap-1.5">
                   ${
                     isRevoked
-                      ? `<span class="rounded-lg border border-slate-200 bg-slate-100 px-2.5 py-1 text-[10px] font-bold text-slate-400 cursor-not-allowed">Berkas Dikunci</span>`
-                      : o.fileName
-                      ? `<a href="${API_BASE}/files/${o.fileName}" download class="inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-2.5 py-1 text-xs font-bold text-navy hover:bg-slate-100">
-                          <span>Unduh</span>
-                         </a>`
-                      : `<span class="text-[10px] text-slate-400">Tanpa File</span>`
+                      ? `<span class="inline-flex items-center gap-1 text-[11px] text-rose-400 font-bold" title="Akses berkas ditutup permanen karena status pesanan ditarik penulis">
+                          <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                          Naskah Terkunci
+                        </span>`
+                      : `<a
+                          href="${API_BASE}/files/${o.fileName}"
+                          target="_blank"
+                          class="rounded-lg border border-slate-200 bg-white px-2 py-1 text-[11px] font-bold text-slate-700 hover:bg-slate-100 hover:text-navy transition-colors"
+                        >
+                          Unduh
+                        </a>`
                   }
                   <a
                     href="${waUrl}"
                     target="_blank"
-                    class="inline-flex items-center gap-1 rounded-lg border border-emerald-300 bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-800 hover:bg-emerald-100"
+                    rel="noopener noreferrer"
+                    class="rounded-lg bg-emerald-600 px-2.5 py-1 text-[11px] font-extrabold text-white hover:bg-emerald-700 transition-colors"
                   >
-                    <span>WA</span>
+                    WA Penulis
                   </a>
                 </div>
               </td>
@@ -283,7 +529,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         .join('');
     }
 
-    // Status updater
+    // Expose update order status to global
     window.updateOrderStatus = async function (orderCode, newStatus) {
       try {
         const res = await fetch(`${API_BASE}/orders/${orderCode}/status`, {
@@ -291,51 +537,54 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ status: newStatus }),
         });
-        const data = await res.json();
+
         if (res.ok) {
           showAdminToast(`Status pesanan ${orderCode} diperbarui ke "${newStatus}".`);
           fetchKPI();
           fetchOrders();
         } else {
-          showAdminToast(data.error || 'Gagal memperbarui status.');
+          const err = await res.json();
+          alert(err.error || 'Gagal memperbarui status');
           fetchOrders();
         }
-      } catch {
-        showAdminToast('Gagal menghubungi server.');
+      } catch (err) {
+        alert('Gagal menghubungi server');
       }
     };
 
-    // Filter tab handler
+    // Filter tab listeners
     adminTabs.forEach((tab) => {
       tab.addEventListener('click', () => {
-        activeFilter = tab.getAttribute('data-filter');
         adminTabs.forEach((t) => {
-          const active = t === tab;
-          t.classList.toggle('bg-navy', active);
-          t.classList.toggle('text-white', active);
-          t.classList.toggle('border-slate-200', !active);
-          t.classList.toggle('bg-white', !active);
-          t.classList.toggle('text-slate-600', !active);
+          t.classList.remove('bg-navy', 'text-white');
+          t.classList.add('bg-white', 'text-slate-600', 'border', 'border-slate-200');
         });
+        tab.classList.remove('bg-white', 'text-slate-600', 'border', 'border-slate-200');
+        tab.classList.add('bg-navy', 'text-white');
+
+        activeFilter = tab.getAttribute('data-filter') || 'ALL';
         renderOrdersTable();
       });
     });
 
-    // Search query listener
-    searchInput.addEventListener('input', (e) => {
-      searchQuery = e.target.value;
-      renderOrdersTable();
-    });
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        searchQuery = e.target.value;
+        renderOrdersTable();
+      });
+    }
 
-    // Refresh button
-    refreshBtn.addEventListener('click', () => {
-      fetchKPI();
-      fetchOrders();
-      showAdminToast('Data pesanan disegarkan.');
-    });
+    if (refreshBtn) {
+      refreshBtn.addEventListener('click', () => {
+        fetchKPI();
+        fetchOrders();
+        showAdminToast('Data pesanan disinkronkan kembali.');
+      });
+    }
 
-    // Initial load
-    fetchKPI();
-    fetchOrders();
+    // Start by checking admin authorization
+    document.addEventListener('DOMContentLoaded', () => {
+      checkAdminAuth();
+    });
   </script>
 </BaseLayout>
