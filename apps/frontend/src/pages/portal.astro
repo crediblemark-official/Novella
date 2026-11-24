@@ -471,7 +471,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   </div>
 
   <script is:inline>
-    const API_BASE = 'http://localhost:3001/api';
+    const API_BASE =
+      typeof window !== 'undefined' && window.location.port === '4321'
+        ? 'http://localhost:3001/api'
+        : '/api';
 
     // State
     let currentUser = null;

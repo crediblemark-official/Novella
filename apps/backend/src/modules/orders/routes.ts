@@ -2,7 +2,7 @@ import { Elysia, t } from 'elysia';
 import { db } from '../../db';
 import { orders } from '../../db/schema';
 import { calculatePrice } from './pricing';
-import { desc, eq, and } from 'drizzle-orm';
+import { desc, eq } from 'drizzle-orm';
 
 const ADMIN_WA_NUMBER = '6281234567890'; // Sesuai PRD Novella.id
 
@@ -22,7 +22,7 @@ export function formatWaMessage(order: {
 }) {
   const formattedPrice = `Rp ${order.totalPrice.toLocaleString('id-ID')}`;
   const addonsStr = order.addons.length > 0 ? order.addons.join(', ') : '-';
-  
+
   const text =
 `Halo Admin Novella.id, saya telah membuat pesanan penerbitan naskah dengan rincian berikut:
 
@@ -60,12 +60,16 @@ export const ordersModule = new Elysia({ prefix: '/api/orders' })
   )
   .get(
     '/',
-    ({ query }) => {
+    async ({ query }) => {
       const { email } = query;
       if (email) {
-        return db.select().from(orders).where(eq(orders.authorEmail, email)).orderBy(desc(orders.createdAt)).all();
+        return await db
+          .select()
+          .from(orders)
+          .where(eq(orders.authorEmail, email))
+          .orderBy(desc(orders.createdAt));
       }
-      return db.select().from(orders).orderBy(desc(orders.createdAt)).all();
+      return await db.select().from(orders).orderBy(desc(orders.createdAt));
     },
     {
       query: t.Object({
@@ -73,8 +77,8 @@ export const ordersModule = new Elysia({ prefix: '/api/orders' })
       }),
     }
   )
-  .get('/:code', ({ params, set }) => {
-    const order = db.select().from(orders).where(eq(orders.orderCode, params.code)).get();
+  .get('/:code', async ({ params, set }) => {
+    const [order] = await db.select().from(orders).where(eq(orders.orderCode, params.code));
     if (!order) {
       set.status = 404;
       return { error: 'Pesanan tidak ditemukan.' };
@@ -95,7 +99,7 @@ export const ordersModule = new Elysia({ prefix: '/api/orders' })
       const randomSuffix = Math.floor(1000 + Math.random() * 9000);
       const orderCode = `NOV-${randomSuffix}`;
 
-      const now = Date.now();
+      const now = new Date();
       const newOrder = {
         orderCode,
         authorName: body.authorName,
@@ -119,7 +123,11 @@ export const ordersModule = new Elysia({ prefix: '/api/orders' })
         updatedAt: now,
       };
 
-      const inserted = db.insert(orders).values(newOrder).returning().get();
+      const [inserted] = await db.insert(orders).values(newOrder).returning();
+      if (!inserted) {
+        set.status = 500;
+        return { error: 'Gagal menyimpan pesanan ke database.' };
+      }
 
       const waInfo = formatWaMessage({
         orderCode: inserted.orderCode,
@@ -162,8 +170,8 @@ export const ordersModule = new Elysia({ prefix: '/api/orders' })
       }),
     }
   )
-  .post('/:code/withdraw', ({ params, set }) => {
-    const existing = db.select().from(orders).where(eq(orders.orderCode, params.code)).get();
+  .post('/:code/withdraw', async ({ params, set }) => {
+    const [existing] = await db.select().from(orders).where(eq(orders.orderCode, params.code));
 
     if (!existing) {
       set.status = 404;
@@ -177,16 +185,15 @@ export const ordersModule = new Elysia({ prefix: '/api/orders' })
       };
     }
 
-    const updated = db
+    const [updated] = await db
       .update(orders)
       .set({
         status: 'Ditarik Penulis',
         isRevoked: 1,
-        updatedAt: Date.now(),
+        updatedAt: new Date(),
       })
       .where(eq(orders.orderCode, params.code))
-      .returning()
-      .get();
+      .returning();
 
     return {
       success: true,
@@ -196,8 +203,8 @@ export const ordersModule = new Elysia({ prefix: '/api/orders' })
   })
   .patch(
     '/:code/status',
-    ({ params, body, set }) => {
-      const existing = db.select().from(orders).where(eq(orders.orderCode, params.code)).get();
+    async ({ params, body, set }) => {
+      const [existing] = await db.select().from(orders).where(eq(orders.orderCode, params.code));
 
       if (!existing) {
         set.status = 404;
@@ -209,15 +216,14 @@ export const ordersModule = new Elysia({ prefix: '/api/orders' })
         return { error: 'Pesanan telah ditarik oleh penulis dan tidak dapat diubah statusnya.' };
       }
 
-      const updated = db
+      const [updated] = await db
         .update(orders)
         .set({
           status: body.status,
-          updatedAt: Date.now(),
+          updatedAt: new Date(),
         })
         .where(eq(orders.orderCode, params.code))
-        .returning()
-        .get();
+        .returning();
 
       return {
         success: true,

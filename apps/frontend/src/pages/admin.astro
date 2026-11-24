@@ -207,7 +207,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   </div>
 
   <script is:inline>
-    const API_BASE = 'http://localhost:3001/api';
+    const API_BASE =
+      typeof window !== 'undefined' && window.location.port === '4321'
+        ? 'http://localhost:3001/api'
+        : '/api';
     const ADMIN_STORAGE_KEY = 'novella_admin_session';
 
     let allOrders = [];
@@ -394,7 +397,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         ordersTbody.innerHTML = `
           <tr>
             <td colspan="7" class="px-4 py-8 text-center text-rose-500 font-bold">
-              Gagal memuat data dari server backend. Pastikan server Elysia berjalan di port 3001.
+              Gagal memuat data dari server backend. Pastikan server Elysia berjalan.
             </td>
           </tr>
         `;

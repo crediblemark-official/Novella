@@ -10,9 +10,11 @@
     "dev": "concurrently \"bun run dev:backend\" \"bun run dev:frontend\"",
     "build": "bun --filter '*' build",
     "typecheck": "bun --filter '*' typecheck",
-    "test": "bun test"
+    "test": "bun test",
+    "prepare": "husky || true"
   },
   "devDependencies": {
-    "concurrently": "^9.1.2"
+    "concurrently": "^9.1.2",
+    "husky": "^9.1.7"
   }
 }

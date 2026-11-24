@@ -3,8 +3,8 @@ import { app } from '../index';
 import { runSeed } from '../db/seed';
 
 describe('Novella.id Full End-to-End API Integration', () => {
-  beforeAll(() => {
-    runSeed();
+  beforeAll(async () => {
+    await runSeed();
   });
 
   it('1. GET / returns status online and runtime information', async () => {

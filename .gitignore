@@ -5,7 +5,9 @@ dist/
 *.log
 .env
 .env.local
-uploads/
-*.sqlite
-*.sqlite-journal
+.env.*.local
+*uploads/*
+!uploads/.gitkeep
+apps/backend/data/
+*.sqlite*
 .DS_Store

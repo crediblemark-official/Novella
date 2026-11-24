@@ -5,7 +5,7 @@ import { db } from '../../db';
 import { orders } from '../../db/schema';
 import { eq } from 'drizzle-orm';
 
-const uploadsDir = join(import.meta.dir, '../../../uploads');
+const uploadsDir = process.env.UPLOADS_DIR || join(import.meta.dir, '../../../../../uploads');
 if (!existsSync(uploadsDir)) {
   mkdirSync(uploadsDir, { recursive: true });
 }
@@ -59,11 +59,12 @@ export const uploadModule = new Elysia({ prefix: '/api' })
   .get('/files/:fileName', async ({ params, set }) => {
     const { fileName } = params;
 
-    // Check file access gatekeeper in DB
-    const matchingOrder = db.select().from(orders).where(eq(orders.fileName, fileName)).get();
+    // Check file access gatekeeper in DB: if any order linking this file is revoked, deny access
+    const matchingOrders = await db.select().from(orders).where(eq(orders.fileName, fileName));
 
-    if (matchingOrder) {
-      if (matchingOrder.isRevoked === 1 || matchingOrder.status === 'Ditarik Penulis') {
+    if (matchingOrders.length > 0) {
+      const isRevoked = matchingOrders.some((o) => o.isRevoked === 1 || o.status === 'Ditarik Penulis');
+      if (isRevoked) {
         set.status = 403;
         return {
           error: 'Akses naskah ditutup karena telah ditarik penulis (Access Revoked / Soft Deleted).',
@@ -79,6 +80,7 @@ export const uploadModule = new Elysia({ prefix: '/api' })
       return { error: 'Berkas naskah tidak ditemukan di server.' };
     }
 
-    set.headers['Content-Disposition'] = `attachment; filename="${matchingOrder?.fileOriginalName || fileName}"`;
+    const firstOrder = matchingOrders[0];
+    set.headers['Content-Disposition'] = `attachment; filename="${firstOrder?.fileOriginalName || fileName}"`;
     return file;
   });

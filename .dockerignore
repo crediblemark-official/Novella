@@ -1,0 +1,16 @@
+node_modules
+apps/*/node_modules
+.git
+.github
+.astro
+dist
+apps/*/dist
+uploads/*
+!uploads/.gitkeep
+*.log
+.env
+.env.local
+.env.*.local
+.DS_Store
+apps/backend/data/
+*.sqlite*

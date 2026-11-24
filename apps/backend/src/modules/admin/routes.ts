@@ -12,7 +12,7 @@ export const adminModule = new Elysia({ prefix: '/api/admin' })
       const password = body.password;
 
       // Check if user exists in DB and has role 'admin'
-      const foundUser = db.select().from(user).where(eq(user.email, email)).get();
+      const [foundUser] = await db.select().from(user).where(eq(user.email, email));
 
       // Standard credential check for Novella editorial staff
       const isValidAdmin =
@@ -31,7 +31,7 @@ export const adminModule = new Elysia({ prefix: '/api/admin' })
       let adminRecord = foundUser;
       if (!adminRecord) {
         const now = new Date();
-        adminRecord = db
+        const [inserted] = await db
           .insert(user)
           .values({
             id: 'usr_admin_novella',
@@ -45,8 +45,16 @@ export const adminModule = new Elysia({ prefix: '/api/admin' })
             createdAt: now,
             updatedAt: now,
           })
-          .returning()
-          .get();
+          .returning();
+        adminRecord = inserted;
+      }
+
+      if (!adminRecord) {
+        set.status = 500;
+        return {
+          success: false,
+          error: 'Gagal memuat akun redaksi.',
+        };
       }
 
       const adminToken = `novella_admin_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
@@ -86,7 +94,7 @@ export const adminModule = new Elysia({ prefix: '/api/admin' })
     // 2. Check custom admin token in authorization header or x-admin-token
     const authHeader = request.headers.get('Authorization') || request.headers.get('x-admin-token');
     if (authHeader && authHeader.includes('novella_admin_')) {
-      const adminRecord = db.select().from(user).where(eq(user.email, 'admin@novella.id')).get();
+      const [adminRecord] = await db.select().from(user).where(eq(user.email, 'admin@novella.id'));
       return {
         authenticated: true,
         user: adminRecord || {
@@ -107,8 +115,8 @@ export const adminModule = new Elysia({ prefix: '/api/admin' })
   .post('/logout', () => {
     return { success: true };
   })
-  .get('/kpi', () => {
-    const allOrders = db.select().from(orders).all();
+  .get('/kpi', async () => {
+    const allOrders = await db.select().from(orders);
 
     const totalOrders = allOrders.length;
     const waitingVerification = allOrders.filter((o) => o.status === 'Menunggu Verifikasi').length;

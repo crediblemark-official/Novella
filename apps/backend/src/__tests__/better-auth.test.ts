@@ -36,7 +36,7 @@ describe('Better Auth Full Implementation', () => {
     const setCookie = res.headers.get('set-cookie');
     expect(setCookie).toBeDefined();
     if (setCookie) {
-      sessionCookie = setCookie.split(';')[0];
+      sessionCookie = setCookie.split(';')[0] ?? '';
     }
   });
 
