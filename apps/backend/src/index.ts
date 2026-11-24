@@ -14,13 +14,18 @@ import { join } from 'node:path';
 import { existsSync } from 'node:fs';
 
 // Initialize PostgreSQL schema if not present
-await initDatabase();
+try {
+  await initDatabase();
 
-// Automatically seed if empty
-const existingOrders = await db.select().from(orders);
-if (existingOrders.length === 0) {
-  console.log('🌱 PostgreSQL database is empty, seeding initial records...');
-  await runSeed();
+  // Automatically seed if empty
+  const existingOrders = await db.select().from(orders);
+  if (existingOrders.length === 0) {
+    console.log('🌱 PostgreSQL database is empty, seeding initial records...');
+    await runSeed();
+  }
+} catch (err: any) {
+  console.error('⚠️ Database connection warning during startup:', err.message);
+  console.error('👉 Pastikan variabel DATABASE_URL diatur di tab Environment Dokploy!');
 }
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -88,7 +93,7 @@ if (hasStaticFrontend && isProduction) {
   }));
 }
 
-const port = process.env.PORT ? Number(process.env.PORT) : 3001;
+const port = process.env.PORT ? Number(process.env.PORT) : 3000;
 app.listen(port);
 
 console.log(`🦊 Elysia backend server running at ${app.server?.hostname}:${app.server?.port} with PostgreSQL`);

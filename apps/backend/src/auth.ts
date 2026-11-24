@@ -7,14 +7,19 @@ const trustedOrigins = [
   'http://localhost:4321',
   'http://localhost:3001',
   'http://localhost:3000',
+  'http://localhost:3010',
   'http://127.0.0.1:4321',
   'http://127.0.0.1:3001',
   'http://127.0.0.1:3000',
+  'http://127.0.0.1:3010',
   ...(process.env.BETTER_AUTH_URL ? [process.env.BETTER_AUTH_URL] : []),
   ...(process.env.TRUSTED_ORIGINS ? process.env.TRUSTED_ORIGINS.split(',').map((s) => s.trim()) : []),
 ];
 
 export const auth = betterAuth({
+  secret:
+    process.env.BETTER_AUTH_SECRET ||
+    'novella_secret_auth_key_2026_at_least_32_characters_long_super_safe',
   database: drizzleAdapter(db, {
     provider: 'pg',
     schema: {
