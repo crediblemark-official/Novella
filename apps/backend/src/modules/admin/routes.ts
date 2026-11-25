@@ -144,7 +144,9 @@ export const adminModule = new Elysia({ prefix: '/api/admin' })
     const allOrders = await db.select().from(orders);
 
     const totalOrders = allOrders.length;
-    const waitingVerification = allOrders.filter((o) => o.status === 'Menunggu Verifikasi').length;
+    const waitingVerification = allOrders.filter(
+      (o) => o.status === 'Menunggu Verifikasi' || o.status === 'Menunggu Konsultasi'
+    ).length;
     const processingCount = allOrders.filter((o) => o.status === 'Diproses').length;
     const completedCount = allOrders.filter((o) => o.status === 'Selesai').length;
     const revokedCount = allOrders.filter((o) => o.status === 'Ditarik Penulis').length;

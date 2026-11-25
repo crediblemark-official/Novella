@@ -6,12 +6,16 @@ interface Props {
   title?: string;
   description?: string;
   activeNav?: 'landing' | 'portal' | 'admin';
+  showNavbar?: boolean;
+  showFooter?: boolean;
 }
 
 const {
   title = 'Novella.id — Mitra Penerbitan Sastra Nusantara',
   description = 'Penerbitan karya sastra Nusantara yang inklusif, terjangkau, dan profesional bagi penulis pemula, pelajar, dan masyarakat akar rumput.',
-  activeNav = 'landing'
+  activeNav = 'landing',
+  showNavbar = Astro.props.showNavbar ?? (activeNav !== 'admin'),
+  showFooter = Astro.props.showFooter ?? (activeNav === 'landing')
 } = Astro.props;
 ---
 
@@ -33,50 +37,52 @@ const {
       rel="stylesheet"
     />
   </head>
-  <body class="min-h-screen bg-white text-navy antialiased flex flex-col justify-between">
-    <!-- Top Navbar -->
-    <Navbar activeNav={activeNav} />
+  <body class="min-h-screen overflow-x-clip bg-white text-navy antialiased flex flex-col justify-between">
+    <!-- Top Navbar (Hidden inside dedicated admin app workspace) -->
+    {showNavbar && <Navbar activeNav={activeNav} />}
 
     <!-- Main Content Slot -->
     <main class="flex-grow">
       <slot />
     </main>
 
-    <!-- Footer -->
-    <footer class="border-t border-slate-100 bg-[#0D1C3D] py-10 text-white">
-      <div class="mx-auto max-w-5xl px-4 sm:px-6">
-        <div class="grid gap-8 sm:grid-cols-2 md:grid-cols-3">
-          <div>
-            <div class="flex items-center gap-2">
-              <span class="rounded bg-white/10 px-2 py-0.5 text-xs font-extrabold tracking-wider text-orange">NOVELLA.ID</span>
+    <!-- Footer (Hanya muncul di halaman publik / landing luar) -->
+    {showFooter && (
+      <footer class="border-t border-slate-100 bg-[#0D1C3D] py-10 text-white">
+        <div class="mx-auto max-w-5xl px-4 sm:px-6">
+          <div class="grid gap-8 sm:grid-cols-2 md:grid-cols-3">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="rounded bg-white/10 px-2 py-0.5 text-xs font-extrabold tracking-wider text-orange">NOVELLA.ID</span>
+              </div>
+              <p class="mt-3 text-xs leading-relaxed text-slate-300">
+                Mitra terpercaya penerbitan karya sastra Nusantara. Inklusif, transparan, dan terjangkau untuk seluruh lapisan penulis.
+              </p>
             </div>
-            <p class="mt-3 text-xs leading-relaxed text-slate-300">
-              Mitra terpercaya penerbitan karya sastra Nusantara. Inklusif, transparan, dan terjangkau untuk seluruh lapisan penulis.
-            </p>
+
+            <div>
+              <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-400">Navigasi</h3>
+              <ul class="mt-3 space-y-2 text-xs text-slate-300">
+                <li><a href="/" class="hover:text-orange transition-colors">Beranda</a></li>
+                <li><a href="/portal" class="hover:text-orange transition-colors">Portal Pemesanan Mandiri</a></li>
+                <li><a href="/portal/kalkulator" class="hover:text-orange transition-colors">Kalkulator Biaya Cetak</a></li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-400">Alamat Resmi Redaksi</h3>
+              <p class="mt-3 text-xs leading-relaxed text-slate-300">
+                Jl. Paingan (Depan Universitas Sanata Dharma), Krodan, Maguwoharjo, Depok, Sleman, D.I. Yogyakarta
+              </p>
+              <p id="footer-wa" class="mt-2 text-xs text-slate-400">WhatsApp Redaksi: +62 819-9510-0401</p>
+            </div>
           </div>
 
-          <div>
-            <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-400">Navigasi</h3>
-            <ul class="mt-3 space-y-2 text-xs text-slate-300">
-              <li><a href="/" class="hover:text-orange transition-colors">Beranda</a></li>
-              <li><a href="/portal" class="hover:text-orange transition-colors">Portal Pemesanan Mandiri</a></li>
-              <li><a href="/portal/kalkulator" class="hover:text-orange transition-colors">Kalkulator Biaya Cetak</a></li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-400">Alamat Resmi Redaksi</h3>
-            <p class="mt-3 text-xs leading-relaxed text-slate-300">
-              Jl. Paingan (Depan Universitas Sanata Dharma), Krodan, Maguwoharjo, Depok, Sleman, D.I. Yogyakarta
-            </p>
-            <p id="footer-wa" class="mt-2 text-xs text-slate-400">WhatsApp Redaksi: +62 819-9510-0401</p>
+          <div class="mt-8 border-t border-white/10 pt-6 text-center text-xs text-slate-400">
+            <p>© {new Date().getFullYear()} Novella.id. Seluruh hak cipta dilindungi undang-undang.</p>
           </div>
         </div>
-
-        <div class="mt-8 border-t border-white/10 pt-6 text-center text-xs text-slate-400">
-          <p>© {new Date().getFullYear()} Novella.id. Seluruh hak cipta dilindungi undang-undang.</p>
-        </div>
-      </div>
-    </footer>
+      </footer>
+    )}
   </body>
 </html>

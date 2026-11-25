@@ -65,6 +65,23 @@ export function initNavbarController() {
     }
   });
 
+  document.getElementById('nav-edit-profile-btn')?.addEventListener('click', () => {
+    toggleDropdown(false);
+    if (window.location.pathname.startsWith('/portal')) {
+      const card = document.getElementById('profile-card');
+      const wizard = document.getElementById('wizard-container');
+      const cancelBtn = document.getElementById('btn-cancel-profile');
+      if (card && wizard) {
+        card.classList.remove('hidden');
+        wizard.classList.add('hidden');
+        cancelBtn?.classList.remove('hidden');
+        card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    } else {
+      window.location.href = '/portal?edit_profile=1';
+    }
+  });
+
   document.getElementById('logout-btn')?.addEventListener('click', async (e) => {
     e.preventDefault();
     const btn = document.getElementById('logout-btn');
@@ -103,16 +120,34 @@ export function initNavbarController() {
     }
   }
 
-  // Sync Better Auth session if present
+  // Sync Better Auth session if present with database profile enrichment
   (async () => {
     if (!isLoggedOut) {
       try {
         const res = await fetch(`${API_URL}/auth/get-session`, { credentials: 'include' });
         if (res.ok) {
           const session = await res.json();
-          if (session?.user) {
-            localStorage.setItem(AUTH_KEY, JSON.stringify(session.user));
-            renderNavUser(session.user);
+          if (session?.user?.email) {
+            const cached = localStorage.getItem(AUTH_KEY);
+            const prev = cached ? JSON.parse(cached) : {};
+            let fullUser = session.user;
+            try {
+              const uRes = await fetch(`${API_URL}/auth/user?email=${encodeURIComponent(session.user.email)}`, {
+                credentials: 'include',
+              });
+              if (uRes.ok) {
+                const uData = await uRes.json();
+                if (uData.user) fullUser = uData.user;
+              }
+            } catch {}
+            const merged = {
+              ...prev,
+              ...fullUser,
+              phone: fullUser.phone || prev.phone || null,
+              address: fullUser.address || prev.address || null,
+            };
+            localStorage.setItem(AUTH_KEY, JSON.stringify(merged));
+            renderNavUser(merged);
           }
         }
       } catch {}

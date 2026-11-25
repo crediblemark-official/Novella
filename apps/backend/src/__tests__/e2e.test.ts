@@ -66,14 +66,12 @@ describe('Novella.id Full End-to-End API Integration', () => {
     );
     expect(res.status).toBe(200);
     const calc = (await res.json()) as any;
-    // Base: 150.000
-    // Extra copies: (25 - 5) * 25.000 = 500.000
-    // Extra pages: (150 - 100) * 200 * 25 = 250.000
-    // Size Unesco: 2.000 * 25 = 50.000
-    // Addons: 75.000 + 50.000 = 125.000
-    // Total: 150.000 + 500.000 + 250.000 + 50.000 + 125.000 = 1.075.000
-    expect(calc.totalPrice).toBe(1_075_000);
-    expect(calc.pricePerBook).toBe(Math.round(1_075_000 / 25));
+    // Cetak 25 eks @ 150 hal (Unesco rate 250): 25 * (150 * 250) = 937.500
+    // Prepress service: 25.000
+    // Addons: 75.000 (ISBN) + 50.000 (Layout) = 125.000
+    // Total: 937.500 + 25.000 + 125.000 = 1.087.500
+    expect(calc.totalPrice).toBe(1_087_500);
+    expect(calc.pricePerBook).toBe(Math.round(1_087_500 / 25));
   });
 
   it('4. POST /api/upload uploads a manuscript file and validates file size/type', async () => {
@@ -125,10 +123,10 @@ describe('Novella.id Full End-to-End API Integration', () => {
     const orderData = (await res.json()) as any;
     expect(orderData.success).toBe(true);
     expect(orderData.order.orderCode).toStartWith('NOV-');
-    expect(orderData.order.status).toBe('Menunggu Verifikasi');
+    expect(orderData.order.status).toBe('Menunggu Konsultasi');
     expect(orderData.waUrl).toContain('wa.me');
-    expect(orderData.waMessage).toContain('Kode Pesanan: ' + orderData.order.orderCode);
-    expect(orderData.waMessage).toContain('Penulis: Penulis Baru');
+    expect(orderData.waMessage).toContain('kode Pesanan: ' + orderData.order.orderCode);
+    expect(orderData.waMessage).toContain('Nama Penulis: Penulis Baru');
   });
 
   it('6. Tarik Naskah: Author can withdraw order, revoking file download access', async () => {

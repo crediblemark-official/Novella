@@ -19,7 +19,15 @@ describe('Pricing Engine', () => {
     expect(result.pricePerBook).toBe(30_000);
   });
 
-  it('calculates extra copies and pages correctly', () => {
+  it('calculates extra copies and pages correctly (including 55 copies = Rp 1.400.000)', () => {
+    const result55 = calculatePrice({
+      pages: 100,
+      copies: 55,
+      bookSize: 'A5',
+      addons: [],
+    });
+    expect(result55.totalPrice).toBe(1_400_000);
+
     const result = calculatePrice({
       pages: 120,
       copies: 10,
@@ -27,22 +35,27 @@ describe('Pricing Engine', () => {
       addons: ['ISBN Resmi'],
     });
 
-    expect(result.extraCopies).toBe(125_000);
-    expect(result.extraPages).toBe(40_000);
     expect(result.addonsCost).toBe(75_000);
-    expect(result.totalPrice).toBe(390_000);
+    expect(result.totalPrice).toBe(400_000);
   });
 
-  it('calculates book size rates correctly (B5 rate = 5000/copy)', () => {
-    const result = calculatePrice({
+  it('calculates book size rates correctly (Unesco is in base package, B5 uses B5 rate)', () => {
+    const unescoResult = calculatePrice({
+      pages: 100,
+      copies: 5,
+      bookSize: 'Unesco',
+      addons: [],
+    });
+    expect(unescoResult.totalPrice).toBe(150_000);
+    expect(unescoResult.originalPrice).toBe(450_000);
+
+    const b5Result = calculatePrice({
       pages: 100,
       copies: 10,
       bookSize: 'B5',
       addons: [],
     });
-
-    expect(result.sizeCost).toBe(50_000);
-    expect(result.totalPrice).toBe(150_000 + 125_000 + 50_000);
+    expect(b5Result.totalPrice).toBe(425_000);
   });
 
   it('calculates official Novella add-ons (E-Sertifikat, Ebook, Revisi, Dummy)', () => {

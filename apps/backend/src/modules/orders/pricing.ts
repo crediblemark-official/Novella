@@ -4,11 +4,13 @@ export interface PricingParams {
   bookSize: 'A5' | 'Unesco' | 'B5' | 'A6 Saku' | 'A6' | 'A4' | string;
   addons: string[];
   printType?: 'BW' | 'FC' | string;
+  paperType?: 'standard' | 'premium' | string;
   coverType?: 'Soft Cover' | 'Hard Cover' | string;
 }
 
 export interface PricingResult {
   basePrice: number;
+  originalPrice: number;
   extraCopies: number;
   extraPages: number;
   sizeCost: number;
@@ -19,18 +21,22 @@ export interface PricingResult {
     baseCopies: number;
     basePages: number;
     sizeName: string;
+    printType: string;
+    paperType: string;
+    coverType: string;
     addonItems: { name: string; price: number }[];
     standardSpecs: string;
   };
 }
 
 export const BASE_PRICE = 150_000;
+export const ORIGINAL_BASE_PRICE = 450_000;
 export const BASE_COPIES = 5;
 export const BASE_PAGES = 100;
-export const STANDARD_SPECS = 'Soft Cover Ivory 230/260 gr, Lem Panas Kuat, Bookmark, Wrapping & Packing';
+export const STANDARD_SPECS = 'Sudah Termasuk: ISBN Resmi, Desain Cover, Layout Naskah, Soft Cover Ivory 230/260 gr, Lem Panas Kuat, Bookmark, Wrapping & Packing';
 
-// Matriks Resmi Tarif Cetak per Halaman Novella.id
-export const NOVELLA_PRINT_RATES = {
+// Matriks Resmi Tarif Cetak per Halaman Novella.id (Sesuai Spreadsheet Percetakan)
+export const NOVELLA_PRINT_RATES: Record<string, Record<string, { standard: number; premium: number }>> = {
   BW: {
     'A6': { standard: 130, premium: 130 },
     'A5': { standard: 250, premium: 275 },
@@ -47,8 +53,9 @@ export const NOVELLA_PRINT_RATES = {
   },
 };
 
-// Tarif Finishing Hard Cover (1 - 500 Halaman)
+// Tarif Finishing Hard Cover (Cover + Laminasi + Binding + Shrink + Pita)
 export const HARD_COVER_RATES: Record<string, number> = {
+  'A6': 25_000,
   'A5': 25_000,
   'Unesco': 35_000,
   'B5': 45_000,
@@ -57,30 +64,31 @@ export const HARD_COVER_RATES: Record<string, number> = {
 
 export const BOOK_SIZES: Record<string, { label: string; dimension: string; ratePerCopy: number }> = {
   'A5': { label: 'A5', dimension: '14.8 × 21 cm', ratePerCopy: 0 },
-  'Unesco': { label: 'Unesco', dimension: '15.5 × 23 cm', ratePerCopy: 2_000 },
+  'Unesco': { label: 'Unesco', dimension: '15.5 × 23 cm', ratePerCopy: 0 },
   'B5': { label: 'B5', dimension: '17.6 × 25 cm', ratePerCopy: 5_000 },
   'A6 Saku': { label: 'A6 Saku', dimension: '10.5 × 14.8 cm', ratePerCopy: 0 },
   'A6': { label: 'A6 Saku', dimension: '10.5 × 14.8 cm', ratePerCopy: 0 },
   'A4': { label: 'A4', dimension: '21 × 29.7 cm', ratePerCopy: 5_000 },
 };
 
-// Daftar Add-on Resmi Penerbit Novella.id
+// Daftar Add-on Resmi Penerbit Novella.id Sesuai Ketentuan Redaksi
 export const ADDON_PRICES: Record<string, number> = {
-  // Layanan Khusus Novella
   'E-Sertifikat': 10_000,
   'E-Sertifikat Penulis': 10_000,
   'Ebook Tanpa Watermark': 250_000,
   'File Ebook Tanpa Watermark': 250_000,
   'Revisi Ringan Cover': 10_000,
+  'Per Sekali Revisi Cover': 10_000,
   'Revisi Ringan Layout': 10_000,
+  'Per Sekali Layout (ringan) Cover': 10_000,
   'Request Model Cover': 500_000,
   'Request Model Cover (Sedang)': 500_000,
   'Request Model Layout': 1_000_000,
   'Request Model Layout (Sedang)': 1_000_000,
   'Cetak 2 Dummy': 200_000,
+  'Cetak 2 Buku Dummy': 200_000,
   'Video Promosi': 250_000,
-
-  // Layanan Redaksi & Format Tambahan
+  'Video Promosi Buku': 250_000,
   'ISBN Resmi': 75_000,
   'ISBN Resmi & Barcode': 75_000,
   'Layout & Sampul': 50_000,
@@ -91,42 +99,56 @@ export const ADDON_PRICES: Record<string, number> = {
   'Pembatas Buku Custom': 25_000,
 };
 
+export function resolvePaperRate(paper: string = 'bp57', printType: 'BW' | 'FC', cat: string) {
+  const isBP = paper === 'bp57' || paper === 'bp72' || paper.toLowerCase().includes('bp') || paper.toLowerCase().includes('bookpaper');
+  const isHeavy = paper === 'bp72' || paper === 'hvs80' || paper === 'premium';
+  let rate = 250;
+  if (printType === 'FC') {
+    rate = cat === 'A6' ? 350 : cat === 'B5' ? (isBP ? 1100 : 1050) : (isBP ? 550 : 520);
+  } else {
+    rate = cat === 'A6' ? 130 : cat === 'B5' ? (isHeavy ? 420 : 400) : (isHeavy ? 275 : 250);
+  }
+  const label = isBP ? (isHeavy ? 'Bookpaper 72 gr' : 'Bookpaper 57 gr') : (isHeavy ? 'HVS 80 gr' : 'HVS 70 gr');
+  return { rate, label, isHeavy, isBP };
+}
+
 export function calculatePrice(params: PricingParams): PricingResult {
   const pages = Math.max(24, Math.min(600, params.pages || 100));
   const copies = Math.max(5, Math.min(1000, params.copies || 5));
-
-  const defaultSize = BOOK_SIZES['A5']!;
   const sizeKey = params.bookSize || 'A5';
-  const sizeConfig = BOOK_SIZES[sizeKey] || defaultSize;
-  const sizeRate = sizeConfig.ratePerCopy;
+  const cat = (sizeKey === 'B5' || sizeKey === 'A4') ? 'B5' : (sizeKey === 'A6' || sizeKey === 'A6 Saku') ? 'A6' : 'A5';
+  const sizeConfig = BOOK_SIZES[sizeKey] || BOOK_SIZES['A5']!;
+  const printType = (params.printType === 'FC' ? 'FC' : 'BW') as 'BW' | 'FC';
+  const isHardCover = params.coverType === 'Hard Cover';
 
-  // Rumus Tambahan Eksemplar: 25.000 / eks (100 hal x 250 tarif BW)
-  const extraCopies = Math.max(0, copies - BASE_COPIES) * 25_000;
+  const { rate, label: paperLabel } = resolvePaperRate(params.paperType || 'bp57', printType, cat);
+  let pageRate = isHardCover ? Math.max(50, rate - (printType === 'FC' ? 50 : 10)) : rate;
 
-  // Tambahan Halaman: di atas 100 hal (200 x copies)
-  const extraPages = Math.max(0, pages - BASE_PAGES) * 200 * copies;
-  const sizeCost = sizeRate * copies;
+  const hardCoverRate = isHardCover ? (HARD_COVER_RATES[cat] || 25_000) : 0;
+  const costPerBook = (pages * pageRate) + hardCoverRate;
+  const totalPrintCost = copies * costPerBook;
+
+  const prepressServiceFee = 25_000;
+  const originalPrepressFee = 325_000;
 
   const addonItems: { name: string; price: number }[] = [];
   for (const name of params.addons || []) {
     const price = ADDON_PRICES[name];
-    if (typeof price === 'number') {
-      addonItems.push({ name, price });
-    }
-  }
-
-  // Cek jika ada finishing Hard Cover
-  if (params.coverType === 'Hard Cover' && HARD_COVER_RATES[sizeKey]) {
-    const hcRate = HARD_COVER_RATES[sizeKey]!;
-    addonItems.push({ name: `Hard Cover ${sizeConfig.label}`, price: hcRate * copies });
+    if (typeof price === 'number') addonItems.push({ name, price });
   }
 
   const addonsCost = addonItems.reduce((acc, curr) => acc + curr.price, 0);
-  const totalPrice = BASE_PRICE + extraCopies + extraPages + sizeCost + addonsCost;
+  const totalPrice = Math.max(BASE_PRICE, totalPrintCost + prepressServiceFee + addonsCost);
+  const originalPrice = totalPrintCost + originalPrepressFee + addonsCost;
   const pricePerBook = Math.round(totalPrice / copies);
+
+  const extraCopies = Math.max(0, copies - BASE_COPIES) * costPerBook;
+  const extraPages = copies * Math.max(0, pages - BASE_PAGES) * pageRate;
+  const sizeCost = Math.max(0, (pageRate - 250) * pages * copies) + (isHardCover ? hardCoverRate * copies : 0);
 
   return {
     basePrice: BASE_PRICE,
+    originalPrice,
     extraCopies,
     extraPages,
     sizeCost,
@@ -137,6 +159,9 @@ export function calculatePrice(params: PricingParams): PricingResult {
       baseCopies: BASE_COPIES,
       basePages: BASE_PAGES,
       sizeName: sizeConfig.label,
+      printType: printType === 'FC' ? 'Full Color (FC)' : 'Hitam Putih (BW)',
+      paperType: paperLabel,
+      coverType: isHardCover ? 'Hard Cover' : 'Soft Cover',
       addonItems,
       standardSpecs: STANDARD_SPECS,
     },

@@ -11,17 +11,12 @@ export function updateUserUI() {
   if (!u) return;
   const name = u.name || 'Penulis Novella';
   const initial = (name || 'P')[0].toUpperCase();
-
-  const setTxt = (id: string, val: string) => {
-    const el = document.getElementById(id);
-    if (el) el.textContent = val;
-  };
+  const setTxt = (id: string, v: string) => { const el = document.getElementById(id); if (el) el.textContent = v; };
   setTxt('user-avatar', initial);
   setTxt('user-display-name', name);
   setTxt('nav-user-avatar', initial);
   setTxt('nav-user-name', name);
   setTxt('user-display-email', u.email + (u.phone ? ' · ' + u.phone : ''));
-
   document.getElementById('nav-user-container')?.classList.remove('hidden');
   document.getElementById('nav-guest-links')?.classList.add('hidden');
 }
@@ -29,6 +24,11 @@ export function updateUserUI() {
 export function showProfileCard() {
   document.getElementById('profile-card')?.classList.remove('hidden');
   document.getElementById('wizard-container')?.classList.add('hidden');
+  const cancelBtn = document.getElementById('btn-cancel-profile');
+  if (cancelBtn) {
+    const hasProfile = Boolean(portalState.currentUser?.phone && portalState.currentUser?.address);
+    cancelBtn.classList.toggle('hidden', !hasProfile);
+  }
 }
 
 export function showWizard(initialStep = 1) {
@@ -40,19 +40,24 @@ export function showWizard(initialStep = 1) {
 function populateProfileFields() {
   const phoneEl = document.getElementById('input-phone') as HTMLInputElement | null;
   const addrEl = document.getElementById('input-address') as HTMLTextAreaElement | null;
-  if (phoneEl && portalState.currentUser?.phone) phoneEl.value = portalState.currentUser.phone;
+  if (phoneEl && portalState.currentUser?.phone) phoneEl.value = portalState.currentUser.phone.replace(/^(\+?62|0)/, '');
   if (addrEl && portalState.currentUser?.address) addrEl.value = portalState.currentUser.address;
 }
 
 function restoreDraftInputs() {
-  const setVal = (id: string, val?: string | number) => {
+  const setVal = (id: string, v?: string | number) => {
     const el = document.getElementById(id) as HTMLInputElement | HTMLSelectElement | null;
-    if (el && val) el.value = String(val);
+    if (el && v) el.value = String(v);
   };
   setVal('input-pages', calcState.pages);
   setVal('input-copies', calcState.copies);
   setVal('input-book-title', bookState.title);
-  setVal('select-book-category', bookState.category);
+  const catEl = document.getElementById('select-book-category') as HTMLSelectElement | null;
+  if (catEl) {
+    const ok = Array.from(catEl.options).some((o) => o.value === bookState.category);
+    catEl.value = ok ? bookState.category : (catEl.options[0]?.value || 'Novel Sastra');
+    bookState.category = catEl.value;
+  }
 
   if (bookState.uploadedFileName) {
     const nameEl = document.getElementById('file-name-label');
@@ -69,14 +74,18 @@ function restoreDraftInputs() {
 }
 
 function applyUserSession(user: any) {
-  portalState.currentUser = user;
-  localStorage.setItem(AUTH_USER_KEY, JSON.stringify(user));
+  if (!user) return;
+  const curr = portalState.currentUser || {};
+  const merged = { ...curr, ...user, phone: user.phone || curr.phone || null, address: user.address || curr.address || null };
+  portalState.currentUser = merged;
+  localStorage.setItem(AUTH_USER_KEY, JSON.stringify(merged));
   updateUserUI();
 
   document.getElementById('portal-loading')?.classList.add('hidden');
   document.getElementById('portal-main-content')?.classList.remove('hidden');
 
-  if (user.phone && user.address) {
+  const isEditing = typeof window !== 'undefined' && window.location.search.includes('edit_profile=1');
+  if (merged.phone && merged.address && !isEditing) {
     showWizard(getStepFromUrl());
     loadAuthorOrders();
     restoreDraftInputs();
@@ -98,27 +107,30 @@ async function syncUserWithDatabase(email: string) {
 
 export function bindAuthEvents() {
   const profileForm = document.getElementById('profile-complete-form') as HTMLFormElement | null;
+  const cancelBtn = document.getElementById('btn-cancel-profile');
   const logoutBtn = document.getElementById('logout-btn');
+
+  cancelBtn?.addEventListener('click', () => {
+    if (portalState.currentUser?.phone && portalState.currentUser?.address) showWizard(getStepFromUrl());
+  });
 
   profileForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const rawPhone = (document.getElementById('input-phone') as HTMLInputElement)?.value.trim() || '';
     const address = (document.getElementById('input-address') as HTMLTextAreaElement)?.value.trim() || '';
-
-    if (!rawPhone || !address) {
-      showToast('Mohon lengkapi nomor WhatsApp dan alamat pengiriman.');
-      return;
-    }
+    if (!rawPhone || !address) { showToast('Mohon lengkapi nomor WhatsApp dan alamat pengiriman.'); return; }
 
     const digits = rawPhone.replace(/[^0-9]/g, '');
     const phone = digits.startsWith('0') ? digits : (digits.startsWith('62') ? '0' + digits.slice(2) : '0' + digits);
+    const userEmail = portalState.currentUser?.email || (JSON.parse(localStorage.getItem(AUTH_USER_KEY) || '{}')).email;
+    if (!userEmail) { showToast('Sesi masuk tidak ditemukan. Silakan login kembali.'); return; }
 
     try {
       const res = await fetch(`${API_BASE}/auth/profile`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ email: portalState.currentUser?.email, phone, address }),
+        body: JSON.stringify({ email: userEmail, phone, address }),
       });
       const data = await res.json();
       applyUserSession(data.user);
@@ -137,12 +149,7 @@ export function bindAuthEvents() {
     try {
       const c = new AbortController();
       const t = setTimeout(() => c.abort(), 1500);
-      await fetch(`${API_BASE}/auth/sign-out`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        signal: c.signal,
-      });
+      await fetch(`${API_BASE}/auth/sign-out`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include', signal: c.signal });
       clearTimeout(t);
     } catch {}
 
@@ -160,6 +167,7 @@ export async function restoreSession() {
     try {
       const user = JSON.parse(cached);
       if (user?.email) {
+        if (user.role === 'admin') { window.location.replace('/admin'); return; }
         applyUserSession(user);
         syncUserWithDatabase(user.email);
         return;
@@ -174,14 +182,18 @@ export async function restoreSession() {
       if (sessionData?.user) {
         let fullUser = sessionData.user;
         try {
-          const uRes = await fetch(`${API_BASE}/auth/user?email=${encodeURIComponent(sessionData.user.email)}`, {
-            credentials: 'include',
-          });
+          const uRes = await fetch(`${API_BASE}/auth/user?email=${encodeURIComponent(sessionData.user.email)}`, { credentials: 'include' });
           if (uRes.ok) {
             const uData = await uRes.json();
             if (uData.user) fullUser = uData.user;
           }
         } catch {}
+
+        if (fullUser.role === 'admin') {
+          localStorage.setItem(AUTH_USER_KEY, JSON.stringify(fullUser));
+          window.location.replace('/admin');
+          return;
+        }
 
         applyUserSession(fullUser);
         return;

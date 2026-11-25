@@ -2,6 +2,7 @@ import { formatRp, renderOrdersTable } from './admin-table';
 import { loadAdminSettings, renderBankList, bindAdminSettingsEvents } from './admin-settings';
 import { fetchAdminBooks, deleteAdminBook, fetchAdminTestimonials, deleteAdminTestimonial, bindAdminShowcaseEvents } from './admin-showcase';
 import { fetchAdminAuthors, exportOrdersCsv } from './admin-authors';
+import { bindAdminDialogEvents, openTrackingDialog, openPricingDialog, openConfirmDialog } from './admin-dialogs';
 
 const API_BASE = typeof window !== 'undefined' && window.location.port === '4321' ? 'http://localhost:3001/api' : '/api';
 const ADMIN_STORAGE_KEY = 'novella_admin_session';
@@ -22,11 +23,10 @@ function getAuthHeaders(): Record<string, string> {
 
 export function showAdminToast(msg: string) {
   const toast = document.getElementById('admin-toast');
-  if (toast) {
-    toast.textContent = msg;
-    toast.classList.remove('hidden');
-    setTimeout(() => toast.classList.add('hidden'), 2500);
-  }
+  if (!toast) return;
+  toast.textContent = msg;
+  toast.classList.remove('hidden');
+  setTimeout(() => toast.classList.add('hidden'), 2500);
 }
 
 function setAdminUi(isAuthed: boolean, user?: any, errMsg?: string) {
@@ -42,7 +42,7 @@ function setAdminUi(isAuthed: boolean, user?: any, errMsg?: string) {
   }
   if (isAuthed && user) {
     const lbl = document.getElementById('admin-identity-label');
-    if (lbl) lbl.textContent = `Staf Redaksi: ${user.name || user.email}`;
+    if (lbl) lbl.textContent = user.name || user.email;
     fetchKPI(); fetchOrders(); fetchAdminBooks(); fetchAdminTestimonials(); fetchAdminAuthors();
     loadAdminSettings().then((d) => { if (d) (window as any)._adminBanks = d.bankAccounts || []; });
   }
@@ -82,22 +82,19 @@ async function handleAdminLogin(email: string, pass: string) {
   } catch {
     setAdminUi(false, undefined, 'Tidak dapat terhubung ke server backend.');
   } finally {
-    if (btn) { btn.disabled = false; btn.textContent = 'Masuk ke Dashboard'; }
+    if (btn) { btn.disabled = false; btn.textContent = 'Masuk'; }
   }
 }
 
 async function fetchKPI() {
   try {
     const res = await fetch(`${API_BASE}/admin/kpi`, { headers: getAuthHeaders(), credentials: 'include' });
-    if (res.ok) {
-      const kpi = await res.json();
-      const elTotal = document.getElementById('kpi-total-orders');
-      const elWaiting = document.getElementById('kpi-waiting-orders');
-      const elActive = document.getElementById('kpi-active-value');
-      if (elTotal) elTotal.textContent = String(kpi.totalOrders);
-      if (elWaiting) elWaiting.textContent = String(kpi.waitingVerification);
-      if (elActive) elActive.textContent = formatRp(kpi.totalActiveValue);
-    }
+    if (!res.ok) return;
+    const kpi = await res.json();
+    const setEl = (id: string, v: string) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+    setEl('kpi-total-orders', String(kpi.totalOrders));
+    setEl('kpi-waiting-orders', String(kpi.waitingVerification));
+    setEl('kpi-active-value', formatRp(kpi.totalActiveValue));
   } catch {}
 }
 
@@ -106,62 +103,69 @@ async function fetchOrders() {
   if (!tbody) return;
   try {
     const res = await fetch(`${API_BASE}/orders`);
-    if (res.ok) {
-      allOrders = await res.json();
-      renderOrdersTable(tbody, allOrders, activeFilter, searchQuery);
-    }
-  } catch {
-    tbody.innerHTML = '<tr><td colspan="7" class="px-4 py-8 text-center text-rose-500 font-bold">Gagal memuat data dari server.</td></tr>';
-  }
+    if (res.ok) { allOrders = await res.json(); renderOrdersTable(tbody, allOrders, activeFilter, searchQuery); }
+  } catch { tbody.innerHTML = '<tr><td colspan="11" class="px-4 py-8 text-center text-rose-500 font-bold">Gagal memuat data dari server.</td></tr>'; }
 }
 
 export function initAdminController() {
+  bindAdminDialogEvents();
   (window as any)._adminBanks = (window as any)._adminBanks || [];
-  (window as any).removeBankRow = (idx: number) => {
-    (window as any)._adminBanks.splice(idx, 1);
-    renderBankList((window as any)._adminBanks);
-  };
+  (window as any).removeBankRow = (idx: number) => { (window as any)._adminBanks.splice(idx, 1); renderBankList((window as any)._adminBanks); };
   (window as any).deleteBookItem = (id: number) => deleteAdminBook(id, showAdminToast);
   (window as any).deleteTestimonialItem = (id: number) => deleteAdminTestimonial(id, showAdminToast);
 
   (window as any).updateOrderStatus = async function (orderCode: string, newStatus: string) {
-    if (newStatus === 'Diproses' && !confirm(`Konfirmasi Verifikasi Pembayaran untuk ${orderCode}?`)) {
+    if (newStatus === 'Diproses' && !(await openConfirmDialog('Verifikasi Pembayaran', `Konfirmasi verifikasi pembayaran untuk ${orderCode} dan mulai proses cetak?`, 'Verifikasi'))) {
       fetchOrders(); return;
     }
     try {
-      const res = await fetch(`${API_BASE}/orders/${orderCode}/status`, {
-        method: 'PATCH',
-        headers: getAuthHeaders(),
-        body: JSON.stringify({ status: newStatus }),
-      });
+      const res = await fetch(`${API_BASE}/orders/${orderCode}/status`, { method: 'PATCH', headers: getAuthHeaders(), body: JSON.stringify({ status: newStatus }) });
       if (res.ok) { showAdminToast(`Status ${orderCode} diubah ke "${newStatus}".`); fetchKPI(); fetchOrders(); }
     } catch { showAdminToast('Gagal mengubah status.'); }
   };
 
-  (window as any).promptTracking = async function (orderCode: string, curCourier: string, curResi: string) {
-    const courier = prompt(`Nama Ekspedisi untuk pesanan ${orderCode}:`, curCourier || 'JNE');
-    if (!courier) return;
-    const tracking = prompt(`Nomor Resi Pengiriman:`, curResi || '');
-    if (!tracking) return;
-    try {
-      const res = await fetch(`${API_BASE}/admin/orders/${orderCode}/tracking`, {
-        method: 'PATCH',
-        headers: getAuthHeaders(),
-        body: JSON.stringify({ shippingCourier: courier, shippingTrackingNumber: tracking }),
-      });
-      if (res.ok) { showAdminToast(`Nomor resi ${tracking} disimpan.`); fetchOrders(); }
-    } catch { showAdminToast('Gagal menyimpan nomor resi.'); }
+  (window as any).promptTracking = (orderCode: string, curCourier: string, curResi: string) => {
+    openTrackingDialog(orderCode, curCourier, curResi, async (shippingCourier, shippingTrackingNumber) => {
+      try {
+        const res = await fetch(`${API_BASE}/admin/orders/${orderCode}/tracking`, {
+          method: 'PATCH', headers: getAuthHeaders(), body: JSON.stringify({ shippingCourier, shippingTrackingNumber }),
+        });
+        if (res.ok) { showAdminToast(`Nomor resi ${shippingTrackingNumber} disimpan.`); fetchOrders(); }
+      } catch { showAdminToast('Gagal menyimpan resi.'); }
+    });
   };
 
-  // Main Tabs Switcher
+  (window as any).promptPricing = (orderCode: string, curPages: number, curPrice: number) => {
+    openPricingDialog(orderCode, curPages, curPrice, async (pages, totalPrice) => {
+      try {
+        const res = await fetch(`${API_BASE}/admin/orders/${orderCode}/pricing`, {
+          method: 'PATCH', headers: getAuthHeaders(), body: JSON.stringify({ pages, totalPrice }),
+        });
+        if (res.ok) { showAdminToast(`Halaman & biaya ${orderCode} diperbarui.`); fetchKPI(); fetchOrders(); }
+      } catch { showAdminToast('Gagal memperbarui biaya.'); }
+    });
+  };
+
   const mainTabs = document.querySelectorAll('.admin-main-tab');
   const panels = document.querySelectorAll('.admin-panel');
+  const drawer = document.getElementById('admin-mobile-drawer');
+  const topTitle = document.getElementById('admin-topbar-title');
+  const closeDrawer = () => drawer?.classList.add('hidden');
+  document.getElementById('btn-admin-drawer')?.addEventListener('click', () => drawer?.classList.remove('hidden'));
+  document.getElementById('btn-close-drawer')?.addEventListener('click', closeDrawer);
+  document.getElementById('admin-drawer-backdrop')?.addEventListener('click', closeDrawer);
+
   mainTabs.forEach((tab) => tab.addEventListener('click', () => {
     const target = tab.getAttribute('data-main-tab');
-    mainTabs.forEach((t) => { t.classList.remove('border-navy', 'text-navy'); t.classList.add('border-transparent', 'text-slate-500'); });
-    tab.classList.remove('border-transparent', 'text-slate-500'); tab.classList.add('border-navy', 'text-navy');
+    mainTabs.forEach((t) => {
+      const on = t.getAttribute('data-main-tab') === target;
+      ['bg-navy', 'text-white', 'font-bold'].forEach((c) => t.classList.toggle(c, on));
+      ['text-slate-600', 'font-semibold', 'hover:bg-slate-100'].forEach((c) => t.classList.toggle(c, !on));
+    });
     panels.forEach((p) => p.classList.add('hidden'));
     document.getElementById(`panel-${target}`)?.classList.remove('hidden');
+    if (topTitle) topTitle.textContent = tab.getAttribute('data-tab-label') || 'Pesanan';
+    closeDrawer();
   }));
 
   // Login & Logout
@@ -169,31 +173,25 @@ export function initAdminController() {
     e.preventDefault();
     handleAdminLogin((document.getElementById('admin-email') as HTMLInputElement)?.value, (document.getElementById('admin-password') as HTMLInputElement)?.value);
   });
-
-  document.getElementById('btn-admin-logout')?.addEventListener('click', async () => {
+  document.querySelectorAll('[data-admin-logout]').forEach((btn) => btn.addEventListener('click', async () => {
     try { await fetch(`${API_BASE}/admin/logout`, { method: 'POST', credentials: 'include' }); } catch {}
     localStorage.removeItem(ADMIN_STORAGE_KEY);
     currentAdminToken = '';
     showAdminToast('Sesi redaksi telah diakhiri.');
     setTimeout(() => location.reload(), 500);
-  });
-
-  document.getElementById('btn-refresh-admin')?.addEventListener('click', () => {
-    fetchKPI(); fetchOrders(); showAdminToast('Data disinkronkan kembali.');
-  });
+  }));
+  document.getElementById('btn-refresh-admin')?.addEventListener('click', () => { fetchKPI(); fetchOrders(); showAdminToast('Data disinkronkan.'); });
   bindAdminSettingsEvents(showAdminToast);
   bindAdminShowcaseEvents(showAdminToast);
   document.getElementById('btn-export-csv')?.addEventListener('click', () => exportOrdersCsv());
 
-  document.querySelectorAll('.admin-tab').forEach((tab) => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.admin-tab').forEach((t) => { t.classList.remove('bg-navy', 'text-white'); t.classList.add('bg-white', 'text-slate-600', 'border', 'border-slate-200'); });
-      tab.classList.remove('bg-white', 'text-slate-600', 'border', 'border-slate-200'); tab.classList.add('bg-navy', 'text-white');
-      activeFilter = tab.getAttribute('data-filter') || 'ALL';
-      const tb = document.getElementById('orders-tbody');
-      if (tb) renderOrdersTable(tb, allOrders, activeFilter, searchQuery);
-    });
-  });
+  document.querySelectorAll('.admin-tab').forEach((tab) => tab.addEventListener('click', () => {
+    document.querySelectorAll('.admin-tab').forEach((t) => { t.classList.remove('bg-navy', 'text-white'); t.classList.add('bg-white', 'text-slate-600', 'border', 'border-slate-200'); });
+    tab.classList.remove('bg-white', 'text-slate-600', 'border', 'border-slate-200'); tab.classList.add('bg-navy', 'text-white');
+    activeFilter = tab.getAttribute('data-filter') || 'ALL';
+    const tb = document.getElementById('orders-tbody');
+    if (tb) renderOrdersTable(tb, allOrders, activeFilter, searchQuery);
+  }));
 
   document.getElementById('admin-search-input')?.addEventListener('input', (e) => {
     searchQuery = (e.target as HTMLInputElement).value;

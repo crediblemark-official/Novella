@@ -32,6 +32,18 @@ export async function runSeed() {
       updatedAt: now,
     },
     {
+      id: 'usr_rasyiqi_novella',
+      name: 'Info rasyiqi',
+      email: 'info.rasyiqi@gmail.com',
+      emailVerified: true,
+      image: 'IR',
+      phone: '081995100401',
+      address: 'Sumenep',
+      role: 'author',
+      createdAt: now,
+      updatedAt: now,
+    },
+    {
       id: 'usr_budi_01',
       name: 'Budi Santoso',
       email: 'budi@example.com',

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+const showPublicShowcase = false;
 ---
 
 <BaseLayout title="Novella.id — Mitra Penerbitan Karya Sastra Nusantara" activeNav="landing">
@@ -257,28 +258,32 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </div>
   </section>
 
-  <!-- Section Karya Terbitan Terbaru (Dinamis dari /api/books) -->
-  <section id="buku-terbit" class="hidden mx-auto max-w-5xl px-4 py-16 sm:px-6">
-    <div class="flex items-end justify-between">
-      <div>
-        <h2 class="text-2xl font-extrabold text-navy sm:text-3xl">Karya Terbitan Terbaru</h2>
-        <p class="mt-1 text-xs text-slate-600 sm:text-sm">Buku-buku karya penulis Nusantara yang telah beredar luas.</p>
-      </div>
-      <a href="/portal" class="text-xs font-bold text-orange hover:underline">Terbitkan Karyamu &rarr;</a>
-    </div>
-    <div id="books-grid" class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"></div>
-  </section>
+  {showPublicShowcase && (
+    <>
+      <!-- Section Karya Terbitan Terbaru (Dinamis dari /api/books) -->
+      <section id="buku-terbit" class="hidden mx-auto max-w-5xl px-4 py-16 sm:px-6">
+        <div class="flex items-end justify-between">
+          <div>
+            <h2 class="text-2xl font-extrabold text-navy sm:text-3xl">Karya Terbitan Terbaru</h2>
+            <p class="mt-1 text-xs text-slate-600 sm:text-sm">Buku-buku karya penulis Nusantara yang telah beredar luas.</p>
+          </div>
+          <a href="/portal" class="text-xs font-bold text-orange hover:underline">Terbitkan Karyamu &rarr;</a>
+        </div>
+        <div id="books-grid" class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"></div>
+      </section>
 
-  <!-- Section Testimoni Penulis (Dinamis dari /api/testimonials) -->
-  <section id="testimoni" class="hidden border-t border-slate-100 bg-[#F1F5F9]/60 py-16">
-    <div class="mx-auto max-w-5xl px-4 sm:px-6">
-      <div class="text-center">
-        <h2 class="text-2xl font-extrabold text-navy sm:text-3xl">Cerita Mereka Bersama Novella.id</h2>
-        <p class="mt-1 text-xs text-slate-600 sm:text-sm">Keberanian memulai menerbitkan karya sastra Nusantara.</p>
-      </div>
-      <div id="testimonials-grid" class="mt-10 grid gap-6 sm:grid-cols-3"></div>
-    </div>
-  </section>
+      <!-- Section Testimoni Penulis (Dinamis dari /api/testimonials) -->
+      <section id="testimoni" class="hidden border-t border-slate-100 bg-[#F1F5F9]/60 py-16">
+        <div class="mx-auto max-w-5xl px-4 sm:px-6">
+          <div class="text-center">
+            <h2 class="text-2xl font-extrabold text-navy sm:text-3xl">Cerita Mereka Bersama Novella.id</h2>
+            <p class="mt-1 text-xs text-slate-600 sm:text-sm">Keberanian memulai menerbitkan karya sastra Nusantara.</p>
+          </div>
+          <div id="testimonials-grid" class="mt-10 grid gap-6 sm:grid-cols-3"></div>
+        </div>
+      </section>
+    </>
+  )}
 
   <!-- Kutipan Sastra Nusantara & CTA Penutup -->
   <section class="bg-navy py-16 text-center text-white">
@@ -396,16 +401,18 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           });
         }
 
-        // Dynamic Books & Testimonials loader
+        // Dynamic Books & Testimonials loader (skipped when hidden from landing)
         (async () => {
+          const booksSection = document.getElementById('buku-terbit');
+          const testiSection = document.getElementById('testimoni');
+          if (!booksSection && !testiSection) return;
           const apiBase = typeof window !== 'undefined' && window.location.port === '4321' ? 'http://localhost:3001/api' : '/api';
-          try {
+          if (booksSection) try {
             const bRes = await fetch(`${apiBase}/books`);
             if (bRes.ok) {
               const books = await bRes.json();
-              const section = document.getElementById('buku-terbit');
               const grid = document.getElementById('books-grid');
-              if (section && grid && books.length > 0) {
+              if (grid && books.length > 0) {
                 grid.innerHTML = books.map((b) => `
                   <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-sm hover:shadow-md transition-shadow">
                     <div class="aspect-[3/4] rounded-xl bg-gradient-to-br from-slate-900 to-navy p-4 text-white flex flex-col justify-between">
@@ -419,18 +426,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                     </div>
                   </div>
                 `).join('');
-                section.classList.remove('hidden');
+                booksSection.classList.remove('hidden');
               }
             }
           } catch {}
 
-          try {
+          if (testiSection) try {
             const tRes = await fetch(`${apiBase}/testimonials`);
             if (tRes.ok) {
               const testimonials = await tRes.json();
-              const section = document.getElementById('testimoni');
               const grid = document.getElementById('testimonials-grid');
-              if (section && grid && testimonials.length > 0) {
+              if (grid && testimonials.length > 0) {
                 grid.innerHTML = testimonials.map((t) => `
                   <div class="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm">
                     <p class="font-literary text-xs italic leading-relaxed text-slate-700">"${t.quote}"</p>
@@ -440,7 +446,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                     </div>
                   </div>
                 `).join('');
-                section.classList.remove('hidden');
+                testiSection.classList.remove('hidden');
               }
             }
           } catch {}

@@ -3,283 +3,142 @@ import { db } from '../../db';
 import { orders } from '../../db/schema';
 import { calculatePrice } from './pricing';
 import { desc, eq } from 'drizzle-orm';
-import { deleteManuscriptFile } from '../../services/storage';
+import { formatWaMessage } from './formatter';
+import { withdrawOrder, changeOrderStatus } from './lifecycle';
 
-const ADMIN_WA_NUMBER = '6281234567890'; // Sesuai PRD Novella.id
-
-export function formatWaMessage(order: {
-  orderCode: string;
-  authorName: string;
-  authorEmail: string;
-  authorPhone: string;
-  shippingAddress: string;
-  bookTitle: string;
-  fileOriginalName: string | null;
-  pages: number;
-  copies: number;
-  bookSize: string;
-  addons: string[];
-  totalPrice: number;
-}) {
-  const formattedPrice = `Rp ${order.totalPrice.toLocaleString('id-ID')}`;
-  const addonsStr = order.addons.length > 0 ? order.addons.join(', ') : '-';
-
-  const text =
-`Halo Admin Novella.id, saya telah membuat pesanan penerbitan naskah dengan rincian berikut:
-
-• Kode Pesanan: ${order.orderCode}
-• Nama Penulis: ${order.authorName}
-• Email: ${order.authorEmail}
-• No. WhatsApp: ${order.authorPhone}
-• Alamat Pengiriman: ${order.shippingAddress}
-• Judul Buku: ${order.bookTitle}
-• Nama Berkas: ${order.fileOriginalName || 'Naskah'}
-• Spesifikasi: ${order.pages} hal | ${order.copies} eks | ${order.bookSize}
-• Add-on: ${addonsStr}
-• Total Biaya: ${formattedPrice}
-
-Mohon petunjuk untuk verifikasi pembayaran dan proses selanjutnya. Terima kasih!`;
-
-  const url = `https://wa.me/${ADMIN_WA_NUMBER}?text=${encodeURIComponent(text)}`;
-  return { text, url };
-}
+export { formatWaMessage } from './formatter';
 
 export const ordersModule = new Elysia({ prefix: '/api/orders' })
-  .post(
-    '/calculate',
-    ({ body }) => {
-      return calculatePrice(body);
-    },
-    {
-      body: t.Object({
-        pages: t.Number(),
-        copies: t.Number(),
-        bookSize: t.String(),
-        addons: t.Array(t.String()),
-      }),
+  .post('/calculate', ({ body }) => calculatePrice(body), {
+    body: t.Object({
+      pages: t.Number(),
+      copies: t.Number(),
+      bookSize: t.String(),
+      addons: t.Array(t.String()),
+      printType: t.Optional(t.String()),
+      paperType: t.Optional(t.String()),
+      coverType: t.Optional(t.String()),
+    }),
+  })
+  .get('/', async ({ query }) => {
+    const { email } = query;
+    if (email) {
+      return await db.select().from(orders).where(eq(orders.authorEmail, email)).orderBy(desc(orders.createdAt));
     }
-  )
-  .get(
-    '/',
-    async ({ query }) => {
-      const { email } = query;
-      if (email) {
-        return await db
-          .select()
-          .from(orders)
-          .where(eq(orders.authorEmail, email))
-          .orderBy(desc(orders.createdAt));
-      }
-      return await db.select().from(orders).orderBy(desc(orders.createdAt));
-    },
-    {
-      query: t.Object({
-        email: t.Optional(t.String()),
-      }),
-    }
-  )
+    return await db.select().from(orders).orderBy(desc(orders.createdAt));
+  }, {
+    query: t.Object({ email: t.Optional(t.String()) }),
+  })
   .get('/:code', async ({ params, set }) => {
     const [order] = await db.select().from(orders).where(eq(orders.orderCode, params.code));
-    if (!order) {
-      set.status = 404;
-      return { error: 'Pesanan tidak ditemukan.' };
-    }
+    if (!order) { set.status = 404; return { error: 'Pesanan tidak ditemukan.' }; }
     return order;
   })
-  .post(
-    '/',
-    async ({ body, set }) => {
-      const pricing = calculatePrice({
-        pages: body.pages,
-        copies: body.copies,
-        bookSize: body.bookSize,
-        addons: body.addons,
-      });
+  .post('/', async ({ body, set }) => {
+    const pricing = calculatePrice({
+      pages: body.pages,
+      copies: body.copies,
+      bookSize: body.bookSize,
+      addons: body.addons,
+      printType: body.printType,
+      paperType: body.paperType,
+      coverType: body.coverType,
+    });
 
-      // Generate order code NOV-XXXX
-      const randomSuffix = Math.floor(1000 + Math.random() * 9000);
-      const orderCode = `NOV-${randomSuffix}`;
+    const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+    const orderCode = `NOV-${randomSuffix}`;
+    const now = new Date();
 
-      const now = new Date();
-      const newOrder = {
-        orderCode,
-        authorName: body.authorName,
-        authorEmail: body.authorEmail,
-        authorPhone: body.authorPhone,
-        shippingAddress: body.shippingAddress,
-        bookTitle: body.bookTitle,
-        category: body.category,
-        pages: body.pages,
-        copies: body.copies,
-        bookSize: body.bookSize,
-        addons: JSON.stringify(body.addons),
-        fileName: body.fileName || null,
-        fileOriginalName: body.fileOriginalName || null,
-        fileSize: body.fileSize || 0,
-        fileMimeType: body.fileMimeType || '',
-        totalPrice: pricing.totalPrice,
-        status: 'Menunggu Verifikasi',
-        isRevoked: 0,
-        createdAt: now,
-        updatedAt: now,
-      };
+    const newOrder = {
+      orderCode,
+      authorName: body.authorName,
+      authorEmail: body.authorEmail,
+      authorPhone: body.authorPhone,
+      shippingAddress: body.shippingAddress,
+      bookTitle: body.bookTitle,
+      category: body.category,
+      pages: body.pages,
+      copies: body.copies,
+      bookSize: body.bookSize,
+      addons: JSON.stringify(body.addons),
+      fileName: body.fileName || null,
+      fileOriginalName: body.fileOriginalName || null,
+      fileSize: body.fileSize || 0,
+      fileMimeType: body.fileMimeType || '',
+      totalPrice: pricing.totalPrice,
+      status: body.status || 'Menunggu Konsultasi',
+      isRevoked: 0,
+      createdAt: now,
+      updatedAt: now,
+    };
 
-      const [inserted] = await db.insert(orders).values(newOrder).returning();
-      if (!inserted) {
-        set.status = 500;
-        return { error: 'Gagal menyimpan pesanan ke database.' };
-      }
+    const [inserted] = await db.insert(orders).values(newOrder).returning();
+    if (!inserted) { set.status = 500; return { error: 'Gagal menyimpan pesanan.' }; }
 
-      const waInfo = formatWaMessage({
-        orderCode: inserted.orderCode,
-        authorName: inserted.authorName,
-        authorEmail: inserted.authorEmail,
-        authorPhone: inserted.authorPhone,
-        shippingAddress: inserted.shippingAddress,
-        bookTitle: inserted.bookTitle,
-        fileOriginalName: inserted.fileOriginalName,
-        pages: inserted.pages,
-        copies: inserted.copies,
-        bookSize: inserted.bookSize,
-        addons: body.addons,
-        totalPrice: inserted.totalPrice,
-      });
-
-      return {
-        success: true,
-        order: inserted,
-        waUrl: waInfo.url,
-        waMessage: waInfo.text,
-      };
-    },
-    {
-      body: t.Object({
-        authorName: t.String(),
-        authorEmail: t.String(),
-        authorPhone: t.String(),
-        shippingAddress: t.String(),
-        bookTitle: t.String(),
-        category: t.String(),
-        pages: t.Number(),
-        copies: t.Number(),
-        bookSize: t.String(),
-        addons: t.Array(t.String()),
-        fileName: t.Optional(t.String()),
-        fileOriginalName: t.Optional(t.String()),
-        fileSize: t.Optional(t.Number()),
-        fileMimeType: t.Optional(t.String()),
-      }),
-    }
-  )
-  .post('/:code/withdraw', async ({ params, set }) => {
-    const [existing] = await db.select().from(orders).where(eq(orders.orderCode, params.code));
-
-    if (!existing) {
-      set.status = 404;
-      return { error: 'Pesanan tidak ditemukan.' };
-    }
-
-    if (existing.status !== 'Menunggu Verifikasi') {
-      set.status = 400;
-      return {
-        error: `Naskah tidak dapat ditarik karena status pesanan saat ini adalah "${existing.status}". Penarikan hanya dapat dilakukan saat status "Menunggu Verifikasi".`,
-      };
-    }
-
-    // Hard delete physical manuscript file from storage
-    if (existing.fileName) {
-      await deleteManuscriptFile(existing.fileName);
-    }
-
-    const deletionTime = new Date();
-    const [updated] = await db
-      .update(orders)
-      .set({
-        status: 'Ditarik Penulis',
-        isRevoked: 1,
-        deletedAt: deletionTime,
-        updatedAt: deletionTime,
-      })
-      .where(eq(orders.orderCode, params.code))
-      .returning();
+    const waInfo = formatWaMessage({
+      orderCode: inserted.orderCode,
+      authorName: inserted.authorName,
+      authorEmail: inserted.authorEmail,
+      authorPhone: inserted.authorPhone,
+      shippingAddress: inserted.shippingAddress,
+      bookTitle: inserted.bookTitle,
+      fileOriginalName: inserted.fileOriginalName,
+      pages: inserted.pages,
+      copies: inserted.copies,
+      bookSize: inserted.bookSize,
+      addons: body.addons,
+      totalPrice: inserted.totalPrice,
+    });
 
     return {
       success: true,
-      message: 'Naskah berhasil ditarik secara mandiri oleh penulis. Berkas fisik telah dihapus permanen dari server.',
-      order: updated,
-      deletedAt: deletionTime.toISOString(),
-      fileName: existing.fileOriginalName || 'Naskah',
+      order: inserted,
+      waUrl: waInfo.url,
+      waMessage: waInfo.text,
     };
+  }, {
+    body: t.Object({
+      authorName: t.String(),
+      authorEmail: t.String(),
+      authorPhone: t.String(),
+      shippingAddress: t.String(),
+      bookTitle: t.String(),
+      category: t.String(),
+      pages: t.Number(),
+      copies: t.Number(),
+      bookSize: t.String(),
+      addons: t.Array(t.String()),
+      printType: t.Optional(t.String()),
+      paperType: t.Optional(t.String()),
+      coverType: t.Optional(t.String()),
+      fileName: t.Optional(t.String()),
+      fileOriginalName: t.Optional(t.String()),
+      fileSize: t.Optional(t.Number()),
+      fileMimeType: t.Optional(t.String()),
+      status: t.Optional(t.String()),
+    }),
   })
-  .patch(
-    '/:code/status',
-    async ({ params, body, set }) => {
-      const [existing] = await db.select().from(orders).where(eq(orders.orderCode, params.code));
-
-      if (!existing) {
-        set.status = 404;
-        return { error: 'Pesanan tidak ditemukan.' };
-      }
-
-      // Read-only guard for final statuses per PRD
-      if (existing.status === 'Ditarik Penulis' || existing.status === 'Kedaluwarsa') {
-        set.status = 400;
-        return {
-          error: `Pesanan telah berstatus "${existing.status}" dan bersifat final sehingga tidak dapat diubah lagi.`,
-        };
-      }
-
-      if (existing.isRevoked === 1 && body.status !== 'Ditarik Penulis') {
-        set.status = 400;
-        return { error: 'Pesanan telah ditarik oleh penulis dan tidak dapat diubah statusnya.' };
-      }
-
-      const updatePayload: any = {
-        status: body.status,
-        updatedAt: new Date(),
-      };
-
-      // If transition to Kedaluwarsa or Ditarik Penulis, execute hard delete
-      if (body.status === 'Kedaluwarsa' || body.status === 'Ditarik Penulis') {
-        if (existing.fileName) {
-          await deleteManuscriptFile(existing.fileName);
-        }
-        updatePayload.isRevoked = 1;
-        updatePayload.deletedAt = new Date();
-      }
-
-      const [updated] = await db
-        .update(orders)
-        .set(updatePayload)
-        .where(eq(orders.orderCode, params.code))
-        .returning();
-
-      return {
-        success: true,
-        order: updated,
-      };
-    },
-    {
-      body: t.Object({
-        status: t.String(),
-      }),
-    }
-  )
-  .post(
-    '/:code/payment-proof',
-    async ({ params, body, set }) => {
-      const [existing] = await db.select().from(orders).where(eq(orders.orderCode, params.code));
-      if (!existing) { set.status = 404; return { error: 'Pesanan tidak ditemukan.' }; }
-      const [updated] = await db
-        .update(orders)
-        .set({ paymentProofUrl: body.proofUrl, updatedAt: new Date() })
-        .where(eq(orders.orderCode, params.code))
-        .returning();
-      return { success: true, order: updated };
-    },
-    {
-      body: t.Object({
-        proofUrl: t.String(),
-      }),
-    }
-  );
+  .post('/:code/withdraw', async ({ params, set }) => {
+    const res = await withdrawOrder(params.code);
+    if (res.error) { set.status = res.status; return { error: res.error }; }
+    return res;
+  })
+  .patch('/:code/status', async ({ params, body, set }) => {
+    const res = await changeOrderStatus(params.code, body.status);
+    if (res.error) { set.status = res.status; return { error: res.error }; }
+    return res;
+  }, {
+    body: t.Object({ status: t.String() }),
+  })
+  .post('/:code/payment-proof', async ({ params, body, set }) => {
+    const [existing] = await db.select().from(orders).where(eq(orders.orderCode, params.code));
+    if (!existing) { set.status = 404; return { error: 'Pesanan tidak ditemukan.' }; }
+    const [updated] = await db
+      .update(orders)
+      .set({ paymentProofUrl: body.proofUrl, updatedAt: new Date() })
+      .where(eq(orders.orderCode, params.code))
+      .returning();
+    return { success: true, order: updated };
+  }, {
+    body: t.Object({ proofUrl: t.String() }),
+  });

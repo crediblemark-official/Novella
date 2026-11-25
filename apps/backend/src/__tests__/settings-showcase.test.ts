@@ -158,4 +158,23 @@ describe('Settings, Showcase & Author CRM Modules', () => {
     expect(data.success).toBe(true);
     expect(data.order.paymentProofUrl).toBe('/api/files/slip_transfer.jpg');
   });
+
+  it('11. PATCH /api/admin/orders/:code/pricing updates pages and total price', async () => {
+    const res = await app.handle(
+      new Request('http://localhost:3001/api/admin/orders/NOV-8822/pricing', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', ...ADMIN_HEADER },
+        body: JSON.stringify({
+          pages: 135,
+          totalPrice: 185000,
+          status: 'Menunggu Konsultasi',
+        }),
+      })
+    );
+    expect(res.status).toBe(200);
+    const data = (await res.json()) as any;
+    expect(data.success).toBe(true);
+    expect(data.order.pages).toBe(135);
+    expect(data.order.totalPrice).toBe(185000);
+  });
 });

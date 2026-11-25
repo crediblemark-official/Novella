@@ -1,161 +1,154 @@
 ---
 /**
- * StepCalculator: Step 1 (Hitung Biaya & Format) — Unboxed Flat Studio
- * Open, breathable 12-column layout:
- * - Left (7 cols): Specifications with clean horizontal rhythm & unified steppers
- * - Right (5 cols): Clean sticky transparent receipt + CTA button
+ * StepCalculator: Simulasi Biaya Cetak & Pengajuan Naskah
+ * Perhitungan estimasi biaya transparan dengan standar penerbitan Novella.id.
  */
+import StepCalculatorSpecs from './StepCalculatorSpecs.astro';
+import StepCalculatorAddons from './StepCalculatorAddons.astro';
+import MobileStickyBar from './MobileStickyBar.astro';
 ---
 
-<div id="step-calc">
+<div id="step-calc" class="pb-20 md:pb-0">
   <div class="grid lg:grid-cols-12 gap-8 lg:gap-12">
-    <!-- Sisi Kiri: Kontrol & Spesifikasi Buku (7 Kolom / ~60%) -->
-    <div class="lg:col-span-7 space-y-7">
-      <!-- 1. Ketebalan Naskah -->
+    <!-- Sisi Kiri: Spesifikasi Naskah & Pilihan Buku (7 Kolom) -->
+    <div class="lg:col-span-7 min-w-0 space-y-6">
+      
+      <!-- 0. Informasi Naskah Buku -->
       <div class="space-y-3">
-        <div class="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <div class="flex items-center gap-2">
-              <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-navy text-[10px] font-extrabold text-white">1</span>
-              <h2 class="text-sm font-extrabold text-navy">Ketebalan Naskah (Halaman)</h2>
-            </div>
-            <p class="text-xs text-slate-500 mt-0.5">Paket dasar mencakup hingga 100 halaman.</p>
-          </div>
-          <div class="inline-flex items-center rounded-xl border border-slate-200 bg-slate-50/80 p-1 shadow-2xs">
-            <button id="btn-page-minus" type="button" class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-sm font-extrabold text-navy shadow-xs hover:bg-slate-100 active:scale-95 transition-all cursor-pointer" aria-label="Kurangi halaman">−</button>
-            <div class="flex items-center px-2.5">
-              <input id="input-pages" type="number" min="24" max="600" value="100" class="h-8 w-12 bg-transparent text-center font-mono text-sm font-extrabold text-navy focus:outline-none" />
-              <span class="text-[11px] font-bold text-slate-400">hal</span>
-            </div>
-            <button id="btn-page-plus" type="button" class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-sm font-extrabold text-navy shadow-xs hover:bg-slate-100 active:scale-95 transition-all cursor-pointer" aria-label="Tambah halaman">+</button>
-          </div>
+        <div class="flex items-center gap-2">
+          <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-navy text-[10px] font-extrabold text-white">1</span>
+          <h2 class="text-sm font-extrabold text-navy">Informasi Naskah Buku</h2>
         </div>
-        <div class="flex flex-wrap items-center gap-2 pt-0.5">
-          <span class="text-[11px] font-semibold text-slate-400 mr-0.5">Pilihan cepat:</span>
-          <button type="button" data-val="60" class="page-chip rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 hover:border-slate-300 hover:bg-slate-50 transition-all cursor-pointer">60 hal</button>
-          <button type="button" data-val="100" class="page-chip rounded-full border border-navy bg-navy px-3.5 py-1 text-xs font-bold text-white shadow-xs cursor-pointer">100 hal (Paket)</button>
-          <button type="button" data-val="150" class="page-chip rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 hover:border-slate-300 hover:bg-slate-50 transition-all cursor-pointer">150 hal</button>
-          <button type="button" data-val="200" class="page-chip rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 hover:border-slate-300 hover:bg-slate-50 transition-all cursor-pointer">200 hal</button>
-          <button type="button" data-val="300" class="page-chip rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 hover:border-slate-300 hover:bg-slate-50 transition-all cursor-pointer">300 hal</button>
+        <div class="grid sm:grid-cols-2 gap-3 pt-0.5">
+          <div>
+            <label for="input-book-title" class="block text-[11px] font-bold text-navy mb-1">Judul Buku / Judul Kerja <span class="text-rose-500">*</span></label>
+            <input id="input-book-title" type="text" required placeholder="Contoh: Lembayung Jogja" class="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-xs font-semibold text-navy focus:border-navy focus:outline-none focus:ring-2 focus:ring-navy/5 shadow-2xs" />
+          </div>
+          <div>
+            <label for="select-book-category" class="block text-[11px] font-bold text-navy mb-1">Kategori / Genre Sastra <span class="text-rose-500">*</span></label>
+            <select id="select-book-category" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-navy focus:border-navy focus:outline-none shadow-2xs cursor-pointer">
+              <option value="Novel Sastra" selected>Novel Sastra & Populer</option>
+              <option value="Kumpulan Cerpen">Kumpulan Cerpen</option>
+              <option value="Antologi Puisi">Antologi Puisi</option>
+              <option value="Memoar & Biografi">Memoar & Biografi</option>
+              <option value="Esai & Karya Ilmiah">Esai & Non-Fiksi</option>
+              <option value="Karya Sastra Lainnya">Karya Sastra Lainnya</option>
+            </select>
+          </div>
         </div>
       </div>
 
-      <!-- 2. Jumlah Cetak Eksemplar -->
-      <div class="border-t border-slate-100/90 pt-6 space-y-3">
-        <div class="flex flex-wrap items-center justify-between gap-3">
-          <div>
+      <!-- Banner Paket Dasar Penerbitan Rp 150.000 (Simetris Seimbang) -->
+      <div class="rounded-2xl border border-amber-200/90 bg-amber-50/60 p-4 text-xs text-amber-950 space-y-2">
+        <div class="flex items-center justify-between gap-2">
+          <div class="flex items-center gap-2 min-w-0">
+            <span class="text-amber-600 shrink-0">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+            </span>
+            <p class="font-extrabold text-amber-950 text-xs sm:text-sm truncate">Paket Dasar Penerbitan Novella</p>
+          </div>
+          <span class="shrink-0 rounded-full bg-orange/15 px-2.5 py-0.5 text-[10px] font-extrabold text-orange">Hemat Rp 300.000</span>
+        </div>
+        <p class="text-[11px] leading-relaxed text-amber-900/90">
+          Hanya <strong>Rp 150.000</strong> (<span class="line-through text-slate-500 font-semibold">Rp 450.000</span>) mendapatkan <strong>5 eksemplar</strong> buku fisik hingga <strong>100 halaman</strong> (format <strong>A5 / Unesco</strong>). Kertas isi: <strong>Bookpaper 57 gr</strong> atau <strong>HVS 70 gr</strong>.
+        </p>
+        <div class="grid grid-cols-3 gap-2 pt-2 border-t border-amber-200/60 text-center text-[10px] font-bold text-emerald-800">
+          <span class="rounded bg-emerald-50/80 py-1">✓ ISBN Resmi</span>
+          <span class="rounded bg-emerald-50/80 py-1">✓ Desain Cover</span>
+          <span class="rounded bg-emerald-50/80 py-1">✓ Layout Naskah</span>
+        </div>
+      </div>
+
+      <!-- 1. Estimasi Ketebalan Halaman (Header Seimbang & 4 Grid Simetris) -->
+      <div class="border-t border-slate-100 pt-5 space-y-3">
+        <div class="flex items-center justify-between gap-2">
+          <div class="min-w-0">
             <div class="flex items-center gap-2">
               <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-navy text-[10px] font-extrabold text-white">2</span>
-              <h2 class="text-sm font-extrabold text-navy">Jumlah Cetak Buku Fisik</h2>
+              <h2 class="text-xs sm:text-sm font-extrabold text-navy truncate">Estimasi Halaman Naskah</h2>
             </div>
-            <p class="text-xs text-slate-500 mt-0.5">Minimal cetak 5 eksemplar per pesanan.</p>
+            <p class="text-[10px] sm:text-[11px] text-slate-500 mt-0.5 truncate">Maksimal 100 halaman pada Paket Dasar.</p>
           </div>
-          <div class="inline-flex items-center rounded-xl border border-slate-200 bg-slate-50/80 p-1 shadow-2xs">
-            <button id="btn-copy-minus" type="button" class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-sm font-extrabold text-navy shadow-xs hover:bg-slate-100 active:scale-95 transition-all cursor-pointer" aria-label="Kurangi eksemplar">−</button>
-            <div class="flex items-center px-2.5">
-              <input id="input-copies" type="number" min="5" max="1000" value="5" class="h-8 w-12 bg-transparent text-center font-mono text-sm font-extrabold text-navy focus:outline-none" />
-              <span class="text-[11px] font-bold text-slate-400">eks</span>
+          <div class="inline-flex items-center rounded-xl border border-slate-200 bg-slate-50/80 p-0.5 shadow-2xs shrink-0">
+            <button id="btn-page-minus" type="button" class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-sm font-extrabold text-navy shadow-xs hover:bg-slate-100 cursor-pointer active:scale-95 transition-all" aria-label="Kurangi halaman">−</button>
+            <div class="flex items-center px-2">
+              <input id="input-pages" type="number" min="24" max="600" value="100" class="h-8 w-11 bg-transparent text-center font-mono text-xs sm:text-sm font-extrabold text-navy focus:outline-none" />
+              <span class="text-[10px] sm:text-[11px] font-bold text-slate-400">hal</span>
             </div>
-            <button id="btn-copy-plus" type="button" class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-sm font-extrabold text-navy shadow-xs hover:bg-slate-100 active:scale-95 transition-all cursor-pointer" aria-label="Tambah eksemplar">+</button>
+            <button id="btn-page-plus" type="button" class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-sm font-extrabold text-navy shadow-xs hover:bg-slate-100 cursor-pointer active:scale-95 transition-all" aria-label="Tambah halaman">+</button>
           </div>
         </div>
-        <div class="flex flex-wrap items-center gap-2 pt-0.5">
-          <span class="text-[11px] font-semibold text-slate-400 mr-0.5">Pilihan cepat:</span>
-          <button type="button" data-val="5" class="copy-chip rounded-full border border-navy bg-navy px-3.5 py-1 text-xs font-bold text-white shadow-xs cursor-pointer">5 eks (Paket)</button>
-          <button type="button" data-val="10" class="copy-chip rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 hover:border-slate-300 hover:bg-slate-50 transition-all cursor-pointer">10 eks</button>
-          <button type="button" data-val="25" class="copy-chip rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 hover:border-slate-300 hover:bg-slate-50 transition-all cursor-pointer">25 eks</button>
-          <button type="button" data-val="50" class="copy-chip rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 hover:border-slate-300 hover:bg-slate-50 transition-all cursor-pointer">50 eks</button>
-          <button type="button" data-val="100" class="copy-chip rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 hover:border-slate-300 hover:bg-slate-50 transition-all cursor-pointer">100 eks</button>
+        <div class="grid grid-cols-4 gap-2 pt-0.5">
+          <button type="button" data-val="60" class="page-chip rounded-xl border border-slate-200 bg-white py-2 text-center text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer transition-all duration-150 hover:scale-[1.01] active:scale-[0.98]">60 hal</button>
+          <button type="button" data-val="100" class="page-chip rounded-xl border-2 border-navy bg-navy py-2 text-center text-xs font-bold text-white shadow-xs cursor-pointer transition-all duration-150 hover:scale-[1.01] active:scale-[0.98]">100 hal ★</button>
+          <button type="button" data-val="150" class="page-chip rounded-xl border border-slate-200 bg-white py-2 text-center text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer transition-all duration-150 hover:scale-[1.01] active:scale-[0.98]">150 hal</button>
+          <button type="button" data-val="200" class="page-chip rounded-xl border border-slate-200 bg-white py-2 text-center text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer transition-all duration-150 hover:scale-[1.01] active:scale-[0.98]">200 hal</button>
         </div>
       </div>
 
-      <!-- 3. Format & Ukuran Buku -->
-      <div class="border-t border-slate-100/90 pt-6 space-y-3">
-        <div>
-          <div class="flex items-center gap-2">
-            <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-navy text-[10px] font-extrabold text-white">3</span>
-            <h2 class="text-sm font-extrabold text-navy">Format & Ukuran Buku</h2>
+      <!-- 2. Jumlah Eksemplar Cetak (Header Seimbang & 5 Grid Simetris) -->
+      <div class="border-t border-slate-100 pt-5 space-y-3">
+        <div class="flex items-center justify-between gap-2">
+          <div class="min-w-0">
+            <div class="flex items-center gap-2">
+              <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-navy text-[10px] font-extrabold text-white">3</span>
+              <h2 class="text-xs sm:text-sm font-extrabold text-navy truncate">Jumlah Cetak Buku Fisik</h2>
+            </div>
+            <p class="text-[10px] sm:text-[11px] text-slate-500 mt-0.5 truncate">Minimal 5 eksemplar per pesanan.</p>
           </div>
-          <p class="text-xs text-slate-500 mt-0.5">Pilih proporsi fisik naskah sesuai kebutuhan karya Anda.</p>
+          <div class="inline-flex items-center rounded-xl border border-slate-200 bg-slate-50/80 p-0.5 shadow-2xs shrink-0">
+            <button id="btn-copy-minus" type="button" class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-sm font-extrabold text-navy shadow-xs hover:bg-slate-100 cursor-pointer active:scale-95 transition-all" aria-label="Kurangi eksemplar">−</button>
+            <div class="flex items-center px-2">
+              <input id="input-copies" type="number" min="5" max="1000" value="5" class="h-8 w-11 bg-transparent text-center font-mono text-xs sm:text-sm font-extrabold text-navy focus:outline-none" />
+              <span class="text-[10px] sm:text-[11px] font-bold text-slate-400">eks</span>
+            </div>
+            <button id="btn-copy-plus" type="button" class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-sm font-extrabold text-navy shadow-xs hover:bg-slate-100 cursor-pointer active:scale-95 transition-all" aria-label="Tambah eksemplar">+</button>
+          </div>
         </div>
-        <div class="grid grid-cols-2 gap-3 sm:grid-cols-4 pt-1">
-          <button type="button" data-size="A5" class="size-card flex flex-col justify-between rounded-2xl border-2 border-navy bg-slate-50/60 p-3.5 text-left transition-all hover:scale-[1.01] cursor-pointer shadow-2xs">
-            <div class="flex items-center justify-between"><span class="text-xs font-extrabold text-navy">A5</span><span class="size-indicator flex h-3.5 w-3.5 items-center justify-center rounded-full border-2 border-navy"><span class="size-dot h-1.5 w-1.5 rounded-full bg-navy"></span></span></div>
-            <div class="mt-2.5"><p class="font-mono text-[10px] font-medium text-slate-500">14.8 × 21 cm</p><span class="inline-block mt-1.5 rounded bg-orange/10 px-1.5 py-0.5 text-[9px] font-bold text-orange">Standar Sastra</span></div>
-          </button>
-          <button type="button" data-size="Unesco" class="size-card flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-3.5 text-left transition-all hover:scale-[1.01] hover:border-slate-300 cursor-pointer">
-            <div class="flex items-center justify-between"><span class="text-xs font-extrabold text-navy">Unesco</span><span class="size-indicator flex h-3.5 w-3.5 items-center justify-center rounded-full border border-slate-300"><span class="size-dot hidden h-1.5 w-1.5 rounded-full bg-navy"></span></span></div>
-            <div class="mt-2.5"><p class="font-mono text-[10px] font-medium text-slate-500">15.5 × 23 cm</p><span class="inline-block mt-1.5 rounded bg-slate-100 px-1.5 py-0.5 text-[9px] font-bold text-slate-600">+Rp 2.000/eks</span></div>
-          </button>
-          <button type="button" data-size="B5" class="size-card flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-3.5 text-left transition-all hover:scale-[1.01] hover:border-slate-300 cursor-pointer">
-            <div class="flex items-center justify-between"><span class="text-xs font-extrabold text-navy">B5</span><span class="size-indicator flex h-3.5 w-3.5 items-center justify-center rounded-full border border-slate-300"><span class="size-dot hidden h-1.5 w-1.5 rounded-full bg-navy"></span></span></div>
-            <div class="mt-2.5"><p class="font-mono text-[10px] font-medium text-slate-500">17.6 × 25 cm</p><span class="inline-block mt-1.5 rounded bg-slate-100 px-1.5 py-0.5 text-[9px] font-bold text-slate-600">+Rp 5.000/eks</span></div>
-          </button>
-          <button type="button" data-size="A6 Saku" class="size-card flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-3.5 text-left transition-all hover:scale-[1.01] hover:border-slate-300 cursor-pointer">
-            <div class="flex items-center justify-between"><span class="text-xs font-extrabold text-navy">A6 Saku</span><span class="size-indicator flex h-3.5 w-3.5 items-center justify-center rounded-full border border-slate-300"><span class="size-dot hidden h-1.5 w-1.5 rounded-full bg-navy"></span></span></div>
-            <div class="mt-2.5"><p class="font-mono text-[10px] font-medium text-slate-500">10.5 × 14.8 cm</p><span class="inline-block mt-1.5 rounded bg-slate-100 px-1.5 py-0.5 text-[9px] font-bold text-slate-600">Standar Puisi</span></div>
-          </button>
+        <div class="grid grid-cols-5 gap-1.5 pt-0.5">
+          <button type="button" data-val="5" class="copy-chip rounded-xl border-2 border-navy bg-navy py-2 text-center text-xs font-bold text-white shadow-xs cursor-pointer transition-all duration-150 hover:scale-[1.01] active:scale-[0.98]">5 eks ★</button>
+          <button type="button" data-val="10" class="copy-chip rounded-xl border border-slate-200 bg-white py-2 text-center text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer transition-all duration-150 hover:scale-[1.01] active:scale-[0.98]">10 eks</button>
+          <button type="button" data-val="25" class="copy-chip rounded-xl border border-slate-200 bg-white py-2 text-center text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer transition-all duration-150 hover:scale-[1.01] active:scale-[0.98]">25 eks</button>
+          <button type="button" data-val="50" class="copy-chip rounded-xl border border-slate-200 bg-white py-2 text-center text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer transition-all duration-150 hover:scale-[1.01] active:scale-[0.98]">50 eks</button>
+          <button type="button" data-val="100" class="copy-chip rounded-xl border border-slate-200 bg-white py-2 text-center text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer transition-all duration-150 hover:scale-[1.01] active:scale-[0.98]">100 eks</button>
         </div>
       </div>
 
-      <!-- 4. Layanan Redaksi & Finishing (Opsional) -->
-      <div class="border-t border-slate-100/90 pt-6 space-y-3">
-        <div>
-          <div class="flex items-center gap-2">
-            <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-navy text-[10px] font-extrabold text-white">4</span>
-            <h2 class="text-sm font-extrabold text-navy">Layanan Redaksi & Finishing (Opsional)</h2>
-          </div>
-          <p class="text-xs text-slate-500 mt-0.5">Fasilitas pendampingan opsional untuk menyempurnakan buku Anda.</p>
-        </div>
-        <div class="grid gap-2.5 sm:grid-cols-2 pt-1">
-          <button type="button" data-addon="E-Sertifikat Penulis" class="addon-btn flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-3 text-left transition-all hover:border-slate-300 hover:shadow-2xs cursor-pointer">
-            <div><p class="text-xs font-extrabold text-navy">E-Sertifikat Penulis</p><p class="text-[11px] font-mono font-bold text-orange mt-0.5">+Rp 10.000</p></div>
-            <span class="addon-check flex h-6 w-6 items-center justify-center rounded-full border border-slate-300 text-xs font-bold text-slate-400 bg-white transition-all">+</span>
-          </button>
-          <button type="button" data-addon="File Ebook Tanpa Watermark" class="addon-btn flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-3 text-left transition-all hover:border-slate-300 hover:shadow-2xs cursor-pointer">
-            <div><p class="text-xs font-extrabold text-navy">Ebook Tanpa Watermark</p><p class="text-[11px] font-mono font-bold text-orange mt-0.5">+Rp 250.000</p></div>
-            <span class="addon-check flex h-6 w-6 items-center justify-center rounded-full border border-slate-300 text-xs font-bold text-slate-400 bg-white transition-all">+</span>
-          </button>
-          <button type="button" data-addon="Cetak 2 Dummy" class="addon-btn flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-3 text-left transition-all hover:border-slate-300 hover:shadow-2xs cursor-pointer">
-            <div><p class="text-xs font-extrabold text-navy">Cetak 2 Dummy (Sample)</p><p class="text-[11px] font-mono font-bold text-orange mt-0.5">+Rp 200.000</p></div>
-            <span class="addon-check flex h-6 w-6 items-center justify-center rounded-full border border-slate-300 text-xs font-bold text-slate-400 bg-white transition-all">+</span>
-          </button>
-          <button type="button" data-addon="Video Promosi" class="addon-btn flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-3 text-left transition-all hover:border-slate-300 hover:shadow-2xs cursor-pointer">
-            <div><p class="text-xs font-extrabold text-navy">Video Promosi Buku</p><p class="text-[11px] font-mono font-bold text-orange mt-0.5">+Rp 250.000</p></div>
-            <span class="addon-check flex h-6 w-6 items-center justify-center rounded-full border border-slate-300 text-xs font-bold text-slate-400 bg-white transition-all">+</span>
-          </button>
-          <button type="button" data-addon="Revisi Ringan Cover" class="addon-btn flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-3 text-left transition-all hover:border-slate-300 hover:shadow-2xs cursor-pointer">
-            <div><p class="text-xs font-extrabold text-navy">Revisi Ringan Cover</p><p class="text-[11px] font-mono font-bold text-orange mt-0.5">+Rp 10.000</p></div>
-            <span class="addon-check flex h-6 w-6 items-center justify-center rounded-full border border-slate-300 text-xs font-bold text-slate-400 bg-white transition-all">+</span>
-          </button>
-          <button type="button" data-addon="Revisi Ringan Layout" class="addon-btn flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-3 text-left transition-all hover:border-slate-300 hover:shadow-2xs cursor-pointer">
-            <div><p class="text-xs font-extrabold text-navy">Revisi Ringan Layout</p><p class="text-[11px] font-mono font-bold text-orange mt-0.5">+Rp 10.000</p></div>
-            <span class="addon-check flex h-6 w-6 items-center justify-center rounded-full border border-slate-300 text-xs font-bold text-slate-400 bg-white transition-all">+</span>
-          </button>
-        </div>
-      </div>
+      <!-- 3. Format Ukuran, Kertas & Cover -->
+      <StepCalculatorSpecs />
+
+      <!-- 4. Layanan Tambahan / Addon -->
+      <StepCalculatorAddons />
     </div>
 
-    <!-- Sisi Kanan: Live Receipt & Ringkasan Biaya (5 Kolom / ~40%) — Sticky -->
-    <div class="lg:col-span-5 border-t lg:border-t-0 lg:border-l border-slate-200/80 lg:pl-10 pt-6 lg:pt-0 self-stretch">
+    <!-- Sisi Kanan: Tiket Estimasi (5 Kolom Docked) -->
+    <div class="lg:col-span-5 min-w-0 border-t lg:border-t-0 lg:border-l border-slate-200/80 lg:pl-10 pt-6 lg:pt-0 self-stretch">
       <div class="sticky top-20 space-y-5">
         <div>
           <div class="flex items-center justify-between">
-            <span class="rounded-full bg-orange/10 px-3 py-1 text-xs font-bold text-orange">Kalkulasi Transparan</span>
-            <span class="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-700">
+            <span class="rounded-full bg-orange/10 px-3 py-1 text-xs font-bold text-orange">Paket Terbit Spesial</span>
+            <span class="text-[11px] font-bold text-emerald-700 flex items-center gap-1.5">
               <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
               Real-time
             </span>
           </div>
-          <p id="summary-total" class="mt-4 font-serif text-3xl sm:text-4xl font-extrabold text-navy tracking-tight">Rp 150.000</p>
-          <p id="summary-perbook" class="mt-1 text-xs font-semibold text-slate-500">Sekitar Rp 30.000 / buku</p>
+          <div class="mt-3 flex items-baseline gap-2.5">
+            <p id="summary-total" class="font-mono text-3xl sm:text-4xl font-black text-navy tracking-tight">Rp 150.000</p>
+            <span id="summary-original" class="font-mono text-base sm:text-lg font-bold text-slate-400 line-through">Rp 450.000</span>
+          </div>
+          <p id="summary-perbook" class="mt-0.5 text-xs font-semibold text-slate-500">Sekitar Rp 30.000 / buku (5 eksemplar)</p>
         </div>
 
-        <!-- Rincian Tiket Transparan -->
         <div class="divide-y divide-slate-100 text-xs text-slate-600 border-t border-b border-slate-100">
           <div class="py-2.5 flex justify-between font-semibold text-slate-800">
-            <span>Paket Cetak Dasar (5 eks / 100 hal)</span>
-            <span class="font-mono font-bold text-navy">Rp 150.000</span>
+            <div>
+              <p>Paket Dasar (5 eks / 100 hal · A5/Unesco)</p>
+              <p class="text-[10px] text-emerald-600 font-bold">✓ Sudah Termasuk: ISBN, Cover, & Layout</p>
+            </div>
+            <div class="text-right">
+              <span class="font-mono font-bold text-navy">Rp 150.000</span>
+              <span class="block text-[10px] text-slate-400 line-through">Rp 450.000</span>
+            </div>
           </div>
           <div id="row-summary-copies" class="py-2.5 hidden justify-between">
             <span id="label-summary-copies">Tambahan cetak</span>
@@ -165,39 +158,42 @@
             <span id="label-summary-pages">Tambahan halaman</span>
             <span id="val-summary-pages" class="font-mono font-bold text-orange">+ Rp 0</span>
           </div>
-          <div class="py-2.5 flex justify-between">
-            <span id="label-summary-size">Ukuran: A5</span>
-            <span id="val-summary-size" class="font-bold text-slate-700">Standar</span>
+          <div class="py-2.5 space-y-1">
+            <div class="flex justify-between items-center text-xs">
+              <span class="text-slate-600 font-semibold">Format Buku:</span>
+              <span id="val-summary-size" class="shrink-0 whitespace-nowrap rounded bg-orange/15 px-2 py-0.5 text-[10px] font-bold text-orange">Paket Dasar</span>
+            </div>
+            <p id="label-summary-size" class="text-[11px] font-medium text-slate-700">A5 · Hitam Putih (BW) · Bookpaper 57 gr · Soft Cover</p>
           </div>
-          <div id="row-summary-addons" class="py-2.5 hidden space-y-1.5">
+          <div id="row-summary-addons" class="py-2.5 hidden space-y-1">
             <p class="text-[11px] font-bold text-slate-400">Add-on Terpilih:</p>
             <div id="list-summary-addons" class="space-y-1 font-mono text-[11px]"></div>
           </div>
         </div>
 
-        <!-- Jaminan Penerbitan -->
-        <div class="flex items-start gap-2.5 text-slate-500 text-[11px] leading-relaxed">
-          <svg class="h-4 w-4 shrink-0 text-orange mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-          </svg>
-          <p>
-            <strong class="text-navy font-bold">100% Hak Cipta Milik Penulis:</strong> Paket sudah termasuk konsultasi redaksi via WhatsApp dan proofing sebelum cetak.
+        <div class="rounded-xl border border-amber-200/80 bg-amber-50/50 p-3 text-[11px] text-amber-950 leading-relaxed space-y-1">
+          <p class="font-bold text-amber-900 flex items-center gap-1.5">
+            <svg class="h-4 w-4 text-amber-700 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" x2="6" y1="2" y2="4"/><line x1="10" x2="10" y1="2" y2="4"/></svg>
+            <span>Ngobrol Santai Seperti Sahabat Sendiri</span>
+          </p>
+          <p class="text-[11px] text-amber-900/90">
+            Di Novella.id, konsultasi naskah dengan admin redaksi rasanya hangat dan akrab seperti mengobrol dengan sahabat sendiri — bebas bertanya dan berdiskusi tanpa canggung.
           </p>
         </div>
 
-        <div class="pt-2">
+        <div class="pt-1">
           <button
-            id="btn-goto-step-book"
+            id="btn-submit-consultation"
             type="button"
-            class="group flex w-full items-center justify-center gap-2 rounded-full bg-orange py-3.5 text-sm font-extrabold text-white shadow-md shadow-orange/20 transition-all hover:bg-orange-hover hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
+            class="group flex w-full items-center justify-center gap-2 rounded-full bg-emerald-600 py-3.5 text-sm font-extrabold text-white shadow-md shadow-emerald-600/20 transition-all duration-150 hover:bg-emerald-700 hover:scale-[1.01] active:scale-[0.98] cursor-pointer"
           >
-            <span>Lanjut: Isi Detail Buku & Berkas</span>
-            <svg class="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </svg>
+            <span>Konsultasi Naskah ke Admin &rarr;</span>
           </button>
+          <p class="text-center text-[10px] text-slate-400 mt-2">Rincian pesanan akan dikonfirmasikan langsung ke WhatsApp Admin Novella</p>
         </div>
       </div>
     </div>
   </div>
+
+  <MobileStickyBar />
 </div>

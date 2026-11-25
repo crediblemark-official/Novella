@@ -1,14 +1,19 @@
 import { Elysia, t } from 'elysia';
 import { db } from '../../db';
 import { user as userTable } from '../../db/schema';
-import { eq } from 'drizzle-orm';
+import { eq, ilike } from 'drizzle-orm';
+
+function deriveDisplayName(email: string): string {
+  const part = (email.split('@')[0] || 'Penulis').replace(/[._-]/g, ' ');
+  return part.charAt(0).toUpperCase() + part.slice(1);
+}
 
 export const authModule = new Elysia({ prefix: '/api/auth' })
   .post(
     '/google',
     async ({ body }) => {
       const email = body.email.toLowerCase().trim();
-      let [existingUser] = await db.select().from(userTable).where(eq(userTable.email, email));
+      let [existingUser] = await db.select().from(userTable).where(ilike(userTable.email, email));
 
       const now = new Date();
       if (!existingUser) {
@@ -56,28 +61,44 @@ export const authModule = new Elysia({ prefix: '/api/auth' })
   )
   .post(
     '/profile',
-    async ({ body, set }) => {
+    async ({ body }) => {
       const email = body.email.toLowerCase().trim();
-      const [existing] = await db.select().from(userTable).where(eq(userTable.email, email));
+      let [existing] = await db.select().from(userTable).where(ilike(userTable.email, email));
 
       if (!existing) {
-        set.status = 404;
-        return { error: 'Pengguna tidak ditemukan.' };
+        const now = new Date();
+        const name = deriveDisplayName(email);
+        const [created] = await db
+          .insert(userTable)
+          .values({
+            id: `usr_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+            name,
+            email,
+            emailVerified: true,
+            phone: body.phone,
+            address: body.address,
+            role: 'author',
+            createdAt: now,
+            updatedAt: now,
+          })
+          .returning();
+        existing = created;
+      } else {
+        const [updated] = await db
+          .update(userTable)
+          .set({
+            phone: body.phone,
+            address: body.address,
+            updatedAt: new Date(),
+          })
+          .where(ilike(userTable.email, email))
+          .returning();
+        existing = updated;
       }
-
-      const [updated] = await db
-        .update(userTable)
-        .set({
-          phone: body.phone,
-          address: body.address,
-          updatedAt: new Date(),
-        })
-        .where(eq(userTable.email, email))
-        .returning();
 
       return {
         success: true,
-        user: updated,
+        user: existing,
       };
     },
     {
@@ -91,16 +112,29 @@ export const authModule = new Elysia({ prefix: '/api/auth' })
   .get(
     '/user',
     async ({ query, set }) => {
-      const { email } = query;
+      const email = query.email?.toLowerCase().trim();
       if (!email) {
         set.status = 400;
         return { error: 'Parameter email wajib disertakan.' };
       }
 
-      const [found] = await db.select().from(userTable).where(eq(userTable.email, email.toLowerCase().trim()));
+      let [found] = await db.select().from(userTable).where(ilike(userTable.email, email));
       if (!found) {
-        set.status = 404;
-        return { error: 'Pengguna tidak ditemukan.' };
+        const now = new Date();
+        const name = deriveDisplayName(email);
+        const [newUser] = await db
+          .insert(userTable)
+          .values({
+            id: `usr_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+            name,
+            email,
+            emailVerified: true,
+            role: 'author',
+            createdAt: now,
+            updatedAt: now,
+          })
+          .returning();
+        found = newUser;
       }
 
       return { user: found };

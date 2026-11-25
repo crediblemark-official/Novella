@@ -119,4 +119,40 @@ export const adminCrmModule = new Elysia({ prefix: '/api/admin' })
         shippingTrackingNumber: t.String(),
       }),
     }
+  )
+  // 4. Update Order Pricing & Pages (Upselling / Layout Revision)
+  .patch(
+    '/orders/:code/pricing',
+    async ({ request, params, body, set }) => {
+      const isAuthorized = await verifyAdminRequest(request);
+      if (!isAuthorized) { set.status = 401; return { error: 'Unauthorized' }; }
+
+      const { code } = params;
+      const [existing] = await db.select().from(orders).where(eq(orders.orderCode, code));
+      if (!existing) { set.status = 404; return { error: 'Pesanan tidak ditemukan.' }; }
+
+      const updateData: Record<string, any> = { updatedAt: new Date() };
+      if (typeof body.pages === 'number') updateData.pages = body.pages;
+      if (typeof body.totalPrice === 'number') updateData.totalPrice = body.totalPrice;
+      if (body.status) updateData.status = body.status;
+
+      const [updated] = await db
+        .update(orders)
+        .set(updateData)
+        .where(eq(orders.orderCode, code))
+        .returning();
+
+      return {
+        success: true,
+        message: 'Spesifikasi halaman dan harga pesanan berhasil disesuaikan.',
+        order: updated,
+      };
+    },
+    {
+      body: t.Object({
+        pages: t.Optional(t.Number()),
+        totalPrice: t.Optional(t.Number()),
+        status: t.Optional(t.String()),
+      }),
+    }
   );

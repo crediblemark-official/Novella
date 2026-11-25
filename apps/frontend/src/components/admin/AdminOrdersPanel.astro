@@ -1,79 +1,80 @@
 ---
 /**
- * AdminOrdersPanel: Dashboard Manajemen Pesanan, KPI, Filter, dan Tabel Naskah
+ * AdminOrdersPanel: Full-Width Edge-to-Edge Hairline Orders Workspace
  */
 ---
 
-<div id="panel-orders" class="admin-panel mt-6">
-  <!-- KPI Top Bar Metrics -->
-  <div class="grid gap-4 sm:grid-cols-3">
-    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-      <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Pesanan Masuk</p>
-      <p id="kpi-total-orders" class="mt-2 text-3xl font-extrabold text-navy">...</p>
-      <p class="mt-1 text-[11px] text-slate-500">Seluruh pesanan naskah sastra</p>
+<div id="panel-orders" class="admin-panel w-full">
+  <!-- KPI Strip: Full-Width Edge-to-Edge Hairline Rail -->
+  <div class="flex overflow-x-auto snap-x snap-mandatory md:grid md:grid-cols-3 border-b border-slate-200 bg-white divide-x divide-slate-200">
+    <div class="shrink-0 w-[200px] md:w-auto snap-start px-4 py-4 sm:px-6">
+      <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Total Pesanan</p>
+      <p id="kpi-total-orders" class="mt-1 font-mono text-2xl font-extrabold tracking-wider text-navy">...</p>
     </div>
 
-    <div class="rounded-2xl border border-orange/40 bg-orange/5 p-5 shadow-sm">
-      <p class="text-xs font-bold uppercase tracking-wider text-orange">Menunggu Verifikasi</p>
-      <p id="kpi-waiting-orders" class="mt-2 text-3xl font-extrabold text-orange">...</p>
-      <p class="mt-1 text-[11px] text-slate-600">Pesanan butuh verifikasi redaksi</p>
+    <div class="shrink-0 w-[200px] md:w-auto snap-start px-4 py-4 sm:px-6 bg-amber-50/40">
+      <p class="text-[11px] font-bold uppercase tracking-wider text-amber-700">Menunggu Tinjauan</p>
+      <p id="kpi-waiting-orders" class="mt-1 font-mono text-2xl font-extrabold tracking-wider text-orange">...</p>
     </div>
 
-    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-      <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Nilai Pesanan Aktif</p>
-      <p id="kpi-active-value" class="mt-2 text-2xl font-extrabold text-emerald-700 sm:text-3xl">...</p>
-      <p class="mt-1 text-[11px] text-slate-500">Di luar pesanan ditarik penulis</p>
+    <div class="shrink-0 w-[230px] md:w-auto snap-start px-4 py-4 sm:px-6">
+      <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Nilai Pesanan Aktif</p>
+      <p id="kpi-active-value" class="mt-1 font-mono text-2xl font-extrabold tracking-wider text-emerald-700">...</p>
     </div>
   </div>
 
-  <!-- Filter Tabs & Actions -->
-  <div class="mt-8 flex flex-wrap items-center justify-between gap-3">
-    <div class="flex flex-wrap items-center gap-1.5 text-xs font-bold">
-      <button type="button" data-filter="ALL" class="admin-tab rounded-full bg-navy px-3.5 py-1.5 text-white cursor-pointer">Semua</button>
-      <button type="button" data-filter="Menunggu Verifikasi" class="admin-tab rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-slate-600 hover:bg-slate-50 cursor-pointer">Menunggu Verifikasi</button>
-      <button type="button" data-filter="Diproses" class="admin-tab rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-slate-600 hover:bg-slate-50 cursor-pointer">Diproses</button>
-      <button type="button" data-filter="Selesai" class="admin-tab rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-slate-600 hover:bg-slate-50 cursor-pointer">Selesai</button>
-      <button type="button" data-filter="Ditarik Penulis" class="admin-tab rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-slate-600 hover:bg-slate-50 cursor-pointer">Ditarik Penulis</button>
+  <!-- Filter Bar & Search Toolbar (Full-Width Strip) -->
+  <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-slate-50/60 px-4 py-3 sm:px-6">
+    <div class="flex overflow-x-auto max-w-full items-center gap-1.5 pb-0.5 sm:pb-0 text-xs font-bold">
+      <button type="button" data-filter="ALL" class="admin-tab shrink-0 rounded-lg bg-navy px-3 py-1.5 text-white cursor-pointer">Semua</button>
+      <button type="button" data-filter="Menunggu Konsultasi" class="admin-tab shrink-0 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-slate-600 hover:bg-slate-50 cursor-pointer">Konsultasi</button>
+      <button type="button" data-filter="Diproses" class="admin-tab shrink-0 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-slate-600 hover:bg-slate-50 cursor-pointer">Diproses</button>
+      <button type="button" data-filter="Selesai" class="admin-tab shrink-0 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-slate-600 hover:bg-slate-50 cursor-pointer">Selesai</button>
+      <button type="button" data-filter="Ditarik Penulis" class="admin-tab shrink-0 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-slate-600 hover:bg-slate-50 cursor-pointer">Dibatalkan</button>
     </div>
 
     <div class="flex items-center gap-2 w-full sm:w-auto">
       <input
         id="admin-search-input"
         type="text"
-        placeholder="Cari kode, judul, atau penulis..."
-        class="w-full sm:w-60 rounded-xl border border-slate-300 bg-white px-3.5 py-1.5 text-xs font-medium focus:border-navy focus:outline-none"
+        placeholder="Cari kode, judul, penulis..."
+        class="w-full sm:w-64 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium focus:border-navy focus:outline-none"
       />
       <button
         id="btn-export-csv"
         type="button"
-        class="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-navy hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer whitespace-nowrap"
+        class="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-navy hover:bg-slate-50 transition-colors cursor-pointer whitespace-nowrap"
       >
-        <span>📥 Unduh CSV</span>
+        <svg class="h-3.5 w-3.5 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+        <span>Ekspor CSV</span>
       </button>
     </div>
   </div>
 
-  <!-- Orders Data Grid Table -->
-  <div class="mt-4 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-    <div class="overflow-x-auto">
-      <table class="w-full text-left text-xs">
-        <thead class="border-b border-slate-200 bg-slate-50/75 text-[11px] font-extrabold uppercase tracking-wider text-slate-500">
-          <tr>
-            <th class="px-4 py-3.5">Kode</th>
-            <th class="px-4 py-3.5">Penulis & Alamat</th>
-            <th class="px-4 py-3.5">Judul Buku & Berkas</th>
-            <th class="px-4 py-3.5">Spesifikasi & Add-on</th>
-            <th class="px-4 py-3.5">Total Biaya</th>
-            <th class="px-4 py-3.5">Status Pesanan</th>
-            <th class="px-4 py-3.5 text-right">Aksi Cepat</th>
-          </tr>
-        </thead>
-        <tbody id="orders-tbody" class="divide-y divide-slate-100">
-          <tr>
-            <td colspan="7" class="px-4 py-8 text-center text-slate-400">Memuat data pesanan...</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  <!-- Full-Width Edge-to-Edge Data Table (Scrollbar di Atas) -->
+  <div id="orders-top-scroll" class="hidden w-full overflow-x-auto border-b border-slate-200 bg-slate-50/60">
+    <div id="orders-top-scroll-inner" class="h-px"></div>
+  </div>
+  <div id="orders-table-wrap" class="w-full overflow-x-auto bg-white [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <table class="w-full text-left text-xs">
+      <thead class="border-b border-slate-200 bg-slate-50/80 text-[11px] font-extrabold uppercase tracking-wider text-slate-600">
+        <tr>
+          <th class="px-3 py-3 sm:pl-6">Kode</th>
+          <th class="px-3 py-3">Penulis</th>
+          <th class="px-3 py-3">WhatsApp</th>
+          <th class="px-3 py-3">Alamat</th>
+          <th class="px-3 py-3">Judul Buku</th>
+          <th class="px-3 py-3">Kategori</th>
+          <th class="px-3 py-3">Spesifikasi</th>
+          <th class="px-3 py-3">Resi</th>
+          <th class="px-3 py-3">Biaya</th>
+          <th class="px-3 py-3">Status</th>
+          <th class="px-3 py-3 sm:pr-6 text-right">Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="orders-tbody" class="divide-y divide-slate-200/80 border-b border-slate-200">
+        <tr><td colspan="11" class="px-4 py-8 text-center text-slate-500">Memuat data pesanan...</td></tr>
+      </tbody>
+    </table>
   </div>
 </div>
