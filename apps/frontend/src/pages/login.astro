@@ -72,10 +72,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         </button>
       </form>
 
-      <div class="mt-6 border-t border-slate-100 pt-4 text-center text-xs text-slate-500">
+      <div class="mt-5 border-t border-slate-100 pt-3 text-center text-xs text-slate-500">
         Belum memiliki akun?{' '}
         <a href="/daftar" class="font-extrabold text-orange hover:underline">
           Daftar Penulis Baru
+        </a>
+      </div>
+
+      <div class="mt-2.5 text-center">
+        <a href="/admin" class="inline-flex items-center gap-1.5 text-[11px] font-bold text-slate-400 hover:text-navy transition-colors">
+          <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          <span>Khusus Staf Redaksi? Masuk di sini &rarr;</span>
         </a>
       </div>
     </div>
@@ -84,13 +91,20 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <script is:inline>
     const API_BASE = '/api';
     const AUTH_KEY = 'novella_auth_user';
+    const ADMIN_KEY = 'novella_admin_session';
     const isLoggedOut = typeof window !== 'undefined' && window.location.search.includes('logged_out=1');
 
     if (isLoggedOut) {
       localStorage.removeItem(AUTH_KEY);
+      localStorage.removeItem(ADMIN_KEY);
     } else {
-      if (localStorage.getItem(AUTH_KEY)) {
-        window.location.replace('/portal');
+      if (localStorage.getItem(ADMIN_KEY)) {
+        window.location.replace('/admin');
+      } else if (localStorage.getItem(AUTH_KEY)) {
+        try {
+          const u = JSON.parse(localStorage.getItem(AUTH_KEY) || '{}');
+          window.location.replace(u.role === 'admin' ? '/admin' : '/portal');
+        } catch { window.location.replace('/portal'); }
       }
 
       async function checkExistingSession() {
@@ -98,9 +112,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           const res = await fetch(`${API_BASE}/auth/get-session`, { credentials: 'include' });
           if (res.ok) {
             const session = await res.json();
-            if (session && session.user) {
+            if (session?.user) {
               localStorage.setItem(AUTH_KEY, JSON.stringify(session.user));
-              window.location.replace('/portal');
+              window.location.replace(session.user.role === 'admin' ? '/admin' : '/portal');
             }
           }
         } catch {}
@@ -116,21 +130,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
-          body: JSON.stringify({
-            provider: 'google',
-            callbackURL: callbackUrl,
-          }),
+          body: JSON.stringify({ provider: 'google', callbackURL: callbackUrl }),
         });
         const data = await res.json();
-        if (data && data.url) {
-          window.location.href = data.url;
-          return;
-        }
+        if (data?.url) { window.location.href = data.url; return; }
       } catch {}
       window.location.href = `${API_BASE}/auth/sign-in/social?provider=google&callbackURL=${encodeURIComponent(callbackUrl)}`;
     });
 
-    // Regular Email Login
+    // Email Login (Author & Admin Fallback)
     const form = document.getElementById('email-login-form');
     const errorBox = document.getElementById('login-error-msg');
     const submitBtn = document.getElementById('btn-submit-login');
@@ -151,19 +159,37 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           credentials: 'include',
           body: JSON.stringify({ email, password }),
         });
-
         const data = await res.json();
 
         if (res.ok) {
-          if (data && data.user) {
+          if (data?.user) {
             localStorage.setItem(AUTH_KEY, JSON.stringify(data.user));
+            if (data.user.role === 'admin') { window.location.href = '/admin'; return; }
           }
           window.location.href = '/portal';
-        } else {
-          errorBox.textContent = data.message || data.error || 'Email atau kata sandi tidak sesuai.';
-          errorBox.classList.remove('hidden');
+          return;
         }
-      } catch (err) {
+
+        // Cek autentikasi staf redaksi jika gagal di Better Auth
+        try {
+          const admRes = await fetch(`${API_BASE}/admin/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ email, password }),
+          });
+          const admData = await admRes.json();
+          if (admRes.ok && admData.success) {
+            localStorage.setItem(ADMIN_KEY, admData.token);
+            if (admData.user) localStorage.setItem(AUTH_KEY, JSON.stringify(admData.user));
+            window.location.href = '/admin';
+            return;
+          }
+        } catch {}
+
+        errorBox.textContent = data.message || data.error || 'Email atau kata sandi tidak sesuai.';
+        errorBox.classList.remove('hidden');
+      } catch {
         errorBox.textContent = 'Gagal terhubung ke server. Pastikan koneksi aktif.';
         errorBox.classList.remove('hidden');
       } finally {

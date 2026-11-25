@@ -22,6 +22,11 @@ export function renderNavUser(user: any) {
   if (dispEmail) {
     dispEmail.textContent = user.email + (user.phone ? ' · ' + user.phone : '');
   }
+
+  const isAdmin = user.role === 'admin' || Boolean(localStorage.getItem('novella_admin_session'));
+  if (isAdmin) {
+    document.getElementById('nav-dropdown-admin-link')?.classList.remove('hidden');
+  }
 }
 
 export function initNavbarController() {
@@ -80,12 +85,14 @@ export function initNavbarController() {
     } catch {}
 
     localStorage.removeItem(AUTH_KEY);
+    localStorage.removeItem('novella_admin_session');
     sessionStorage.removeItem('novella_portal_draft');
     window.location.replace('/login?logged_out=1');
   });
 
   if (isLoggedOut) {
     localStorage.removeItem(AUTH_KEY);
+    localStorage.removeItem('novella_admin_session');
   } else {
     const cached = localStorage.getItem(AUTH_KEY);
     if (cached) {
