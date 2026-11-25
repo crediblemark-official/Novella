@@ -11,7 +11,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </div>
   </div>
 
-  <!-- Admin Auth Guard (Shown when unauthenticated or unauthorized) -->
+  <!-- Admin Auth Guard (Protected Login Form) -->
   <div id="admin-auth-guard" class="hidden min-h-[calc(100vh-64px)] items-center justify-center bg-[#F1F5F9] px-4 py-12 sm:px-6">
     <div class="w-full max-w-md rounded-3xl border border-slate-200/90 bg-white p-7 sm:p-9 shadow-lg">
       <div class="text-center">
@@ -34,29 +34,27 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         Email atau kata sandi tidak valid.
       </div>
 
-      <!-- Login Form -->
+      <!-- Login Form (Clean, Production) -->
       <form id="admin-login-form" class="mt-5 space-y-4">
         <div>
-          <label class="block text-xs font-bold text-navy">Email Staf Redaksi</label>
+          <label for="admin-email" class="block text-xs font-bold text-navy">Email Staf Redaksi</label>
           <input
             id="admin-email"
             type="email"
             required
-            value="admin@novella.id"
-            placeholder="admin@novella.id"
+            autocomplete="username"
+            placeholder="nama@novella.id"
             class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-xs font-semibold text-navy focus:border-navy focus:outline-none"
           />
         </div>
 
         <div>
-          <div class="flex items-center justify-between">
-            <label class="block text-xs font-bold text-navy">Kata Sandi Redaksi</label>
-          </div>
+          <label for="admin-password" class="block text-xs font-bold text-navy">Kata Sandi Redaksi</label>
           <input
             id="admin-password"
             type="password"
             required
-            value="AdminNovella2026!"
+            autocomplete="current-password"
             placeholder="••••••••••••"
             class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-xs font-semibold text-navy focus:border-navy focus:outline-none"
           />
@@ -65,34 +63,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <button
           id="btn-admin-submit"
           type="submit"
-          class="w-full rounded-full bg-navy py-3 text-xs font-extrabold text-white shadow-md transition-all hover:bg-slate-800 active:scale-[0.99]"
+          class="w-full rounded-full bg-navy py-3 text-xs font-extrabold text-white shadow-md transition-all hover:bg-slate-800 active:scale-[0.99] cursor-pointer"
         >
           Masuk ke Dashboard
         </button>
-
-        <!-- Fast Demo Fill Button -->
-        <button
-          id="btn-fast-demo"
-          type="button"
-          class="w-full rounded-full border border-slate-200 bg-slate-50 py-2.5 text-xs font-bold text-slate-700 transition-colors hover:bg-slate-100"
-        >
-          ⚡ Masuk Cepat sebagai Redaksi Demo
-        </button>
       </form>
 
-      <!-- Demo Credentials Notice -->
       <div class="mt-6 border-t border-slate-100 pt-4 text-center">
-        <p class="text-[11px] text-slate-400">
-          Akun Demo Redaksi: <strong class="text-slate-600">admin@novella.id</strong> | Sandi: <strong class="text-slate-600">AdminNovella2026!</strong>
-        </p>
-        <a href="/" class="mt-3 inline-block text-xs font-bold text-orange hover:underline">
+        <a href="/" class="text-xs font-bold text-orange hover:underline">
           &larr; Kembali ke Beranda Penulis
         </a>
       </div>
     </div>
   </div>
 
-  <!-- Protected Admin Dashboard Content (Hidden by default until authenticated) -->
+  <!-- Protected Admin Dashboard Content -->
   <div id="admin-dashboard-content" class="hidden min-h-[calc(100vh-64px)] bg-[#F1F5F9] px-4 py-8 sm:px-6">
     <div class="mx-auto max-w-6xl">
       <!-- Admin Header with Identity & Logout -->
@@ -100,7 +85,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <div>
           <div class="inline-flex items-center gap-2 rounded-full bg-emerald-50 border border-emerald-200 px-3 py-1 text-xs font-bold text-emerald-800">
             <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span id="admin-identity-label">Staf Redaksi Aktif: admin@novella.id</span>
+            <span id="admin-identity-label">Staf Redaksi Aktif</span>
           </div>
           <h1 class="mt-2 text-2xl font-extrabold text-navy sm:text-3xl">Dashboard Manajemen Pesanan</h1>
           <p class="text-xs text-slate-500">Pantau verifikasi naskah sastra, status cetak, dan komunikasi penulis.</p>
@@ -110,7 +95,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <button
             id="btn-refresh-admin"
             type="button"
-            class="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 text-xs font-bold text-navy shadow-xs hover:bg-slate-50 transition-colors"
+            class="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 text-xs font-bold text-navy shadow-xs hover:bg-slate-50 transition-colors cursor-pointer"
           >
             <svg class="h-3.5 w-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -121,7 +106,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <button
             id="btn-admin-logout"
             type="button"
-            class="inline-flex items-center gap-1.5 rounded-full border border-rose-200 bg-rose-50 px-3.5 py-2 text-xs font-extrabold text-rose-700 hover:bg-rose-100 transition-colors"
+            class="inline-flex items-center gap-1.5 rounded-full border border-rose-200 bg-rose-50 px-3.5 py-2 text-xs font-extrabold text-rose-700 hover:bg-rose-100 transition-colors cursor-pointer"
           >
             <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -155,12 +140,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <!-- Filter Tabs & Search Bar -->
       <div class="mt-8 flex flex-wrap items-center justify-between gap-3">
         <div class="flex flex-wrap items-center gap-1.5 text-xs font-bold">
-          <button type="button" data-filter="ALL" class="admin-tab rounded-full bg-navy px-3.5 py-1.5 text-white">Semua</button>
-          <button type="button" data-filter="Menunggu Verifikasi" class="admin-tab rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-slate-600 hover:bg-slate-50">Menunggu Verifikasi</button>
-          <button type="button" data-filter="Diproses" class="admin-tab rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-slate-600 hover:bg-slate-50">Diproses</button>
-          <button type="button" data-filter="Selesai" class="admin-tab rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-slate-600 hover:bg-slate-50">Selesai</button>
-          <button type="button" data-filter="Ditarik Penulis" class="admin-tab rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-slate-600 hover:bg-slate-50">Ditarik Penulis</button>
-          <button type="button" data-filter="Kedaluwarsa" class="admin-tab rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-slate-600 hover:bg-slate-50">Kedaluwarsa</button>
+          <button type="button" data-filter="ALL" class="admin-tab rounded-full bg-navy px-3.5 py-1.5 text-white cursor-pointer">Semua</button>
+          <button type="button" data-filter="Menunggu Verifikasi" class="admin-tab rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-slate-600 hover:bg-slate-50 cursor-pointer">Menunggu Verifikasi</button>
+          <button type="button" data-filter="Diproses" class="admin-tab rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-slate-600 hover:bg-slate-50 cursor-pointer">Diproses</button>
+          <button type="button" data-filter="Selesai" class="admin-tab rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-slate-600 hover:bg-slate-50 cursor-pointer">Selesai</button>
+          <button type="button" data-filter="Ditarik Penulis" class="admin-tab rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-slate-600 hover:bg-slate-50 cursor-pointer">Ditarik Penulis</button>
+          <button type="button" data-filter="Kedaluwarsa" class="admin-tab rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-slate-600 hover:bg-slate-50 cursor-pointer">Kedaluwarsa</button>
         </div>
 
         <div class="w-full sm:w-64">
@@ -207,410 +192,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     Pemberitahuan
   </div>
 
-  <script is:inline>
-    const API_BASE =
-      typeof window !== 'undefined' && window.location.port === '4321'
-        ? 'http://localhost:3001/api'
-        : '/api';
-    const ADMIN_STORAGE_KEY = 'novella_admin_session';
-
-    let allOrders = [];
-    let activeFilter = 'ALL';
-    let searchQuery = '';
-    let currentAdminToken = localStorage.getItem(ADMIN_STORAGE_KEY) || '';
-
-    const loadingScreen = document.getElementById('admin-loading-screen');
-    const authGuard = document.getElementById('admin-auth-guard');
-    const dashboardContent = document.getElementById('admin-dashboard-content');
-    const loginForm = document.getElementById('admin-login-form');
-    const authErrorBanner = document.getElementById('auth-error-banner');
-    const identityLabel = document.getElementById('admin-identity-label');
-    const logoutBtn = document.getElementById('btn-admin-logout');
-    const fastDemoBtn = document.getElementById('btn-fast-demo');
-
-    const kpiTotalOrders = document.getElementById('kpi-total-orders');
-    const kpiWaitingOrders = document.getElementById('kpi-waiting-orders');
-    const kpiActiveValue = document.getElementById('kpi-active-value');
-    const ordersTbody = document.getElementById('orders-tbody');
-    const adminTabs = document.querySelectorAll('.admin-tab');
-    const searchInput = document.getElementById('admin-search-input');
-    const refreshBtn = document.getElementById('btn-refresh-admin');
-
-    function showAdminToast(msg) {
-      const toast = document.getElementById('admin-toast');
-      if (toast) {
-        toast.textContent = msg;
-        toast.classList.remove('hidden');
-        setTimeout(() => toast.classList.add('hidden'), 2500);
-      }
-    }
-
-    function formatRp(num) {
-      return 'Rp ' + Number(num || 0).toLocaleString('id-ID');
-    }
-
-    // Check if current user is an authorized admin
-    async function checkAdminAuth() {
-      try {
-        // 1. Verify via admin module
-        const headers = { 'Content-Type': 'application/json' };
-        if (currentAdminToken) {
-          headers['Authorization'] = `Bearer ${currentAdminToken}`;
-          headers['x-admin-token'] = currentAdminToken;
-        }
-
-        const res = await fetch(`${API_BASE}/admin/verify`, {
-          headers,
-          credentials: 'include',
-        });
-
-        if (res.ok) {
-          const data = await res.json();
-          if (data.authenticated && data.user) {
-            grantAdminAccess(data.user);
-            return;
-          }
-        }
-      } catch (err) {
-        console.warn('Admin check fallback:', err);
-      }
-
-      // If not authenticated as admin, show auth guard
-      denyAdminAccess();
-    }
-
-    function grantAdminAccess(user) {
-      if (loadingScreen) loadingScreen.classList.add('hidden');
-      if (authGuard) authGuard.classList.add('hidden');
-      if (dashboardContent) dashboardContent.classList.remove('hidden');
-
-      if (identityLabel) {
-        identityLabel.textContent = `Staf Redaksi: ${user.name || user.email}`;
-      }
-
-      fetchKPI();
-      fetchOrders();
-    }
-
-    function denyAdminAccess(errorMessage) {
-      if (loadingScreen) loadingScreen.classList.add('hidden');
-      if (dashboardContent) dashboardContent.classList.add('hidden');
-      if (authGuard) {
-        authGuard.classList.remove('hidden');
-        authGuard.classList.add('flex');
-      }
-
-      if (errorMessage && authErrorBanner) {
-        authErrorBanner.textContent = errorMessage;
-        authErrorBanner.classList.remove('hidden');
-      }
-    }
-
-    // Admin Login Execution
-    async function handleAdminLogin(email, password) {
-      const submitBtn = document.getElementById('btn-admin-submit');
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Memverifikasi...';
-      }
-      if (authErrorBanner) authErrorBanner.classList.add('hidden');
-
-      try {
-        const res = await fetch(`${API_BASE}/admin/login`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({ email, password }),
-        });
-
-        const data = await res.json();
-        if (res.ok && data.success) {
-          currentAdminToken = data.token;
-          localStorage.setItem(ADMIN_STORAGE_KEY, data.token);
-          grantAdminAccess(data.user);
-          showAdminToast('Berhasil masuk sebagai staf redaksi!');
-        } else {
-          denyAdminAccess(data.error || 'Autentikasi gagal. Periksa kembali email dan sandi redaksi.');
-        }
-      } catch (err) {
-        denyAdminAccess('Tidak dapat terhubung ke server backend.');
-      } finally {
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Masuk ke Dashboard';
-        }
-      }
-    }
-
-    if (loginForm) {
-      loginForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const email = document.getElementById('admin-email').value;
-        const password = document.getElementById('admin-password').value;
-        handleAdminLogin(email, password);
-      });
-    }
-
-    if (fastDemoBtn) {
-      fastDemoBtn.addEventListener('click', () => {
-        document.getElementById('admin-email').value = 'admin@novella.id';
-        document.getElementById('admin-password').value = 'AdminNovella2026!';
-        handleAdminLogin('admin@novella.id', 'AdminNovella2026!');
-      });
-    }
-
-    if (logoutBtn) {
-      logoutBtn.addEventListener('click', async () => {
-        try {
-          await fetch(`${API_BASE}/admin/logout`, { method: 'POST', credentials: 'include' });
-        } catch {}
-        localStorage.removeItem(ADMIN_STORAGE_KEY);
-        currentAdminToken = '';
-        showAdminToast('Sesi redaksi telah diakhiri.');
-        setTimeout(() => {
-          location.reload();
-        }, 500);
-      });
-    }
-
-    async function fetchKPI() {
-      try {
-        const res = await fetch(`${API_BASE}/admin/kpi`);
-        if (res.ok) {
-          const kpi = await res.json();
-          kpiTotalOrders.textContent = String(kpi.totalOrders);
-          kpiWaitingOrders.textContent = String(kpi.waitingVerification);
-          kpiActiveValue.textContent = formatRp(kpi.totalActiveValue);
-        }
-      } catch (err) {
-        console.error('Failed to fetch KPI', err);
-      }
-    }
-
-    async function fetchOrders() {
-      try {
-        const res = await fetch(`${API_BASE}/orders`);
-        if (res.ok) {
-          allOrders = await res.json();
-          renderOrdersTable();
-        }
-      } catch (err) {
-        ordersTbody.innerHTML = `
-          <tr>
-            <td colspan="7" class="px-4 py-8 text-center text-rose-500 font-bold">
-              Gagal memuat data dari server backend. Pastikan server Elysia berjalan.
-            </td>
-          </tr>
-        `;
-      }
-    }
-
-    function renderOrdersTable() {
-      let filtered = allOrders;
-
-      if (activeFilter !== 'ALL') {
-        filtered = filtered.filter((o) => o.status === activeFilter);
-      }
-
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase();
-        filtered = filtered.filter(
-          (o) =>
-            o.orderCode.toLowerCase().includes(q) ||
-            o.authorName.toLowerCase().includes(q) ||
-            o.bookTitle.toLowerCase().includes(q) ||
-            o.authorPhone.toLowerCase().includes(q)
-        );
-      }
-
-      if (filtered.length === 0) {
-        ordersTbody.innerHTML = `
-          <tr>
-            <td colspan="7" class="px-4 py-8 text-center text-slate-400">
-              Tidak ada pesanan sastra yang sesuai filter.
-            </td>
-          </tr>
-        `;
-        return;
-      }
-
-      ordersTbody.innerHTML = filtered
-        .map((o) => {
-          let parsedAddons = [];
-          try {
-            parsedAddons = JSON.parse(o.addons || '[]');
-          } catch {
-            parsedAddons = [];
-          }
-
-          const isWithdrawn = o.status === 'Ditarik Penulis';
-          const isExpired = o.status === 'Kedaluwarsa';
-          const isFinal = isWithdrawn || isExpired || o.isRevoked === 1;
-          const isAwaiting = o.status === 'Menunggu Verifikasi';
-          const isProcessingOrDone = o.status === 'Diproses' || o.status === 'Selesai';
-
-          // Status Badge / Select
-          const statusBg =
-            o.status === 'Menunggu Verifikasi'
-              ? 'bg-amber-50 text-amber-800 border-amber-200'
-              : o.status === 'Diproses'
-              ? 'bg-blue-50 text-blue-800 border-blue-200'
-              : o.status === 'Selesai'
-              ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-              : isExpired
-              ? 'bg-slate-100 text-slate-700 border-slate-300'
-              : 'bg-rose-50 text-rose-800 border-rose-200';
-
-          // WhatsApp Follow-up URL
-          const waPhone = o.authorPhone.startsWith('0') ? '62' + o.authorPhone.slice(1) : o.authorPhone;
-          const waMsg = encodeURIComponent(
-            `Halo Kak ${o.authorName}, kami dari tim redaksi Novella.id ingin menindaklanjuti pesanan naskah sastra "${o.bookTitle}" (Kode: ${o.orderCode}). Ada yang bisa kami bantu?`
-          );
-          const waUrl = `https://wa.me/${waPhone}?text=${waMsg}`;
-
-          return `
-            <tr class="hover:bg-slate-50/60 transition-colors">
-              <td class="px-4 py-3.5 font-mono font-extrabold text-navy whitespace-nowrap">
-                ${o.orderCode}
-              </td>
-              <td class="px-4 py-3.5">
-                <p class="font-extrabold text-navy">${o.authorName}</p>
-                <p class="text-[11px] text-slate-500">${o.authorPhone}</p>
-                <p class="text-[10px] text-slate-400 truncate max-w-[180px]" title="${o.shippingAddress}">${o.shippingAddress}</p>
-              </td>
-              <td class="px-4 py-3.5">
-                <p class="font-extrabold text-navy">${o.bookTitle}</p>
-                <p class="text-[11px] text-slate-500">${o.category}</p>
-                <p class="font-mono text-[10px] text-slate-400">[${o.fileOriginalName || 'Naskah'}]</p>
-              </td>
-              <td class="px-4 py-3.5 text-[11px] text-slate-600">
-                <p class="font-semibold">${o.pages} hal · ${o.copies} eks · ${o.bookSize}</p>
-                <p class="text-slate-400">Add-on: ${parsedAddons.length ? parsedAddons.join(', ') : '–'}</p>
-              </td>
-              <td class="px-4 py-3.5 font-extrabold text-navy whitespace-nowrap">
-                ${formatRp(o.totalPrice)}
-              </td>
-              <td class="px-4 py-3.5 whitespace-nowrap">
-                ${
-                  isFinal
-                    ? isWithdrawn
-                      ? `<span class="inline-block rounded-lg border border-rose-200 bg-rose-50 px-2.5 py-1 text-[11px] font-extrabold text-rose-700">Ditarik Penulis</span>`
-                      : `<span class="inline-block rounded-lg border border-slate-300 bg-slate-100 px-2.5 py-1 text-[11px] font-extrabold text-slate-600">Kedaluwarsa</span>`
-                    : `
-                    <select
-                      onchange="window.updateOrderStatus('${o.orderCode}', this.value)"
-                      class="rounded-lg border px-2.5 py-1 text-xs font-bold focus:outline-none ${statusBg}"
-                    >
-                      <option value="Menunggu Verifikasi" ${o.status === 'Menunggu Verifikasi' ? 'selected' : ''}>Menunggu Verifikasi</option>
-                      <option value="Diproses" ${o.status === 'Diproses' ? 'selected' : ''}>Diproses</option>
-                      <option value="Selesai" ${o.status === 'Selesai' ? 'selected' : ''}>Selesai</option>
-                    </select>
-                  `
-                }
-              </td>
-              <td class="px-4 py-3.5 text-right whitespace-nowrap">
-                <div class="flex items-center justify-end gap-1.5">
-                  ${
-                    isFinal
-                      ? `<span class="inline-flex items-center gap-1 text-[11px] text-rose-500 font-bold" title="Berkas naskah telah dihapus permanen dari server">
-                          <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                          Berkas Dihapus
-                        </span>`
-                      : isAwaiting
-                      ? `<span class="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-slate-50 px-2 py-1 text-[11px] font-bold text-slate-400 cursor-not-allowed" title="Naskah terkunci otomatis sebelum pembayaran diverifikasi oleh redaksi">
-                          <svg class="h-3.5 w-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                          Terkunci
-                        </span>`
-                      : `<a
-                          href="${API_BASE}/files/${o.fileName}"
-                          target="_blank"
-                          class="rounded-lg border border-slate-200 bg-white px-2 py-1 text-[11px] font-bold text-slate-700 hover:bg-slate-100 hover:text-navy transition-colors"
-                        >
-                          Unduh
-                        </a>`
-                  }
-                  <a
-                    href="${waUrl}"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="rounded-lg bg-emerald-600 px-2.5 py-1 text-[11px] font-extrabold text-white hover:bg-emerald-700 transition-colors"
-                  >
-                    WA Penulis
-                  </a>
-                </div>
-              </td>
-            </tr>
-          `;
-        })
-        .join('');
-    }
-
-    // Expose update order status to global
-    window.updateOrderStatus = async function (orderCode, newStatus) {
-      if (newStatus === 'Diproses') {
-        const confirmed = confirm(
-          `Konfirmasi Verifikasi Pembayaran:\n\nApakah Anda yakin pembayaran pesanan ${orderCode} telah diverifikasi?\n\nMengubah status ke "Diproses" akan membuka akses unduh naskah bagi redaksi dan mengunci hak penarikan naskah penulis.`
-        );
-        if (!confirmed) {
-          fetchOrders();
-          return;
-        }
-      }
-
-      try {
-        const res = await fetch(`${API_BASE}/orders/${orderCode}/status`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ status: newStatus }),
-        });
-
-        if (res.ok) {
-          showAdminToast(`Status pesanan ${orderCode} diperbarui ke "${newStatus}".`);
-          fetchKPI();
-          fetchOrders();
-        } else {
-          const err = await res.json();
-          alert(err.error || 'Gagal memperbarui status');
-          fetchOrders();
-        }
-      } catch (err) {
-        alert('Gagal menghubungi server');
-      }
-    };
-
-    // Filter tab listeners
-    adminTabs.forEach((tab) => {
-      tab.addEventListener('click', () => {
-        adminTabs.forEach((t) => {
-          t.classList.remove('bg-navy', 'text-white');
-          t.classList.add('bg-white', 'text-slate-600', 'border', 'border-slate-200');
-        });
-        tab.classList.remove('bg-white', 'text-slate-600', 'border', 'border-slate-200');
-        tab.classList.add('bg-navy', 'text-white');
-
-        activeFilter = tab.getAttribute('data-filter') || 'ALL';
-        renderOrdersTable();
-      });
-    });
-
-    if (searchInput) {
-      searchInput.addEventListener('input', (e) => {
-        searchQuery = e.target.value;
-        renderOrdersTable();
-      });
-    }
-
-    if (refreshBtn) {
-      refreshBtn.addEventListener('click', () => {
-        fetchKPI();
-        fetchOrders();
-        showAdminToast('Data pesanan disinkronkan kembali.');
-      });
-    }
-
-    // Start by checking admin authorization
-    document.addEventListener('DOMContentLoaded', () => {
-      checkAdminAuth();
-    });
+  <script>
+    import { initAdminController } from '../scripts/admin-controller';
+    initAdminController();
   </script>
 </BaseLayout>

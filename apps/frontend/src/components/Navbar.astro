@@ -121,10 +121,11 @@ const { activeNav = 'landing' } = Astro.props;
         </div>
       </div>
 
-      <!-- Admin Button -->
+      <!-- Admin Button (Hidden by default, revealed only for authenticated editorial staff) -->
       <a
         href="/admin"
-        class={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold transition-colors ${
+        id="nav-admin-link"
+        class={`hidden inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold transition-colors ${
           activeNav === 'admin'
             ? 'border-navy bg-navy text-white'
             : 'border-slate-300 bg-white text-slate-700 hover:border-navy hover:text-navy'

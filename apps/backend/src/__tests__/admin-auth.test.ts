@@ -82,7 +82,44 @@ describe('Admin Authentication Guard & Module', () => {
     expect(verifyBody.user.role).toBe('admin');
   });
 
-  it('5. POST /api/admin/logout returns success', async () => {
+  it('5. GET /api/admin/kpi rejects unauthenticated requests', async () => {
+    const res = await app.handle(
+      new Request('http://localhost:3001/api/admin/kpi')
+    );
+    expect(res.status).toBe(401);
+    const body = (await res.json()) as any;
+    expect(body.error).toContain('Akses ditolak');
+  });
+
+  it('6. GET /api/admin/kpi allows access with valid admin token', async () => {
+    const loginRes = await app.handle(
+      new Request('http://localhost:3001/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: 'admin@novella.id',
+          password: 'AdminNovella2026!',
+        }),
+      })
+    );
+    const loginBody = (await loginRes.json()) as any;
+
+    const kpiRes = await app.handle(
+      new Request('http://localhost:3001/api/admin/kpi', {
+        headers: {
+          'Authorization': `Bearer ${loginBody.token}`,
+        },
+      })
+    );
+
+    expect(kpiRes.status).toBe(200);
+    const kpiBody = (await kpiRes.json()) as any;
+    expect(typeof kpiBody.totalOrders).toBe('number');
+    expect(typeof kpiBody.waitingVerification).toBe('number');
+    expect(typeof kpiBody.totalActiveValue).toBe('number');
+  });
+
+  it('7. POST /api/admin/logout returns success', async () => {
     const res = await app.handle(
       new Request('http://localhost:3001/api/admin/logout', {
         method: 'POST',

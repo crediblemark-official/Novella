@@ -5,6 +5,26 @@ import { eq } from 'drizzle-orm';
 import { auth } from '../../auth';
 import { cleanupExpiredOrders } from '../../services/expiry';
 
+const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || 'admin@novella.id').toLowerCase().trim();
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'AdminNovella2026!';
+
+export async function verifyAdminRequest(request: Request): Promise<boolean> {
+  // 1. Check Better Auth session
+  try {
+    const session = await auth.api.getSession({ headers: request.headers });
+    if (session && session.user && (session.user as any).role === 'admin') {
+      return true;
+    }
+  } catch {}
+
+  // 2. Check custom admin token in authorization header or x-admin-token
+  const authHeader = request.headers.get('Authorization') || request.headers.get('x-admin-token');
+  if (authHeader && authHeader.includes('novella_admin_')) {
+    return true;
+  }
+  return false;
+}
+
 export const adminModule = new Elysia({ prefix: '/api/admin' })
   .post(
     '/login',
@@ -15,10 +35,10 @@ export const adminModule = new Elysia({ prefix: '/api/admin' })
       // Check if user exists in DB and has role 'admin'
       const [foundUser] = await db.select().from(user).where(eq(user.email, email));
 
-      // Standard credential check for Novella editorial staff
+      // Credential check with env variable & database roles
       const isValidAdmin =
-        (email === 'admin@novella.id' && password === 'AdminNovella2026!') ||
-        (foundUser && foundUser.role === 'admin' && password === 'AdminNovella2026!');
+        (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) ||
+        (foundUser && foundUser.role === 'admin' && password === ADMIN_PASSWORD);
 
       if (!isValidAdmin) {
         set.status = 401;
@@ -37,7 +57,7 @@ export const adminModule = new Elysia({ prefix: '/api/admin' })
           .values({
             id: 'usr_admin_novella',
             name: 'Tim Redaksi Novella',
-            email: 'admin@novella.id',
+            email: ADMIN_EMAIL,
             emailVerified: true,
             image: 'AD',
             phone: '081234567890',
@@ -88,20 +108,18 @@ export const adminModule = new Elysia({ prefix: '/api/admin' })
           user: session.user,
         };
       }
-    } catch {
-      // fallback
-    }
+    } catch {}
 
     // 2. Check custom admin token in authorization header or x-admin-token
     const authHeader = request.headers.get('Authorization') || request.headers.get('x-admin-token');
     if (authHeader && authHeader.includes('novella_admin_')) {
-      const [adminRecord] = await db.select().from(user).where(eq(user.email, 'admin@novella.id'));
+      const [adminRecord] = await db.select().from(user).where(eq(user.email, ADMIN_EMAIL));
       return {
         authenticated: true,
         user: adminRecord || {
           id: 'usr_admin_novella',
           name: 'Tim Redaksi Novella',
-          email: 'admin@novella.id',
+          email: ADMIN_EMAIL,
           role: 'admin',
         },
       };
@@ -116,7 +134,13 @@ export const adminModule = new Elysia({ prefix: '/api/admin' })
   .post('/logout', () => {
     return { success: true };
   })
-  .get('/kpi', async () => {
+  .get('/kpi', async ({ request, set }) => {
+    const isAuthorized = await verifyAdminRequest(request);
+    if (!isAuthorized) {
+      set.status = 401;
+      return { error: 'Akses ditolak. Endpoint KPI ini khusus staf redaksi.' };
+    }
+
     const allOrders = await db.select().from(orders);
 
     const totalOrders = allOrders.length;
@@ -141,7 +165,13 @@ export const adminModule = new Elysia({ prefix: '/api/admin' })
       totalActiveValue,
     };
   })
-  .post('/cleanup-expired', async () => {
+  .post('/cleanup-expired', async ({ request, set }) => {
+    const isAuthorized = await verifyAdminRequest(request);
+    if (!isAuthorized) {
+      set.status = 401;
+      return { error: 'Akses ditolak. Endpoint pembersihan naskah khusus staf redaksi.' };
+    }
+
     const result = await cleanupExpiredOrders();
     return {
       success: true,

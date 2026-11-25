@@ -172,7 +172,11 @@ describe('Novella.id Full End-to-End API Integration', () => {
   });
 
   it('8. Admin KPI calculates metrics correctly', async () => {
-    const kpiRes = await app.handle(new Request('http://localhost:3001/api/admin/kpi'));
+    const kpiRes = await app.handle(
+      new Request('http://localhost:3001/api/admin/kpi', {
+        headers: { 'x-admin-token': 'novella_admin_test_session' },
+      })
+    );
     expect(kpiRes.status).toBe(200);
     const kpi = (await kpiRes.json()) as any;
     expect(kpi.totalOrders).toBeGreaterThanOrEqual(3);
@@ -206,10 +210,11 @@ describe('Novella.id Full End-to-End API Integration', () => {
     const errBody = (await attemptUpdateRes.json()) as any;
     expect(errBody.error).toContain('bersifat final');
 
-    // Trigger cleanup expired endpoint
+    // Trigger cleanup expired endpoint with admin token
     const cleanupRes = await app.handle(
       new Request('http://localhost:3001/api/admin/cleanup-expired', {
         method: 'POST',
+        headers: { 'x-admin-token': 'novella_admin_test_session' },
       })
     );
     expect(cleanupRes.status).toBe(200);
