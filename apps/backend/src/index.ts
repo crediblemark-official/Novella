@@ -5,7 +5,10 @@ import { staticPlugin } from '@elysiajs/static';
 import { ordersModule } from './modules/orders/routes';
 import { uploadModule } from './modules/upload/routes';
 import { adminModule } from './modules/admin/routes';
+import { adminCrmModule } from './modules/admin/crm';
 import { authModule } from './modules/auth/routes';
+import { settingsModule } from './modules/settings/routes';
+import { showcaseModule } from './modules/showcase/routes';
 import { db, initDatabase } from './db';
 import { orders } from './db/schema';
 import { runSeed } from './db/seed';
@@ -104,7 +107,10 @@ export const app = new Elysia()
   .use(authModule)
   .use(ordersModule)
   .use(uploadModule)
-  .use(adminModule);
+  .use(adminModule)
+  .use(adminCrmModule)
+  .use(settingsModule)
+  .use(showcaseModule);
 
 // In production, serve built frontend static files.
 // In dev/test, fallback '/' returns API status for backward test compatibility.

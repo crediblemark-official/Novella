@@ -1,10 +1,10 @@
 ---
 /**
- * StepPayment: Step 3 (Rincian Pembayaran & Konfirmasi WhatsApp) — Unboxed Flat Studio
+ * StepPayment: Step 3 (Rincian Pembayaran & Konfirmasi WhatsApp) — Dynamic Settings
  * - Flat order summary breakdown with hairlines
- * - Official bank account details with 1-click copy
+ * - Official bank account details loaded dynamically with 1-click copy
+ * - Optional payment proof slip upload
  * - WhatsApp confirmation CTA
- * - Order cancellation (Tarik Naskah) & New Order triggers
  */
 ---
 
@@ -18,7 +18,7 @@
     <button id="btn-back-to-book" type="button" class="rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-bold text-slate-600 hover:border-slate-300 hover:bg-slate-50 transition-colors shadow-xs cursor-pointer">&larr; Ubah Berkas</button>
   </div>
 
-  <!-- Ringkasan Pesanan (Flat Hairline List, NO nested box) -->
+  <!-- Ringkasan Pesanan -->
   <div class="mt-6 border-t border-b border-slate-100 py-3.5 text-xs space-y-1.5">
     <div class="flex justify-between items-baseline font-bold text-navy">
       <span id="pay-book-title" class="text-sm">Buku: -</span>
@@ -28,46 +28,39 @@
     <p id="pay-addons" class="text-slate-500 text-[11px]">Add-on: -</p>
   </div>
 
-  <!-- Disclaimer Estimasi Halaman (Flat Footnote, NO nested box) -->
+  <!-- Disclaimer Estimasi Halaman -->
   <p class="mt-3 text-[11px] text-slate-500 leading-relaxed">
     <strong class="text-navy font-bold">Catatan Estimasi Halaman:</strong> Total biaya ini adalah estimasi berdasarkan jumlah halaman yang Anda masukkan. Jika setelah proses tata letak jumlah halaman bertambah melebihi batas paket, tim redaksi akan menginformasikan penyesuaian biaya melalui WhatsApp.
   </p>
 
-  <!-- Rekening Resmi Novella.id (Flat Hairlines, NO nested cards) -->
+  <!-- Rekening Resmi Novella.id (Dinamis dari /api/settings) -->
   <div class="mt-6">
     <p class="text-xs font-bold text-navy mb-2">Nomor Rekening Resmi Penerbit Novella:</p>
-    <div class="divide-y divide-slate-100 border-t border-b border-slate-100">
-      <!-- BCA -->
-      <div class="py-3.5 flex items-center justify-between">
-        <div>
-          <p class="text-xs font-extrabold text-navy">Bank Central Asia (BCA)</p>
-          <p class="font-mono text-sm font-bold text-slate-800">8920-192-831</p>
-          <p class="text-[11px] text-slate-500">a.n. Penerbit Novella Nusantara</p>
-        </div>
-        <button
-          type="button"
-          class="copy-btn rounded-lg border border-slate-300 bg-white px-3.5 py-1.5 text-xs font-bold text-navy hover:bg-slate-50 transition-colors cursor-pointer"
-          data-copy="8920192831"
-        >
-          Salin
-        </button>
-      </div>
+    <div id="payment-bank-accounts" class="divide-y divide-slate-100 border-t border-b border-slate-100">
+      <div class="py-3 text-center text-xs text-slate-400">Memuat data rekening resmi...</div>
+    </div>
+  </div>
 
-      <!-- Mandiri -->
-      <div class="py-3.5 flex items-center justify-between">
-        <div>
-          <p class="text-xs font-extrabold text-navy">Bank Mandiri</p>
-          <p class="font-mono text-sm font-bold text-slate-800">137-00-1829102-4</p>
-          <p class="text-[11px] text-slate-500">a.n. Penerbit Novella Nusantara</p>
-        </div>
-        <button
-          type="button"
-          class="copy-btn rounded-lg border border-slate-300 bg-white px-3.5 py-1.5 text-xs font-bold text-navy hover:bg-slate-50 transition-colors cursor-pointer"
-          data-copy="1370018291024"
-        >
-          Salin
-        </button>
+  <!-- Bukti Pembayaran / Struk Transfer (Opsional tapi Direkomendasikan) -->
+  <div class="mt-6 border-t border-slate-100 pt-5">
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="text-xs font-bold text-navy">Unggah Bukti Transfer (Opsional)</p>
+        <p class="text-[11px] text-slate-500">Unggah foto struk transfer / bukti m-banking untuk mempercepat verifikasi redaksi.</p>
       </div>
+      <span id="proof-upload-badge" class="hidden rounded-full bg-emerald-50 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700 border border-emerald-200">Terunggah</span>
+    </div>
+
+    <div class="mt-3 flex items-center gap-3">
+      <input id="input-payment-proof" type="file" accept="image/*,.pdf" class="hidden" />
+      <button
+        id="btn-upload-proof"
+        type="button"
+        class="rounded-xl border border-dashed border-slate-300 bg-slate-50/70 px-4 py-2 text-xs font-bold text-slate-700 hover:border-navy hover:bg-white transition-all cursor-pointer"
+      >
+        📷 Pilih Foto / Slip Transfer
+      </button>
+      <span id="proof-filename" class="text-xs text-slate-400 truncate max-w-[200px]">Belum ada berkas dipilih</span>
     </div>
   </div>
 

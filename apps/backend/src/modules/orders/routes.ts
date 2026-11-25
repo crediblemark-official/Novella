@@ -264,4 +264,22 @@ export const ordersModule = new Elysia({ prefix: '/api/orders' })
         status: t.String(),
       }),
     }
+  )
+  .post(
+    '/:code/payment-proof',
+    async ({ params, body, set }) => {
+      const [existing] = await db.select().from(orders).where(eq(orders.orderCode, params.code));
+      if (!existing) { set.status = 404; return { error: 'Pesanan tidak ditemukan.' }; }
+      const [updated] = await db
+        .update(orders)
+        .set({ paymentProofUrl: body.proofUrl, updatedAt: new Date() })
+        .where(eq(orders.orderCode, params.code))
+        .returning();
+      return { success: true, order: updated };
+    },
+    {
+      body: t.Object({
+        proofUrl: t.String(),
+      }),
+    }
   );

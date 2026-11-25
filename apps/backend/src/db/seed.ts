@@ -1,26 +1,23 @@
 import { db } from './index';
-import { orders, user } from './schema';
+import { orders, user, settings, publishedBooks, testimonials } from './schema';
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 export async function runSeed() {
   const uploadsDir = process.env.UPLOADS_DIR || join(import.meta.dir, '../../../../uploads');
-  if (!existsSync(uploadsDir)) {
-    mkdirSync(uploadsDir, { recursive: true });
-  }
+  if (!existsSync(uploadsDir)) mkdirSync(uploadsDir, { recursive: true });
 
-  // Create sample manuscript mock files
-  writeFileSync(join(uploadsDir, 'lembayung_sample.docx'), 'Sample manuscript: Lembayung Jogja oleh Budi Santoso.');
-  writeFileSync(join(uploadsDir, 'dapur_cerita_sample.pdf'), 'Sample manuscript: Dapur & Cerita oleh Siti Rahma.');
-  writeFileSync(join(uploadsDir, 'jejak_sample.pdf'), 'Sample manuscript: Jejak Langkah oleh Ahmad R.');
+  writeFileSync(join(uploadsDir, 'lembayung_sample.docx'), 'Sample manuscript: Lembayung Jogja');
+  writeFileSync(join(uploadsDir, 'dapur_cerita_sample.pdf'), 'Sample manuscript: Dapur & Cerita');
+  writeFileSync(join(uploadsDir, 'jejak_sample.pdf'), 'Sample manuscript: Jejak Langkah');
 
   const now = new Date();
-
-  // Clear existing to avoid duplicate on re-seed
   await db.delete(orders);
   await db.delete(user);
+  await db.delete(settings);
+  await db.delete(publishedBooks);
+  await db.delete(testimonials);
 
-  // Seed sample users with Better Auth compliant schema
   await db.insert(user).values([
     {
       id: 'usr_admin_novella',
@@ -28,8 +25,8 @@ export async function runSeed() {
       email: 'admin@novella.id',
       emailVerified: true,
       image: 'AD',
-      phone: '081234567890',
-      address: 'Kantor Redaksi Novella.id, Maguwoharjo, Sleman, D.I. Yogyakarta',
+      phone: '081995100401',
+      address: 'Kantor Redaksi Novella.id, Paingan, Maguwoharjo, Sleman, D.I. Yogyakarta',
       role: 'admin',
       createdAt: now,
       updatedAt: now,
@@ -58,33 +55,31 @@ export async function runSeed() {
       createdAt: new Date(Date.now() - 86400000 * 5),
       updatedAt: new Date(Date.now() - 86400000 * 3),
     },
-    {
-      id: 'usr_ahmad_03',
-      name: 'Ahmad R.',
-      email: 'ahmad@example.com',
-      emailVerified: true,
-      image: 'AR',
-      phone: '08198765432',
-      address: 'Kebayoran Baru, Jakarta Selatan',
-      role: 'author',
-      createdAt: new Date(Date.now() - 86400000 * 7),
-      updatedAt: new Date(Date.now() - 86400000 * 6),
-    },
-    {
-      id: 'usr_rasyiqi_main',
-      name: 'Rasyiqi',
-      email: 'info.rasyiqi@gmail.com',
-      emailVerified: true,
-      image: 'R',
-      phone: '081995100401',
-      address: 'Sumenep',
-      role: 'author',
-      createdAt: now,
-      updatedAt: now,
-    },
   ]);
 
-  // Seed sample orders matching PRD Table section 5 Modul F
+  await db.insert(settings).values({
+    adminWa: '6281995100401',
+    companyAddress: 'Jl. Paingan (Depan Universitas Sanata Dharma), Krodan, Maguwoharjo, Depok, Sleman, D.I. Yogyakarta',
+    companyTagline: 'Mitra Penerbitan Sastra Nusantara Terpercaya',
+    bankAccounts: JSON.stringify([
+      { bankName: 'Bank Central Asia (BCA)', accountNumber: '8920192831', accountHolder: 'Penerbit Novella Nusantara' },
+      { bankName: 'Bank Mandiri', accountNumber: '1370018291024', accountHolder: 'Penerbit Novella Nusantara' },
+    ]),
+    updatedAt: now,
+  });
+
+  await db.insert(publishedBooks).values([
+    { title: 'Lembayung Jogja', authorName: 'Budi Santoso', category: 'Novel Sastra', pages: 120, bookSize: 'A5', isPublished: true },
+    { title: 'Dapur & Cerita', authorName: 'Siti Rahma', category: 'Kumpulan Cerpen', pages: 80, bookSize: 'A5', isPublished: true },
+    { title: 'Jejak Langkah', authorName: 'Ahmad R.', category: 'Antologi Puisi', pages: 150, bookSize: 'B5', isPublished: true },
+  ]);
+
+  await db.insert(testimonials).values([
+    { authorName: 'Ahmad R.', roleOrCity: 'Pelajar SMA, Jakarta', quote: 'Di Novella.id cuma Rp 150 ribu sudah dapat 5 eksemplar, adminnya ramah banget membantu!', rating: 5, isActive: true },
+    { authorName: 'Dewi Anggraini', roleOrCity: 'Mahasiswi Sastra, Yogyakarta', quote: 'Proses mandirinya cepat, kalkulatornya transparan dan ada opsi ISBN resmi.', rating: 5, isActive: true },
+    { authorName: 'Siti Rahma', roleOrCity: 'Ibu Rumah Tangga, Surakarta', quote: 'Akhirnya bisa menghadiahkan buku cetak berwujud nyata untuk anak cucu.', rating: 5, isActive: true },
+  ]);
+
   await db.insert(orders).values([
     {
       orderCode: 'NOV-8821',
@@ -93,16 +88,16 @@ export async function runSeed() {
       authorPhone: '08123456789',
       shippingAddress: 'Jl. Kaliurang KM 9, Sleman, D.I. Yogyakarta',
       bookTitle: 'Lembayung Jogja',
-      category: 'Novel',
-      pages: 120,
-      copies: 10,
+      category: 'Novel Sastra',
+      pages: 100,
+      copies: 5,
       bookSize: 'A5',
-      addons: JSON.stringify(['ISBN Resmi']),
+      addons: JSON.stringify([]),
       fileName: 'lembayung_sample.docx',
       fileOriginalName: 'lembayung.docx',
-      fileSize: 42 * 1024,
+      fileSize: 24 * 1024,
       fileMimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      totalPrice: 320000,
+      totalPrice: 150000,
       status: 'Menunggu Verifikasi',
       isRevoked: 0,
       createdAt: new Date(Date.now() - 86400000 * 2),
@@ -114,9 +109,9 @@ export async function runSeed() {
       authorEmail: 'siti@example.com',
       authorPhone: '08567891234',
       shippingAddress: 'Jl. Slamet Riyadi No. 45, Surakarta, Jawa Tengah',
-      bookTitle: 'Dapur & Cerita Rasa',
-      category: 'Antologi Cerpen & Puisi',
-      pages: 80,
+      bookTitle: 'Dapur & Cerita',
+      category: 'Kumpulan Cerpen',
+      pages: 100,
       copies: 5,
       bookSize: 'A5',
       addons: JSON.stringify(['Layout Standar']),
@@ -127,30 +122,10 @@ export async function runSeed() {
       totalPrice: 200000,
       status: 'Diproses',
       isRevoked: 0,
+      shippingCourier: 'JNE',
+      shippingTrackingNumber: 'JNE123456789',
       createdAt: new Date(Date.now() - 86400000 * 4),
       updatedAt: new Date(Date.now() - 86400000 * 1),
-    },
-    {
-      orderCode: 'NOV-8823',
-      authorName: 'Ahmad R.',
-      authorEmail: 'ahmad@example.com',
-      authorPhone: '08198765432',
-      shippingAddress: 'Kebayoran Baru, Jakarta Selatan',
-      bookTitle: 'Jejak Langkah Menembus Batas',
-      category: 'Kumpulan Puisi',
-      pages: 150,
-      copies: 20,
-      bookSize: 'B5',
-      addons: JSON.stringify(['ISBN Resmi', 'Cover Custom']),
-      fileName: 'jejak_sample.pdf',
-      fileOriginalName: 'jejak_langkah.pdf',
-      fileSize: 35 * 1024,
-      fileMimeType: 'application/pdf',
-      totalPrice: 650000,
-      status: 'Selesai',
-      isRevoked: 0,
-      createdAt: new Date(Date.now() - 86400000 * 6),
-      updatedAt: new Date(Date.now() - 86400000 * 2),
     },
   ]);
 

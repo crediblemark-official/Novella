@@ -101,7 +101,46 @@ export async function initDatabase() {
     )
   `;
 
+  await client`ALTER TABLE "orders" ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMP`;
+  await client`ALTER TABLE "orders" ADD COLUMN IF NOT EXISTS shipping_courier TEXT`;
+  await client`ALTER TABLE "orders" ADD COLUMN IF NOT EXISTS shipping_tracking_number TEXT`;
+  await client`ALTER TABLE "orders" ADD COLUMN IF NOT EXISTS payment_proof_url TEXT`;
+
   await client`
-    ALTER TABLE "orders" ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMP;
+    CREATE TABLE IF NOT EXISTS "settings" (
+      id SERIAL PRIMARY KEY,
+      admin_wa TEXT NOT NULL,
+      company_address TEXT NOT NULL,
+      company_tagline TEXT NOT NULL,
+      bank_accounts TEXT NOT NULL,
+      updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+    )
+  `;
+
+  await client`
+    CREATE TABLE IF NOT EXISTS "published_books" (
+      id SERIAL PRIMARY KEY,
+      title TEXT NOT NULL,
+      author_name TEXT NOT NULL,
+      category TEXT NOT NULL,
+      pages INTEGER NOT NULL DEFAULT 100,
+      book_size TEXT NOT NULL DEFAULT 'A5',
+      cover_url TEXT,
+      synopsis TEXT,
+      is_published BOOLEAN NOT NULL DEFAULT TRUE,
+      created_at TIMESTAMP NOT NULL DEFAULT NOW()
+    )
+  `;
+
+  await client`
+    CREATE TABLE IF NOT EXISTS "testimonials" (
+      id SERIAL PRIMARY KEY,
+      author_name TEXT NOT NULL,
+      role_or_city TEXT NOT NULL,
+      quote TEXT NOT NULL,
+      rating INTEGER NOT NULL DEFAULT 5,
+      is_active BOOLEAN NOT NULL DEFAULT TRUE,
+      created_at TIMESTAMP NOT NULL DEFAULT NOW()
+    )
   `;
 }

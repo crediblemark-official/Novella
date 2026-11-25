@@ -34,10 +34,26 @@ export function renderOrderRow(o: any): string {
   const waUrl = `https://wa.me/${waPhone}?text=${waMsg}`;
   const apiBase = typeof window !== 'undefined' && window.location.port === '4321' ? 'http://localhost:3001/api' : '/api';
 
+  const proofHtml = o.paymentProofUrl
+    ? `<a href="${o.paymentProofUrl}" target="_blank" class="inline-block rounded-md bg-orange/10 px-1.5 py-0.5 text-[10px] font-extrabold text-orange hover:underline">Lihat Bukti Bayar ↗</a>`
+    : '';
+
+  const trackingHtml = `
+    <button
+      type="button"
+      onclick="window.promptTracking('${o.orderCode}', '${o.shippingCourier || 'JNE'}', '${o.shippingTrackingNumber || ''}')"
+      class="inline-block rounded border border-slate-300 px-1.5 py-0.5 text-[10px] font-bold text-slate-600 hover:bg-slate-100 cursor-pointer"
+      title="Klik untuk input/ubah nomor resi ekspedisi"
+    >
+      ${o.shippingTrackingNumber ? `🚚 ${o.shippingCourier || 'Resi'}: ${o.shippingTrackingNumber}` : '+ Input Resi'}
+    </button>
+  `;
+
   return `
     <tr class="hover:bg-slate-50/60 transition-colors">
       <td class="px-4 py-3.5 font-mono font-extrabold text-navy whitespace-nowrap">
         ${o.orderCode}
+        <div class="mt-1">${proofHtml}</div>
       </td>
       <td class="px-4 py-3.5">
         <p class="font-extrabold text-navy">${o.authorName}</p>
@@ -52,6 +68,7 @@ export function renderOrderRow(o: any): string {
       <td class="px-4 py-3.5 text-[11px] text-slate-600">
         <p class="font-semibold">${o.pages} hal · ${o.copies} eks · ${o.bookSize}</p>
         <p class="text-slate-400">Add-on: ${parsedAddons.length ? parsedAddons.join(', ') : '–'}</p>
+        <div class="mt-1">${trackingHtml}</div>
       </td>
       <td class="px-4 py-3.5 font-extrabold text-navy whitespace-nowrap">
         ${formatRp(o.totalPrice)}

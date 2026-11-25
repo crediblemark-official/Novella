@@ -1,5 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import AdminOrdersPanel from '../components/admin/AdminOrdersPanel.astro';
+import AdminSettingsPanel from '../components/admin/AdminSettingsPanel.astro';
+import AdminBooksPanel from '../components/admin/AdminBooksPanel.astro';
+import AdminTestimonialsPanel from '../components/admin/AdminTestimonialsPanel.astro';
+import AdminAuthorsPanel from '../components/admin/AdminAuthorsPanel.astro';
 ---
 
 <BaseLayout title="Dashboard Internal Redaksi — Novella.id" activeNav="admin">
@@ -29,12 +34,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         </p>
       </div>
 
-      <!-- Error Message Banner -->
       <div id="auth-error-banner" class="mt-5 hidden rounded-xl border border-rose-200 bg-rose-50 p-3 text-xs font-bold text-rose-700">
         Email atau kata sandi tidak valid.
       </div>
 
-      <!-- Login Form (Clean, Production) -->
       <form id="admin-login-form" class="mt-5 space-y-4">
         <div>
           <label for="admin-email" class="block text-xs font-bold text-navy">Email Staf Redaksi</label>
@@ -87,8 +90,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
             <span id="admin-identity-label">Staf Redaksi Aktif</span>
           </div>
-          <h1 class="mt-2 text-2xl font-extrabold text-navy sm:text-3xl">Dashboard Manajemen Pesanan</h1>
-          <p class="text-xs text-slate-500">Pantau verifikasi naskah sastra, status cetak, dan komunikasi penulis.</p>
+          <h1 class="mt-2 text-2xl font-extrabold text-navy sm:text-3xl">Dashboard Manajemen Redaksi</h1>
+          <p class="text-xs text-slate-500">Kelola pesanan naskah, rekening pembayaran, buku terbitan, dan CRM penulis.</p>
         </div>
 
         <div class="flex items-center gap-2.5">
@@ -116,71 +119,23 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         </div>
       </div>
 
-      <!-- KPI Top Bar Metrics -->
-      <div class="mt-6 grid gap-4 sm:grid-cols-3">
-        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Pesanan Masuk</p>
-          <p id="kpi-total-orders" class="mt-2 text-3xl font-extrabold text-navy">...</p>
-          <p class="mt-1 text-[11px] text-slate-500">Seluruh pesanan naskah sastra</p>
-        </div>
-
-        <div class="rounded-2xl border border-orange/40 bg-orange/5 p-5 shadow-sm">
-          <p class="text-xs font-bold uppercase tracking-wider text-orange">Menunggu Verifikasi</p>
-          <p id="kpi-waiting-orders" class="mt-2 text-3xl font-extrabold text-orange">...</p>
-          <p class="mt-1 text-[11px] text-slate-600">Pesanan butuh verifikasi redaksi</p>
-        </div>
-
-        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Nilai Pesanan Aktif</p>
-          <p id="kpi-active-value" class="mt-2 text-2xl font-extrabold text-emerald-700 sm:text-3xl">...</p>
-          <p class="mt-1 text-[11px] text-slate-500">Di luar pesanan ditarik penulis</p>
-        </div>
+      <!-- Main Navigation Tabs -->
+      <div class="mt-6 border-b border-slate-200">
+        <nav class="-mb-px flex flex-wrap gap-6 text-xs font-bold" id="admin-main-tabs">
+          <button type="button" data-main-tab="orders" class="admin-main-tab active border-b-2 border-navy pb-3 text-navy cursor-pointer">📦 Pesanan Naskah</button>
+          <button type="button" data-main-tab="settings" class="admin-main-tab border-b-2 border-transparent pb-3 text-slate-500 hover:text-navy cursor-pointer">⚙️ Pengaturan & Rekening</button>
+          <button type="button" data-main-tab="books" class="admin-main-tab border-b-2 border-transparent pb-3 text-slate-500 hover:text-navy cursor-pointer">📚 Katalog Buku</button>
+          <button type="button" data-main-tab="testimonials" class="admin-main-tab border-b-2 border-transparent pb-3 text-slate-500 hover:text-navy cursor-pointer">💬 Testimoni</button>
+          <button type="button" data-main-tab="authors" class="admin-main-tab border-b-2 border-transparent pb-3 text-slate-500 hover:text-navy cursor-pointer">👥 Data Penulis</button>
+        </nav>
       </div>
 
-      <!-- Filter Tabs & Search Bar -->
-      <div class="mt-8 flex flex-wrap items-center justify-between gap-3">
-        <div class="flex flex-wrap items-center gap-1.5 text-xs font-bold">
-          <button type="button" data-filter="ALL" class="admin-tab rounded-full bg-navy px-3.5 py-1.5 text-white cursor-pointer">Semua</button>
-          <button type="button" data-filter="Menunggu Verifikasi" class="admin-tab rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-slate-600 hover:bg-slate-50 cursor-pointer">Menunggu Verifikasi</button>
-          <button type="button" data-filter="Diproses" class="admin-tab rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-slate-600 hover:bg-slate-50 cursor-pointer">Diproses</button>
-          <button type="button" data-filter="Selesai" class="admin-tab rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-slate-600 hover:bg-slate-50 cursor-pointer">Selesai</button>
-          <button type="button" data-filter="Ditarik Penulis" class="admin-tab rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-slate-600 hover:bg-slate-50 cursor-pointer">Ditarik Penulis</button>
-          <button type="button" data-filter="Kedaluwarsa" class="admin-tab rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-slate-600 hover:bg-slate-50 cursor-pointer">Kedaluwarsa</button>
-        </div>
-
-        <div class="w-full sm:w-64">
-          <input
-            id="admin-search-input"
-            type="text"
-            placeholder="Cari kode, judul, atau penulis..."
-            class="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-1.5 text-xs font-medium focus:border-navy focus:outline-none"
-          />
-        </div>
-      </div>
-
-      <!-- Orders Data Grid Table -->
-      <div class="mt-4 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs">
-            <thead class="border-b border-slate-200 bg-slate-50/75 text-[11px] font-extrabold uppercase tracking-wider text-slate-500">
-              <tr>
-                <th class="px-4 py-3.5">Kode</th>
-                <th class="px-4 py-3.5">Penulis & Alamat</th>
-                <th class="px-4 py-3.5">Judul Buku & Berkas</th>
-                <th class="px-4 py-3.5">Spesifikasi & Add-on</th>
-                <th class="px-4 py-3.5">Total Biaya</th>
-                <th class="px-4 py-3.5">Status Pesanan</th>
-                <th class="px-4 py-3.5 text-right">Aksi Cepat</th>
-              </tr>
-            </thead>
-            <tbody id="orders-tbody" class="divide-y divide-slate-100">
-              <tr>
-                <td colspan="7" class="px-4 py-8 text-center text-slate-400">Memuat data pesanan...</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <!-- Tab Panels -->
+      <AdminOrdersPanel />
+      <AdminSettingsPanel />
+      <AdminBooksPanel />
+      <AdminTestimonialsPanel />
+      <AdminAuthorsPanel />
     </div>
   </div>
 

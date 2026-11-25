@@ -2,6 +2,46 @@ import { formatRp } from '../../utils/formatters';
 import { calcState, bookState, portalState, STORAGE_KEY } from './state';
 import { API_BASE, showToast } from './api';
 
+export async function loadBankAccounts() {
+  const container = document.getElementById('payment-bank-accounts');
+  if (!container) return;
+  try {
+    const res = await fetch(`${API_BASE}/settings`);
+    if (!res.ok) return;
+    const data = await res.json();
+    const banks = data.bankAccounts || [];
+    if (banks.length === 0) {
+      container.innerHTML = '<div class="py-3 text-center text-xs text-slate-400">Hubungi WhatsApp redaksi untuk rekening pembayaran.</div>';
+      return;
+    }
+
+    container.innerHTML = banks
+      .map((b: any) => `
+        <div class="py-3 flex items-center justify-between">
+          <div>
+            <p class="text-xs font-extrabold text-navy">${b.bankName}</p>
+            <p class="font-mono text-sm font-bold text-slate-800">${b.accountNumber}</p>
+            <p class="text-[11px] text-slate-500">a.n. ${b.accountHolder}</p>
+          </div>
+          <button type="button" class="copy-btn rounded-lg border border-slate-300 bg-white px-3.5 py-1.5 text-xs font-bold text-navy hover:bg-slate-50 transition-colors cursor-pointer" data-copy="${b.accountNumber.replace(/[^0-9]/g, '')}">
+            Salin
+          </button>
+        </div>
+      `).join('');
+
+    container.querySelectorAll<HTMLButtonElement>('.copy-btn').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(btn.getAttribute('data-copy') || '');
+          showToast('Nomor rekening berhasil disalin!');
+        } catch {
+          showToast('Gagal menyalin nomor rekening.');
+        }
+      });
+    });
+  } catch {}
+}
+
 export async function loadAuthorOrders() {
   const historyList = document.getElementById('history-list');
   const userOrdersCount = document.getElementById('user-orders-count');
@@ -22,30 +62,21 @@ export async function loadAuthorOrders() {
         const isPending = o.status === 'Menunggu Verifikasi';
         const isWithdrawn = o.status === 'Ditarik Penulis';
         const isExpired = o.status === 'Kedaluwarsa';
-        const statusClass =
-          isPending
-            ? 'bg-amber-100 text-amber-800'
-            : o.status === 'Diproses'
-            ? 'bg-blue-100 text-blue-800'
-            : o.status === 'Selesai'
-            ? 'bg-emerald-100 text-emerald-800'
-            : isExpired
-            ? 'bg-slate-200 text-slate-700'
-            : 'bg-rose-100 text-rose-800';
+        const statusClass = isPending ? 'bg-amber-100 text-amber-800' : o.status === 'Diproses' ? 'bg-blue-100 text-blue-800' : o.status === 'Selesai' ? 'bg-emerald-100 text-emerald-800' : isExpired ? 'bg-slate-200 text-slate-700' : 'bg-rose-100 text-rose-800';
 
         const actionHtml = isPending
           ? `<button onclick="window.withdrawAuthorOrder('${o.orderCode}')" class="rounded-lg border border-rose-300 bg-white px-3 py-1 font-bold text-rose-700 hover:bg-rose-50 transition-colors cursor-pointer">Tarik Naskah</button>`
           : isWithdrawn
-          ? `<span class="inline-flex items-center gap-1 text-[11px] font-bold text-rose-600">
-              <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-              Berkas Dihapus
-            </span>`
+          ? `<span class="inline-flex items-center gap-1 text-[11px] font-bold text-rose-600">Berkas Dihapus</span>`
           : isExpired
-          ? `<span class="inline-flex items-center gap-1 text-[11px] font-bold text-slate-500">
-              <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-              Kedaluwarsa
-            </span>`
+          ? `<span class="inline-flex items-center gap-1 text-[11px] font-bold text-slate-500">Kedaluwarsa</span>`
           : `<span class="text-[11px] text-slate-400">Sedang diproses redaksi</span>`;
+
+        const trackingHtml = o.shippingTrackingNumber
+          ? `<div class="mt-1 inline-flex items-center gap-1 rounded bg-emerald-50 px-2 py-0.5 text-[10px] font-extrabold text-emerald-800 border border-emerald-200">
+              🚚 ${o.shippingCourier || 'Ekspedisi'}: ${o.shippingTrackingNumber}
+             </div>`
+          : '';
 
         return `
           <div class="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-3.5 text-xs shadow-xs">
@@ -56,10 +87,9 @@ export async function loadAuthorOrders() {
               </div>
               <p class="mt-1 font-bold text-slate-800">${o.bookTitle} (${o.category})</p>
               <p class="text-[11px] text-slate-500 font-medium">${o.pages} hal · ${o.copies} eks · ${o.bookSize} · ${formatRp(o.totalPrice)}</p>
+              ${trackingHtml}
             </div>
-            <div>
-              ${actionHtml}
-            </div>
+            <div>${actionHtml}</div>
           </div>
         `;
       })
@@ -70,34 +100,14 @@ export async function loadAuthorOrders() {
 }
 
 export function bindOrderEvents() {
-  const toggleHistoryBtn = document.getElementById('toggle-history-btn');
-  const historyBox = document.getElementById('history-box');
-  const closeHistoryBtn = document.getElementById('close-history-btn');
+  loadBankAccounts();
 
-  if (toggleHistoryBtn && historyBox) {
-    toggleHistoryBtn.addEventListener('click', () => historyBox.classList.toggle('hidden'));
-  }
-  if (closeHistoryBtn && historyBox) {
-    closeHistoryBtn.addEventListener('click', () => historyBox.classList.add('hidden'));
-  }
-
-  // Exposed globally for onclick in dynamically injected HTML
   (window as any).withdrawAuthorOrder = async function (code: string) {
-    if (!confirm(`Konfirmasi Tarik Naskah (${code}):\nApakah Anda yakin ingin membatalkan pesanan ini? Naskah digital akan langsung dihapus permanen dari server detik ini juga dan transaksi dibatalkan.`)) {
-      return;
-    }
+    if (!confirm(`Konfirmasi Tarik Naskah (${code}):\nApakah Anda yakin ingin membatalkan pesanan ini? Naskah digital akan langsung dihapus permanen dari server.`)) return;
     try {
       const res = await fetch(`${API_BASE}/orders/${code}/withdraw`, { method: 'POST' });
       const data = await res.json();
       if (res.ok) {
-        const dateObj = data.deletedAt ? new Date(data.deletedAt) : new Date();
-        const timeFormatted = dateObj.toLocaleDateString('id-ID', {
-          day: 'numeric',
-          month: 'long',
-          year: 'numeric',
-        }) + ' pukul ' + dateObj.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
-
-        alert(`Bukti Penghapusan Berkas:\nBerkas "${data.fileName || 'Naskah'}" telah dihapus permanen dari server pada ${timeFormatted}.\n\nStatus pesanan Anda kini "Ditarik Penulis".`);
         showToast('Naskah berhasil ditarik & berkas fisik dihapus permanen.');
         loadAuthorOrders();
       } else {
@@ -108,17 +118,35 @@ export function bindOrderEvents() {
     }
   };
 
-  // Copy Rekening Buttons
-  document.querySelectorAll<HTMLButtonElement>('.copy-btn').forEach((btn) => {
-    btn.addEventListener('click', async () => {
-      const text = btn.getAttribute('data-copy') || '';
-      try {
-        await navigator.clipboard.writeText(text);
-        showToast('Nomor rekening berhasil disalin!');
-      } catch {
-        showToast('Gagal menyalin nomor rekening.');
+  // Payment Proof Upload
+  const proofBtn = document.getElementById('btn-upload-proof');
+  const proofInput = document.getElementById('input-payment-proof') as HTMLInputElement | null;
+  const proofLabel = document.getElementById('proof-filename');
+  const proofBadge = document.getElementById('proof-upload-badge');
+
+  proofBtn?.addEventListener('click', () => proofInput?.click());
+  proofInput?.addEventListener('change', async (e) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    if (proofLabel) proofLabel.textContent = file.name;
+
+    const fd = new FormData();
+    fd.append('file', file);
+    try {
+      const upRes = await fetch(`${API_BASE}/upload`, { method: 'POST', body: fd });
+      const upData = await upRes.json();
+      if (upRes.ok && upData.fileName && portalState.createdOrder) {
+        await fetch(`${API_BASE}/orders/${portalState.createdOrder.orderCode}/payment-proof`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ proofUrl: `/api/files/${upData.fileName}` }),
+        });
+        proofBadge?.classList.remove('hidden');
+        showToast('Bukti transfer berhasil diunggah!');
       }
-    });
+    } catch {
+      showToast('Gagal mengunggah bukti transfer.');
+    }
   });
 
   // Confirm Order & WhatsApp Redirect
