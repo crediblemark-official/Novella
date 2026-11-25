@@ -45,7 +45,7 @@ export const app = new Elysia()
       origin: true,
       credentials: true,
       methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
-      allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Cookie'],
+      allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Cookie', 'x-admin-token'],
       exposeHeaders: ['Set-Cookie'],
     })
   )

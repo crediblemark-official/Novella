@@ -31,6 +31,10 @@ function loadEnvFallback() {
 }
 loadEnvFallback();
 
+const isProd =
+  process.env.NODE_ENV === 'production' ||
+  Boolean(process.env.BETTER_AUTH_URL && !process.env.BETTER_AUTH_URL.includes('localhost') && !process.env.BETTER_AUTH_URL.includes('127.0.0.1'));
+
 const trustedOrigins = [
   'http://localhost:4321',
   'http://localhost:3001',
@@ -40,6 +44,10 @@ const trustedOrigins = [
   'http://127.0.0.1:3001',
   'http://127.0.0.1:3000',
   'http://127.0.0.1:3010',
+  'https://novella.id',
+  'https://www.novella.id',
+  'http://novella.id',
+  'http://www.novella.id',
   ...(process.env.BETTER_AUTH_URL ? [process.env.BETTER_AUTH_URL] : []),
   ...(process.env.TRUSTED_ORIGINS ? process.env.TRUSTED_ORIGINS.split(',').map((s) => s.trim()) : []),
 ];
@@ -59,6 +67,16 @@ export const auth = betterAuth({
   }),
   baseURL: process.env.BETTER_AUTH_URL || 'http://localhost:3001',
   trustedOrigins,
+  advanced: {
+    crossSubDomainCookies: {
+      enabled: isProd,
+      domain: isProd ? '.novella.id' : undefined,
+    },
+    defaultCookieAttributes: {
+      sameSite: 'lax',
+      secure: isProd,
+    },
+  },
   account: {
     skipStateCookieCheck: true,
   },
