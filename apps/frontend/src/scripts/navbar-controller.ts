@@ -1,6 +1,5 @@
 const API_URL = '/api';
 const AUTH_KEY = 'novella_auth_user';
-const ADMIN_SESSION_KEY = 'novella_admin_session';
 
 export function renderNavUser(user: any) {
   const guestLinks = document.getElementById('nav-guest-links');
@@ -97,41 +96,17 @@ export function initNavbarController() {
     }
   }
 
-  // Sync session and admin badge
+  // Sync Better Auth session if present
   (async () => {
-    let currentUser: any = null;
     if (!isLoggedOut) {
       try {
         const res = await fetch(`${API_URL}/auth/get-session`, { credentials: 'include' });
         if (res.ok) {
           const session = await res.json();
           if (session?.user) {
-            currentUser = session.user;
             localStorage.setItem(AUTH_KEY, JSON.stringify(session.user));
             renderNavUser(session.user);
           }
-        }
-      } catch {}
-    }
-
-    // Admin link is strictly hidden unless the user has an active admin token or admin role
-    const adminToken = localStorage.getItem(ADMIN_SESSION_KEY);
-    const isAdmin = (currentUser && currentUser.role === 'admin') || Boolean(adminToken);
-    const adminLink = document.getElementById('nav-admin-link');
-
-    if (adminLink && isAdmin) {
-      adminLink.classList.remove('hidden');
-      try {
-        const headers: Record<string, string> = {};
-        if (adminToken) {
-          headers['Authorization'] = `Bearer ${adminToken}`;
-          headers['x-admin-token'] = adminToken;
-        }
-        const res = await fetch(`${API_URL}/admin/kpi`, { headers, credentials: 'include' });
-        if (res.ok) {
-          const data = await res.json();
-          const badge = document.getElementById('nav-admin-badge');
-          if (badge) badge.textContent = String(data.waitingVerification ?? 0);
         }
       } catch {}
     }

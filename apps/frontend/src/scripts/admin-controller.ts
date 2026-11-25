@@ -41,7 +41,6 @@ function setAdminUi(isAuthed: boolean, user?: any, errMsg?: string) {
   if (isAuthed && user) {
     const lbl = document.getElementById('admin-identity-label');
     if (lbl) lbl.textContent = `Staf Redaksi: ${user.name || user.email}`;
-    document.getElementById('nav-admin-link')?.classList.remove('hidden');
     fetchKPI();
     fetchOrders();
   }
@@ -129,7 +128,6 @@ export function initAdminController() {
     try { await fetch(`${API_BASE}/admin/logout`, { method: 'POST', credentials: 'include' }); } catch {}
     localStorage.removeItem(ADMIN_STORAGE_KEY);
     currentAdminToken = '';
-    document.getElementById('nav-admin-link')?.classList.add('hidden');
     showAdminToast('Sesi redaksi telah diakhiri.');
     setTimeout(() => location.reload(), 500);
   });
