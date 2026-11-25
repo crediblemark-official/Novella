@@ -3,6 +3,7 @@ import { db } from '../../db';
 import { orders, user } from '../../db/schema';
 import { eq } from 'drizzle-orm';
 import { auth } from '../../auth';
+import { cleanupExpiredOrders } from '../../services/expiry';
 
 export const adminModule = new Elysia({ prefix: '/api/admin' })
   .post(
@@ -123,10 +124,11 @@ export const adminModule = new Elysia({ prefix: '/api/admin' })
     const processingCount = allOrders.filter((o) => o.status === 'Diproses').length;
     const completedCount = allOrders.filter((o) => o.status === 'Selesai').length;
     const revokedCount = allOrders.filter((o) => o.status === 'Ditarik Penulis').length;
+    const expiredCount = allOrders.filter((o) => o.status === 'Kedaluwarsa').length;
 
-    // Total Nilai Pesanan Aktif excludes "Ditarik Penulis"
+    // Total Nilai Pesanan Aktif excludes "Ditarik Penulis" and "Kedaluwarsa"
     const totalActiveValue = allOrders
-      .filter((o) => o.status !== 'Ditarik Penulis')
+      .filter((o) => o.status !== 'Ditarik Penulis' && o.status !== 'Kedaluwarsa')
       .reduce((sum, o) => sum + o.totalPrice, 0);
 
     return {
@@ -135,6 +137,15 @@ export const adminModule = new Elysia({ prefix: '/api/admin' })
       processingCount,
       completedCount,
       revokedCount,
+      expiredCount,
       totalActiveValue,
+    };
+  })
+  .post('/cleanup-expired', async () => {
+    const result = await cleanupExpiredOrders();
+    return {
+      success: true,
+      message: `Pembersihan naskah kedaluwarsa selesai. ${result.cleanedCount} pesanan diproses.`,
+      ...result,
     };
   });

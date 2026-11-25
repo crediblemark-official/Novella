@@ -2,6 +2,34 @@ import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { db } from './db';
 import * as schema from './db/schema';
+import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
+// Robust environment variables loader for multi-workspace & root execution
+function loadEnvFallback() {
+  const envPaths = [
+    join(import.meta.dir, '../.env'),
+    join(import.meta.dir, '../../../.env'),
+  ];
+  for (const p of envPaths) {
+    if (existsSync(p)) {
+      try {
+        const content = readFileSync(p, 'utf-8');
+        for (const line of content.split('\n')) {
+          const trimmed = line.trim();
+          if (!trimmed || trimmed.startsWith('#')) continue;
+          const idx = trimmed.indexOf('=');
+          if (idx !== -1) {
+            const k = trimmed.slice(0, idx).trim();
+            const v = trimmed.slice(idx + 1).trim();
+            if (!process.env[k]) process.env[k] = v;
+          }
+        }
+      } catch {}
+    }
+  }
+}
+loadEnvFallback();
 
 const trustedOrigins = [
   'http://localhost:4321',
@@ -31,6 +59,9 @@ export const auth = betterAuth({
   }),
   baseURL: process.env.BETTER_AUTH_URL || 'http://localhost:3001',
   trustedOrigins,
+  account: {
+    skipStateCookieCheck: true,
+  },
   emailAndPassword: {
     enabled: true,
     autoSignIn: true,
@@ -39,6 +70,7 @@ export const auth = betterAuth({
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID || 'mock-google-client-id',
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || 'mock-google-client-secret',
+      prompt: 'select_account',
     },
   },
   user: {

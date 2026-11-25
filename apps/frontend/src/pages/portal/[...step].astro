@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProfileCard from '../../components/portal/ProfileCard.astro';
+import OrderHistoryDrawer from '../../components/portal/OrderHistoryDrawer.astro';
+import StudioStepper from '../../components/portal/StudioStepper.astro';
+import StepCalculator from '../../components/portal/StepCalculator.astro';
+import StepManuscript from '../../components/portal/StepManuscript.astro';
+import StepPayment from '../../components/portal/StepPayment.astro';
+
+export function getStaticPaths() {
+  return [
+    { params: { step: undefined } },
+    { params: { step: 'kalkulator' } },
+    { params: { step: 'naskah' } },
+    { params: { step: 'pembayaran' } },
+  ];
+}
+---
+
+<BaseLayout title="Portal Penerbitan Mandiri — Novella.id" activeNav="portal">
+  <main class="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6 sm:py-8 min-h-[calc(100vh-64px)]">
+    <!-- Loading State (visible until session check completes) -->
+    <div id="portal-loading" class="flex flex-col items-center justify-center py-24 text-center">
+      <div class="h-9 w-9 animate-spin rounded-full border-4 border-navy border-t-orange"></div>
+      <p class="mt-4 text-xs font-bold text-slate-500">Memverifikasi akun penulis...</p>
+    </div>
+
+    <!-- Main Portal Content (hidden until session verified) -->
+    <div id="portal-main-content" class="hidden">
+      <!-- 1. Profil Penulis Wajib: Open Editorial Studio (Shows ONLY if profile incomplete) -->
+      <ProfileCard />
+
+      <!-- 2. Master Publishing Studio Panel: Flat, Seamless & Unboxed -->
+      <div id="wizard-container" class="w-full">
+        <OrderHistoryDrawer />
+        <StudioStepper />
+        <StepCalculator />
+        <StepManuscript />
+        <StepPayment />
+      </div>
+    </div>
+  </main>
+
+  <!-- Toast Notification -->
+  <div
+    id="toast"
+    class="fixed bottom-5 right-5 z-50 hidden rounded-xl bg-navy px-4 py-2.5 text-xs font-bold text-white shadow-lg transition-all"
+  >
+    Nomor rekening berhasil disalin!
+  </div>
+
+  <script>
+    import { initPortalController } from '../../scripts/portal-controller';
+    initPortalController();
+  </script>
+</BaseLayout>

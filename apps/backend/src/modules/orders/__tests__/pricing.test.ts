@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test';
-import { calculatePrice, BASE_PRICE } from '../pricing';
+import { calculatePrice, BASE_PRICE, ADDON_PRICES } from '../pricing';
 
 describe('Pricing Engine', () => {
   it('calculates baseline package correctly (100 hal, 5 eks, A5, no addons)', () => {
@@ -20,13 +20,6 @@ describe('Pricing Engine', () => {
   });
 
   it('calculates extra copies and pages correctly', () => {
-    // 120 hal (+20 hal), 10 eks (+5 eks), A5, ISBN (+75rb)
-    // base: 150.000
-    // extra copies: (10 - 5) * 25.000 = 125.000
-    // extra pages: (120 - 100) * 200 * 10 = 40.000
-    // size: 0
-    // addon ISBN: 75.000
-    // total: 150.000 + 125.000 + 40.000 + 0 + 75.000 = 390.000
     const result = calculatePrice({
       pages: 120,
       copies: 10,
@@ -48,8 +41,24 @@ describe('Pricing Engine', () => {
       addons: [],
     });
 
-    // base: 150.000 + extra copies (5 * 25.000 = 125.000) + size (5.000 * 10 = 50.000)
     expect(result.sizeCost).toBe(50_000);
     expect(result.totalPrice).toBe(150_000 + 125_000 + 50_000);
+  });
+
+  it('calculates official Novella add-ons (E-Sertifikat, Ebook, Revisi, Dummy)', () => {
+    expect(ADDON_PRICES['E-Sertifikat Penulis']).toBe(10_000);
+    expect(ADDON_PRICES['File Ebook Tanpa Watermark']).toBe(250_000);
+    expect(ADDON_PRICES['Cetak 2 Dummy']).toBe(200_000);
+    expect(ADDON_PRICES['Video Promosi']).toBe(250_000);
+
+    const result = calculatePrice({
+      pages: 100,
+      copies: 5,
+      bookSize: 'A5',
+      addons: ['E-Sertifikat Penulis', 'Cetak 2 Dummy'],
+    });
+
+    expect(result.addonsCost).toBe(10_000 + 200_000);
+    expect(result.totalPrice).toBe(150_000 + 210_000);
   });
 });

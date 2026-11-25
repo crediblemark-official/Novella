@@ -3,6 +3,7 @@ import { db } from '../../db';
 import { orders } from '../../db/schema';
 import { calculatePrice } from './pricing';
 import { desc, eq } from 'drizzle-orm';
+import { deleteManuscriptFile } from '../../services/storage';
 
 const ADMIN_WA_NUMBER = '6281234567890'; // Sesuai PRD Novella.id
 
@@ -185,20 +186,29 @@ export const ordersModule = new Elysia({ prefix: '/api/orders' })
       };
     }
 
+    // Hard delete physical manuscript file from storage
+    if (existing.fileName) {
+      await deleteManuscriptFile(existing.fileName);
+    }
+
+    const deletionTime = new Date();
     const [updated] = await db
       .update(orders)
       .set({
         status: 'Ditarik Penulis',
         isRevoked: 1,
-        updatedAt: new Date(),
+        deletedAt: deletionTime,
+        updatedAt: deletionTime,
       })
       .where(eq(orders.orderCode, params.code))
       .returning();
 
     return {
       success: true,
-      message: 'Naskah berhasil ditarik secara mandiri oleh penulis. Akses unduh berkas redaksi telah dikunci.',
+      message: 'Naskah berhasil ditarik secara mandiri oleh penulis. Berkas fisik telah dihapus permanen dari server.',
       order: updated,
+      deletedAt: deletionTime.toISOString(),
+      fileName: existing.fileOriginalName || 'Naskah',
     };
   })
   .patch(
@@ -211,17 +221,36 @@ export const ordersModule = new Elysia({ prefix: '/api/orders' })
         return { error: 'Pesanan tidak ditemukan.' };
       }
 
+      // Read-only guard for final statuses per PRD
+      if (existing.status === 'Ditarik Penulis' || existing.status === 'Kedaluwarsa') {
+        set.status = 400;
+        return {
+          error: `Pesanan telah berstatus "${existing.status}" dan bersifat final sehingga tidak dapat diubah lagi.`,
+        };
+      }
+
       if (existing.isRevoked === 1 && body.status !== 'Ditarik Penulis') {
         set.status = 400;
         return { error: 'Pesanan telah ditarik oleh penulis dan tidak dapat diubah statusnya.' };
       }
 
+      const updatePayload: any = {
+        status: body.status,
+        updatedAt: new Date(),
+      };
+
+      // If transition to Kedaluwarsa or Ditarik Penulis, execute hard delete
+      if (body.status === 'Kedaluwarsa' || body.status === 'Ditarik Penulis') {
+        if (existing.fileName) {
+          await deleteManuscriptFile(existing.fileName);
+        }
+        updatePayload.isRevoked = 1;
+        updatePayload.deletedAt = new Date();
+      }
+
       const [updated] = await db
         .update(orders)
-        .set({
-          status: body.status,
-          updatedAt: new Date(),
-        })
+        .set(updatePayload)
         .where(eq(orders.orderCode, params.code))
         .returning();
 

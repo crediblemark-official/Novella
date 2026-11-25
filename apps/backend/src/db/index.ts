@@ -95,8 +95,13 @@ export async function initDatabase() {
       total_price INTEGER NOT NULL,
       status TEXT NOT NULL DEFAULT 'Menunggu Verifikasi',
       is_revoked INTEGER NOT NULL DEFAULT 0,
+      deleted_at TIMESTAMP,
       created_at TIMESTAMP NOT NULL DEFAULT NOW(),
       updated_at TIMESTAMP NOT NULL DEFAULT NOW()
     )
+  `;
+
+  await client`
+    ALTER TABLE "orders" ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMP;
   `;
 }

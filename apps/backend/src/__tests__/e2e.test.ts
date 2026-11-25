@@ -192,4 +192,29 @@ describe('Novella.id Full End-to-End API Integration', () => {
     const updated = (await updateRes.json()) as any;
     expect(updated.order.status).toBe('Selesai');
   });
+
+  it('10. Auto-Expiry & Final Status Guard: Cannot modify Ditarik Penulis or Kedaluwarsa orders', async () => {
+    // NOV-8821 was withdrawn in test 6
+    const attemptUpdateRes = await app.handle(
+      new Request('http://localhost:3001/api/orders/NOV-8821/status', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'Diproses' }),
+      })
+    );
+    expect(attemptUpdateRes.status).toBe(400);
+    const errBody = (await attemptUpdateRes.json()) as any;
+    expect(errBody.error).toContain('bersifat final');
+
+    // Trigger cleanup expired endpoint
+    const cleanupRes = await app.handle(
+      new Request('http://localhost:3001/api/admin/cleanup-expired', {
+        method: 'POST',
+      })
+    );
+    expect(cleanupRes.status).toBe(200);
+    const cleanupData = (await cleanupRes.json()) as any;
+    expect(cleanupData.success).toBe(true);
+    expect(typeof cleanupData.cleanedCount).toBe('number');
+  });
 });

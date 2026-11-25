@@ -1,0 +1,19 @@
+---
+/**
+ * OrderHistoryDrawer: Collapsible Author Orders History
+ * Shows author's active and previous orders with live status and 1-click withdraw action.
+ */
+---
+
+<div id="history-box" class="border-b border-slate-200/80 py-4 mb-6 hidden">
+  <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+    <div class="flex items-center gap-2">
+      <h2 class="text-sm font-extrabold text-navy">Riwayat Naskah Saya</h2>
+      <span class="text-[11px] font-medium text-slate-500">· Seluruh naskah yang terdaftar di akun ini</span>
+    </div>
+    <button id="close-history-btn" type="button" class="text-xs font-bold text-slate-400 hover:text-navy cursor-pointer">Tutup ✕</button>
+  </div>
+  <div id="history-list" class="mt-4 space-y-3">
+    <p class="text-xs text-slate-400">Memuat riwayat...</p>
+  </div>
+</div>

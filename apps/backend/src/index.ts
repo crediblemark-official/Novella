@@ -10,6 +10,7 @@ import { db, initDatabase } from './db';
 import { orders } from './db/schema';
 import { runSeed } from './db/seed';
 import { auth } from './auth';
+import { startOrderExpiryScheduler } from './services/expiry';
 import { join } from 'node:path';
 import { existsSync } from 'node:fs';
 
@@ -23,6 +24,9 @@ try {
     console.log('🌱 PostgreSQL database is empty, seeding initial records...');
     await runSeed();
   }
+
+  // Start 7-day auto-expiry scheduler for manuscripts
+  startOrderExpiryScheduler();
 } catch (err: any) {
   console.error('⚠️ Database connection warning during startup:', err.message);
   console.error('👉 Pastikan variabel DATABASE_URL diatur di tab Environment Dokploy!');
@@ -65,6 +69,35 @@ export const app = new Elysia()
     status: 'ok',
     timestamp: new Date().toISOString(),
   }))
+  // Dedicated GET handler for Social OAuth Redirect
+  .get('/api/auth/sign-in/social', async ({ query }) => {
+    const provider = (query.provider as string) || 'google';
+    const callbackURL = (query.callbackURL as string) || '/portal';
+    try {
+      const authRes = await auth.api.signInSocial({
+        body: {
+          provider: provider as any,
+          callbackURL,
+        },
+        asResponse: true,
+      });
+
+      const data = (await authRes.json()) as { url?: string } | null;
+      const setCookie = authRes.headers.get('set-cookie');
+      if (data && data.url) {
+        return new Response(null, {
+          status: 302,
+          headers: {
+            'Location': data.url,
+            ...(setCookie ? { 'Set-Cookie': setCookie } : {}),
+          },
+        });
+      }
+    } catch (err: any) {
+      console.error('Failed social sign-in redirect:', err.message);
+    }
+    return Response.redirect(callbackURL, 302);
+  })
   .all('/api/auth/*', async ({ request }) => {
     return await auth.handler(request);
   })
@@ -93,7 +126,7 @@ if (hasStaticFrontend && isProduction) {
   }));
 }
 
-const port = process.env.PORT ? Number(process.env.PORT) : 3000;
+const port = process.env.PORT ? Number(process.env.PORT) : 3001;
 app.listen(port);
 
 console.log(`🦊 Elysia backend server running at ${app.server?.hostname}:${app.server?.port} with PostgreSQL`);

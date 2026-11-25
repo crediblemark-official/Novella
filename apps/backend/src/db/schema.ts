@@ -72,8 +72,9 @@ export const orders = pgTable('orders', {
   fileSize: integer('file_size'),
   fileMimeType: text('file_mime_type'),
   totalPrice: integer('total_price').notNull(),
-  status: text('status').notNull().default('Menunggu Verifikasi'), // 'Menunggu Verifikasi' | 'Diproses' | 'Selesai' | 'Ditarik Penulis'
+  status: text('status').notNull().default('Menunggu Verifikasi'), // 'Menunggu Verifikasi' | 'Diproses' | 'Selesai' | 'Ditarik Penulis' | 'Kedaluwarsa'
   isRevoked: integer('is_revoked').notNull().default(0),
+  deletedAt: timestamp('deleted_at'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });

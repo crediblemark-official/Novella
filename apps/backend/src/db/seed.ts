@@ -70,6 +70,18 @@ export async function runSeed() {
       createdAt: new Date(Date.now() - 86400000 * 7),
       updatedAt: new Date(Date.now() - 86400000 * 6),
     },
+    {
+      id: 'usr_rasyiqi_main',
+      name: 'Rasyiqi',
+      email: 'info.rasyiqi@gmail.com',
+      emailVerified: true,
+      image: 'R',
+      phone: '081995100401',
+      address: 'Sumenep',
+      role: 'author',
+      createdAt: now,
+      updatedAt: now,
+    },
   ]);
 
   // Seed sample orders matching PRD Table section 5 Modul F

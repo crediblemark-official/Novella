@@ -2,490 +2,169 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="Novella.id — Mitra Penerbitan Karya Sastra Nusantara" activeNav="landing">
-  <!-- Hero Section -->
-  <section class="mx-auto max-w-5xl px-4 pb-14 pt-12 sm:px-6 sm:pb-20 sm:pt-16">
-    <div class="grid items-center gap-10 md:grid-cols-12">
-      <div class="space-y-6 md:col-span-7">
-        <div class="inline-flex items-center gap-2 rounded-full border border-orange/30 bg-orange/10 px-3.5 py-1 text-xs font-extrabold text-orange">
-          <span>Mitra Penerbitan Sastra Nusantara</span>
-        </div>
-        <h1 class="text-3xl font-extrabold tracking-tight text-navy sm:text-5xl sm:leading-[1.15]">
-          Wujudkan Naskah Pertamamu Jadi Buku Nyata.
+<BaseLayout title="Novella.id — Mitra Penerbitan Sastra Nusantara" activeNav="landing">
+  <!-- 1. Hero & Paket Dasar Utama -->
+  <section class="mx-auto max-w-5xl px-4 pt-10 pb-8 sm:px-6">
+    <div class="grid items-center gap-8 md:grid-cols-12">
+      <div class="space-y-4 md:col-span-7">
+        <span class="inline-flex items-center rounded-full border border-orange/30 bg-orange/10 px-3 py-1 text-xs font-extrabold text-orange">
+          Mitra Penerbitan Sastra Nusantara
+        </span>
+        <h1 class="text-3xl font-extrabold tracking-tight text-navy sm:text-4xl sm:leading-tight">
+          Cetak Karyamu Mulai <span class="text-orange">Rp 150.000</span> Dapat 5 Eksemplar.
         </h1>
-        <p class="text-sm leading-relaxed text-slate-600 sm:text-base">
-          Penerbitan inklusif, ramah, dan transparan untuk pelajar, mahasiswa, ibu rumah tangga, hingga masyarakat akar rumput. Mulai dari <strong class="text-navy">Rp 150.000</strong> untuk 5 eksemplar buku.
+        <p class="text-sm leading-relaxed text-slate-600">
+          Paket dasar maksimal 100 halaman berkualitas toko buku: <strong>Soft Cover Ivory 230/260 gr</strong>, lem binding kuat, bookmark, wrapping, dan packing buku aman.
         </p>
-        <div class="flex flex-wrap items-center gap-3 pt-2">
-          <a
-            href="/portal"
-            class="inline-flex items-center justify-center rounded-full bg-orange px-6 py-3 text-sm font-extrabold text-white shadow-md transition-all hover:bg-orange-hover hover:scale-[1.02] active:scale-[0.98]"
-          >
-            Terbitkan Sekarang
+        <div class="flex flex-wrap items-center gap-3 pt-1">
+          <a href="/portal" class="rounded-full bg-orange px-6 py-2.5 text-xs font-extrabold text-white shadow-md hover:bg-orange-hover transition-all">
+            Hitung & Terbitkan Buku &rarr;
           </a>
-          <a
-            href="#cara-kerja"
-            class="inline-flex items-center justify-center rounded-full border-2 border-navy px-6 py-3 text-sm font-extrabold text-navy transition-colors hover:bg-navy hover:text-white"
-          >
-            Cara Kerja
+          <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer" class="rounded-full border border-slate-300 bg-white px-5 py-2.5 text-xs font-bold text-slate-700 hover:border-navy hover:text-navy transition-colors">
+            Hubungi WhatsApp Redaksi
           </a>
         </div>
       </div>
-
-      <!-- Visual Customer Service Showcase -->
       <div class="relative md:col-span-5">
-        <div class="relative mx-auto max-w-[320px] rounded-3xl border border-slate-200 bg-white p-3.5 shadow-xl sm:max-w-[360px]">
-          <div class="relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-slate-100 shadow-inner">
-            <img
-              src="/images/cs-novella.jpg"
-              alt="Customer Service Novella.id Ramah dan Profesional"
-              class="h-full w-full object-cover object-center"
-              loading="eager"
-            />
-            <!-- Online Status Chip -->
-            <div class="absolute top-3 left-3 flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1 text-[11px] font-extrabold text-navy backdrop-blur shadow-sm">
-              <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span>CS Redaksi Online</span>
-            </div>
-            <!-- Bottom Overlay Tag -->
-            <div class="absolute bottom-3 inset-x-3 rounded-xl bg-navy/90 p-2.5 text-white backdrop-blur">
-              <p class="text-xs font-extrabold">Konsultasi Ramah & Sopan</p>
-              <p class="text-[10px] text-slate-300">Siap memandu penulis pemula dari naskah hingga cetak.</p>
-            </div>
+        <div class="relative mx-auto max-w-[320px] rounded-3xl border border-slate-200 bg-white p-3 shadow-lg">
+          <div class="aspect-[4/3] w-full overflow-hidden rounded-2xl bg-slate-100">
+            <img src="/images/cs-novella.jpg" alt="CS Redaksi Novella.id" class="h-full w-full object-cover" />
           </div>
           <div class="mt-3 flex items-center justify-between px-1 text-xs">
-            <span class="rounded-full bg-orange/15 px-2.5 py-0.5 font-bold text-orange">Paket Mulai Rp 150rb</span>
-            <span class="font-bold text-slate-500">Pendampingan Penuh</span>
+            <span class="inline-flex items-center gap-1.5 font-bold text-emerald-700">
+              <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span> CS Online & Ramah
+            </span>
+            <span class="font-bold text-slate-500">Jl. Paingan, Sleman</span>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Section "Bisa Terbitkan Apa Saja di Sini?" (Genre Sastra Modern & Kontemporer) -->
-  <section class="border-t border-slate-100 bg-white py-12 sm:py-16">
+  <!-- 2. Tentang Novella.id (Misi & Manusia Akar Rumput) -->
+  <section class="border-t border-slate-100 bg-slate-50/60 py-10">
     <div class="mx-auto max-w-5xl px-4 sm:px-6">
-      <h2 class="text-2xl font-extrabold text-navy sm:text-3xl tracking-tight">
-        Bisa Terbitkan Karya Sastra Apa Saja di Sini?
-      </h2>
-      
-      <p class="mt-5 text-base sm:text-xl font-medium leading-relaxed sm:leading-[2.3] text-slate-800">
-        Di Novella.id, kamu bisa langsung menerbitkan 
-        <span class="inline-flex items-center gap-1.5 rounded-md border border-amber-300 bg-[#FEF3C7] px-2 py-0.5 text-xs sm:text-sm font-bold text-[#92400E] align-baseline whitespace-nowrap shadow-xs">
-          <svg class="h-4 w-4 text-[#B45309] inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-          </svg>
-          <span>Fiksi Populer</span>
-        </span> 
-        seperti <strong class="font-extrabold text-[#C25E00] tracking-tight"><span id="typewriter-fiksi">Novel Metropop & Romance</span><span class="animate-pulse font-normal text-slate-400">|</span></strong>, 
-        merangkai 
-        <span class="inline-flex items-center gap-1.5 rounded-md border border-indigo-200 bg-[#EEF2FF] px-2 py-0.5 text-xs sm:text-sm font-bold text-[#3730A3] align-baseline whitespace-nowrap shadow-xs">
-          <svg class="h-4 w-4 text-[#4F46E5] inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-          </svg>
-          <span>Prosa & Puisi</span>
-        </span> 
-        mulai dari <strong class="font-extrabold text-[#3B49DF] tracking-tight"><span id="typewriter-puisi">Prosa Liris & Puisi Estetik</span><span class="animate-pulse font-normal text-slate-400">|</span></strong>, 
-        menggarap 
-        <span class="inline-flex items-center gap-1.5 rounded-md border border-emerald-300 bg-[#DCFCE7] px-2 py-0.5 text-xs sm:text-sm font-bold text-[#166534] align-baseline whitespace-nowrap shadow-xs">
-          <svg class="h-4 w-4 text-[#15803D] inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
-          </svg>
-          <span>Skenario & Grafis</span>
-        </span> 
-        dengan <strong class="font-extrabold text-[#0D7A53] tracking-tight"><span id="typewriter-drama">Novelet Grafis & Webtoon</span><span class="animate-pulse font-normal text-slate-400">|</span></strong>, 
-        hingga mengabadikan 
-        <span class="inline-flex items-center gap-1.5 rounded-md border border-yellow-300 bg-[#FEF9C3] px-2 py-0.5 text-xs sm:text-sm font-bold text-[#854D0E] align-baseline whitespace-nowrap shadow-xs">
-          <svg class="h-4 w-4 text-[#A16207] inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
-          </svg>
-          <span>Esai & Memoar</span>
-        </span> 
-        seperti <strong class="font-extrabold text-[#8F3985] tracking-tight"><span id="typewriter-memoar">Esai Personal & Refleksi Diri</span><span class="animate-pulse font-normal text-slate-400">|</span></strong>, 
-        lengkap dengan paket 
-        <span class="inline-flex items-center gap-1 rounded-md border border-amber-300 bg-[#FEF3C7] px-2 py-0.5 text-xs sm:text-sm font-extrabold text-[#B45309] align-baseline whitespace-nowrap shadow-xs">
-          Mulai 5 Eksemplar
-        </span> 
-        hanya dalam 
-        <span class="inline-flex items-center rounded-md border border-rose-200 bg-[#FFE4E6] px-2 py-0.5 text-xs sm:text-sm font-extrabold text-[#9F1239] align-baseline whitespace-nowrap shadow-xs">
-          1 kali alur mudah
-        </span>.
+      <div class="max-w-3xl">
+        <span class="text-xs font-extrabold uppercase tracking-wider text-orange">TENTANG NOVELLA.ID</span>
+        <h2 class="mt-1 text-2xl font-extrabold text-navy tracking-tight">
+          Menulis Adalah Hak Kemerdekaan Pikiran Seluruh Rakyat
+        </h2>
+        <p class="mt-3 text-xs sm:text-sm leading-relaxed text-slate-600">
+          Novella.id siap menjadi mitra penerbitan karya sastra terbaik di Nusantara. Membina dan mengarahkan karakter manusia agar berani menjadi penulis. 
+          <strong>Pelajar, Mahasiswa, dan Ibu Rumah Tangga</strong> adalah mitra terbesar kami. Mereka menulis bukan semata-mata demi materi, melainkan:
+        </p>
+      </div>
+
+      <div class="mt-5 grid gap-3 sm:grid-cols-2 md:grid-cols-3 text-xs text-slate-700">
+        <div class="rounded-xl border border-slate-200 bg-white p-3 shadow-2xs">
+          <p class="font-bold text-navy">1. Membuang Sampah Pikiran</p>
+          <p class="mt-1 text-slate-500 text-[11px]">Membebaskan beban mental yang menumpuk di kepala.</p>
+        </div>
+        <div class="rounded-xl border border-slate-200 bg-white p-3 shadow-2xs">
+          <p class="font-bold text-navy">2. Katarsis Keresahan Hati</p>
+          <p class="mt-1 text-slate-500 text-[11px]">Mengeluarkan unek-unek sebelum merenggut kesehatan.</p>
+        </div>
+        <div class="rounded-xl border border-slate-200 bg-white p-3 shadow-2xs">
+          <p class="font-bold text-navy">3. Warisan Sejarah Anak-Cucu</p>
+          <p class="mt-1 text-slate-500 text-[11px]">Meninggalkan jejak pemikiran nyata bagi generasi penerus.</p>
+        </div>
+        <div class="rounded-xl border border-slate-200 bg-white p-3 shadow-2xs">
+          <p class="font-bold text-navy">4. Menularkan Semangat Hidup</p>
+          <p class="mt-1 text-slate-500 text-[11px]">Menebar pelajaran dan inspirasi berharga untuk pembaca.</p>
+        </div>
+        <div class="rounded-xl border border-slate-200 bg-white p-3 shadow-2xs sm:col-span-2 md:col-span-2">
+          <p class="font-bold text-navy">5. Mengasah Kecerdasan & Pola Pikir</p>
+          <p class="mt-1 text-slate-500 text-[11px]">Menajamkan logika, empati, dan kejernihan bertutur.</p>
+        </div>
+      </div>
+
+      <p class="mt-4 text-xs italic text-slate-600 bg-amber-50/80 border border-amber-200/80 p-3 rounded-xl">
+        “Novella.id menjanjikan harga cetakan buku seharga sempol ayam di kawasan Cafe Malioboro. Anda dapat menghitung harga buku Anda sendiri secara mandiri. Kami paling bersahabat dengan isi dompet masyarakat kelas bawah alias manusia akar rumput.”
       </p>
     </div>
   </section>
 
-  <!-- Section Cara Kerja (Penerbitan Mudah Bergaya Card Lebar Sejajar Header) -->
-  <section id="cara-kerja" class="bg-white py-14 sm:py-20 overflow-hidden border-t border-slate-100">
+  <!-- 3. Tabel Harga Orderan Resmi Novella.id -->
+  <section class="border-t border-slate-100 bg-white py-10">
     <div class="mx-auto max-w-5xl px-4 sm:px-6">
-      <!-- Top Header Row (Sejajar Sempurna dengan Navbar Header) -->
-      <div class="flex items-end justify-between pb-8">
+      <div class="flex flex-wrap items-end justify-between gap-4 pb-6">
         <div>
-          <span class="inline-flex items-center rounded-xl border border-amber-300 bg-[#FFFDF5] px-3.5 py-1.5 text-xs font-extrabold uppercase tracking-wider text-[#B45309]">
-            ALUR PENERBITAN
-          </span>
-          <h2 class="mt-3 text-2xl font-extrabold text-navy sm:text-3xl tracking-tight">
-            Penerbitan Mudah dalam 3 Langkah
-          </h2>
-          <p class="mt-1 text-xs text-slate-500 sm:text-sm">
-            Tanpa istilah rumit, tanpa beban biaya tersembunyi.
-          </p>
+          <span class="text-xs font-extrabold uppercase tracking-wider text-orange">TABEL BIAYA TRANSPARAN</span>
+          <h2 class="mt-1 text-2xl font-extrabold text-navy tracking-tight">Tarif Cetak & Finishing Resmi</h2>
+          <p class="text-xs text-slate-500 mt-0.5">Rumus: Jumlah Halaman × Tarif Ukuran = Harga per Eksemplar.</p>
         </div>
-
-        <!-- Carousel Navigation Controls -->
-        <div class="flex items-center gap-2">
-          <button
-            id="carousel-btn-prev"
-            type="button"
-            aria-label="Sebelumnya"
-            class="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-400 shadow-2xs transition-all hover:border-navy hover:text-navy hover:shadow-xs active:scale-95 cursor-pointer"
-          >
-            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          <button
-            id="carousel-btn-next"
-            type="button"
-            aria-label="Selanjutnya"
-            class="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-400 shadow-2xs transition-all hover:border-navy hover:text-navy hover:shadow-xs active:scale-95 cursor-pointer"
-          >
-            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      <!-- Step Cards with Vertical Dividers (Lebar Leluasa dengan Carousel Overflow) -->
-      <div
-        id="keunggulan-track"
-        class="mt-4 flex gap-0 overflow-x-auto scroll-smooth scrollbar-none pb-4"
-        style="-ms-overflow-style: none; scrollbar-width: none;"
-      >
-        <!-- Card 01 -->
-        <div class="w-[320px] sm:w-[380px] md:w-[410px] flex-shrink-0 pr-6 sm:pr-8 md:pr-10 border-r border-slate-200/80 flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between">
-              <span class="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#0F172A]">01</span>
-              <span class="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-[#FEF3C7] px-3.5 py-1 text-xs font-bold text-[#92400E]">
-                <span>🧮</span>
-                <span>Hitung Biaya</span>
-              </span>
-            </div>
-            <h3 class="mt-5 text-xl sm:text-2xl font-extrabold text-[#0F172A] tracking-tight">
-              Masuk & Hitung Biaya
-            </h3>
-            <p class="mt-3 text-sm sm:text-base leading-relaxed text-slate-500 font-normal">
-              Login dengan akun Google dan tentukan sendiri jumlah halaman, eksemplar, serta add-on dengan kalkulator biaya transparan mulai Rp 150.000.
-            </p>
-          </div>
-          <div class="mt-8 flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-800">
-            <span class="text-emerald-500 font-bold">✓</span>
-            <span>Transparan tanpa biaya tersembunyi</span>
-          </div>
-        </div>
-
-        <!-- Card 02 -->
-        <div class="w-[320px] sm:w-[380px] md:w-[410px] flex-shrink-0 px-6 sm:pr-8 md:px-10 border-r border-slate-200/80 flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between">
-              <span class="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#0F172A]">02</span>
-              <span class="inline-flex items-center gap-1.5 rounded-full border border-purple-200 bg-[#F3E8FF] px-3.5 py-1 text-xs font-bold text-[#7E22CE]">
-                <span>📂</span>
-                <span>Unggah 50MB</span>
-              </span>
-            </div>
-            <h3 class="mt-5 text-xl sm:text-2xl font-extrabold text-[#0F172A] tracking-tight">
-              Unggah Naskah Mandiri
-            </h3>
-            <p class="mt-3 text-sm sm:text-base leading-relaxed text-slate-500 font-normal">
-              Kirimkan berkas naskah sastramu (.pdf, .doc, .docx) secara aman melalui sistem drag-and-drop mandiri berkapasitas hingga 50 MB.
-            </p>
-          </div>
-          <div class="mt-8 flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-800">
-            <span class="text-emerald-500 font-bold">✓</span>
-            <span>Hak cipta 100% milik penulis</span>
-          </div>
-        </div>
-
-        <!-- Card 03 -->
-        <div class="w-[320px] sm:w-[380px] md:w-[410px] flex-shrink-0 px-6 sm:pr-8 md:px-10 border-r border-slate-200/80 flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between">
-              <span class="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#0F172A]">03</span>
-              <span class="inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-[#EFF6FF] px-3.5 py-1 text-xs font-bold text-[#1D4ED8]">
-                <span>💬</span>
-                <span>WhatsApp Cepat</span>
-              </span>
-            </div>
-            <h3 class="mt-5 text-xl sm:text-2xl font-extrabold text-[#0F172A] tracking-tight">
-              Bayar & Konfirmasi Redaksi
-            </h3>
-            <p class="mt-3 text-sm sm:text-base leading-relaxed text-slate-500 font-normal">
-              Transfer biaya cetak ke rekening resmi Novella.id, lalu sapa redaksi via pesan WhatsApp otomatis untuk verifikasi cepat dan cetak.
-            </p>
-          </div>
-          <div class="mt-8 flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-800">
-            <span class="text-emerald-500 font-bold">✓</span>
-            <span>Pendampingan ramah tim redaksi</span>
-          </div>
-        </div>
-
-        <!-- Card 04 -->
-        <div class="w-[320px] sm:w-[380px] md:w-[410px] flex-shrink-0 pl-6 sm:pl-8 md:pl-10 flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between">
-              <span class="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#0F172A]">04</span>
-              <span class="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-[#DCFCE7] px-3.5 py-1 text-xs font-bold text-[#166534]">
-                <span>📦</span>
-                <span>Kirim Aman</span>
-              </span>
-            </div>
-            <h3 class="mt-5 text-xl sm:text-2xl font-extrabold text-[#0F172A] tracking-tight">
-              Buku Sampai di Rumah
-            </h3>
-            <p class="mt-3 text-sm sm:text-base leading-relaxed text-slate-500 font-normal">
-              Buku dicetak rapi berstandar toko buku, jilid lem panas kokoh, dan dikirim aman ke alamat rumahmu dengan resi pelacakan aktif.
-            </p>
-          </div>
-          <div class="mt-8 flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-800">
-            <span class="text-emerald-500 font-bold">✓</span>
-            <span>Garansi cetak berkualitas</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- [SEMENTARA DI-HIDE UNTUK FASE LAUNCHING]
-       Section Karya Terbitan Terbaru dinonaktifkan sementara karena penerbit baru akan launching perdana.
-       Dapat diaktifkan kembali setelah judul-judul perdana resmi beredar.
-  -->
-  {false && (
-    <section id="buku-terbit" class="mx-auto max-w-5xl px-4 py-16 sm:px-6">
-      <div class="flex items-end justify-between">
-        <div>
-          <h2 class="text-2xl font-extrabold text-navy sm:text-3xl">Karya Terbitan Terbaru</h2>
-          <p class="mt-1 text-xs text-slate-600 sm:text-sm">Buku-buku karya penulis Nusantara yang telah beredar luas.</p>
-        </div>
-        <a href="/portal" class="text-xs font-bold text-orange hover:underline">Terbitkan Karyamu &rarr;</a>
-      </div>
-
-      <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-sm hover:shadow-md transition-shadow">
-          <div class="aspect-[3/4] rounded-xl bg-slate-800 p-4 text-white flex flex-col justify-between">
-            <span class="text-[9px] font-extrabold text-orange uppercase">Novel</span>
-            <p class="font-literary text-lg font-bold italic">Lembayung Jogja</p>
-            <span class="text-[10px] text-slate-400">120 Halaman · A5</span>
-          </div>
-          <div class="mt-3">
-            <h3 class="text-sm font-extrabold text-navy">Lembayung Jogja</h3>
-            <p class="text-xs text-slate-500">Budi Santoso (Pegiat Komunitas)</p>
-          </div>
-        </div>
-
-        <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-sm hover:shadow-md transition-shadow">
-          <div class="aspect-[3/4] rounded-xl bg-amber-950 p-4 text-white flex flex-col justify-between">
-            <span class="text-[9px] font-extrabold text-orange uppercase">Kumpulan Cerpen</span>
-            <p class="font-literary text-lg font-bold italic">Dapur & Cerita</p>
-            <span class="text-[10px] text-slate-400">80 Halaman · A5</span>
-          </div>
-          <div class="mt-3">
-            <h3 class="text-sm font-extrabold text-navy">Dapur & Cerita</h3>
-            <p class="text-xs text-slate-500">Siti Rahma (Ibu Rumah Tangga)</p>
-          </div>
-        </div>
-
-        <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-sm hover:shadow-md transition-shadow">
-          <div class="aspect-[3/4] rounded-xl bg-emerald-950 p-4 text-white flex flex-col justify-between">
-            <span class="text-[9px] font-extrabold text-orange uppercase">Antologi Puisi</span>
-            <p class="font-literary text-lg font-bold italic">Jejak Langkah</p>
-            <span class="text-[10px] text-slate-400">200 Halaman · B5</span>
-          </div>
-          <div class="mt-3">
-            <h3 class="text-sm font-extrabold text-navy">Jejak Langkah</h3>
-            <p class="text-xs text-slate-500">Ahmad R. (Pelajar SMA)</p>
-          </div>
-        </div>
-
-        <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-sm hover:shadow-md transition-shadow">
-          <div class="aspect-[3/4] rounded-xl bg-sky-950 p-4 text-white flex flex-col justify-between">
-            <span class="text-[9px] font-extrabold text-orange uppercase">Memoar</span>
-            <p class="font-literary text-lg font-bold italic">Kidung Senja</p>
-            <span class="text-[10px] text-slate-400">150 Halaman · Unesco</span>
-          </div>
-          <div class="mt-3">
-            <h3 class="text-sm font-extrabold text-navy">Kidung Senja</h3>
-            <p class="text-xs text-slate-500">Dewi Anggraini (Mahasiswi)</p>
-          </div>
-        </div>
-      </div>
-    </section>
-  )}
-
-  <!-- [SEMENTARA DI-HIDE UNTUK FASE LAUNCHING]
-       Section Testimoni Penulis dinonaktifkan sementara karena penerbit baru akan launching perdana.
-       Dapat diaktifkan kembali setelah ada testimoni terbitan resmi dari penulis mitra.
-  -->
-  {false && (
-    <section id="testimoni" class="border-t border-slate-100 bg-[#F1F5F9]/60 py-16">
-      <div class="mx-auto max-w-5xl px-4 sm:px-6">
-        <div class="text-center">
-          <h2 class="text-2xl font-extrabold text-navy sm:text-3xl">Cerita Mereka Bersama Novella.id</h2>
-          <p class="mt-1 text-xs text-slate-600 sm:text-sm">Keberanian memulai menerbitkan karya sastra Nusantara.</p>
-        </div>
-
-        <div class="mt-10 grid gap-6 sm:grid-cols-3">
-          <div class="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm">
-            <p class="font-literary text-xs italic leading-relaxed text-slate-700">
-              "Awalnya ragu apakah antologi puisi tugas sekolah bisa jadi buku cetak rapi. Di Novella.id cuma Rp 150 ribu sudah dapat 5 eksemplar, adminnya ramah banget membantu!"
-            </p>
-            <div class="mt-5 border-t border-slate-100 pt-3">
-              <p class="text-xs font-extrabold text-navy">Ahmad R.</p>
-              <p class="text-[11px] text-slate-500">Pelajar SMA, Jakarta</p>
-            </div>
-          </div>
-
-          <div class="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm">
-            <p class="font-literary text-xs italic leading-relaxed text-slate-700">
-              "Proses mandirinya cepat, kalkulatornya transparan dan ada opsi ISBN resmi. Kumpulan naskah lakon saya kini jadi buku ber-ISBN yang beredar di komunitas sastra."
-            </p>
-            <div class="mt-5 border-t border-slate-100 pt-3">
-              <p class="text-xs font-extrabold text-navy">Dewi Anggraini</p>
-              <p class="text-[11px] text-slate-500">Mahasiswi Sastra, Yogyakarta</p>
-            </div>
-          </div>
-
-          <div class="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm">
-            <p class="font-literary text-xs italic leading-relaxed text-slate-700">
-              "Saya seorang ibu rumah tangga yang suka menulis cerpen dan cerita rakyat leluhur. Akhirnya bisa menghadiahkan buku cetak berwujud nyata untuk anak cucu."
-            </p>
-            <div class="mt-5 border-t border-slate-100 pt-3">
-              <p class="text-xs font-extrabold text-navy">Siti Rahma</p>
-              <p class="text-[11px] text-slate-500">Ibu Rumah Tangga, Surakarta</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  )}
-
-  <!-- Kutipan Sastra Nusantara & CTA Penutup -->
-  <section class="bg-navy py-16 text-center text-white">
-    <div class="mx-auto max-w-3xl px-4 sm:px-6">
-      <blockquote class="font-literary text-lg font-medium italic sm:text-2xl leading-relaxed text-slate-100">
-        “Orang boleh pandai setinggi langit, tapi selama ia tidak menulis, ia akan hilang di dalam masyarakat dan dari sejarah. Menulis adalah bekerja untuk keabadian.”
-      </blockquote>
-      <p class="mt-4 text-xs font-bold tracking-widest uppercase text-orange">— Pramoedya Ananta Toer</p>
-
-      <div class="mt-10">
-        <a
-          href="/portal"
-          class="inline-flex items-center justify-center rounded-full bg-orange px-8 py-3.5 text-sm font-extrabold text-white shadow-lg transition-all hover:bg-orange-hover hover:scale-105 active:scale-95"
-        >
-          Mulai Terbitkan Naskahmu Sekarang
+        <a href="/portal" class="rounded-full bg-navy px-4 py-1.5 text-xs font-bold text-white hover:bg-slate-800 transition-colors">
+          Buka Kalkulator Mandiri &rarr;
         </a>
       </div>
+
+      <div class="grid gap-6 md:grid-cols-2">
+        <!-- Cetak Black & White (BW) -->
+        <div class="rounded-2xl border border-slate-200 p-4 shadow-2xs">
+          <h3 class="text-xs font-extrabold uppercase tracking-wider text-navy flex items-center gap-1.5">
+            <span class="h-2 w-2 rounded-full bg-slate-900"></span> CETAK BLACK & WHITE (BW)
+          </h3>
+          <div class="mt-3 divide-y divide-slate-100 text-xs">
+            <div class="py-2 flex justify-between"><span>A6 (BP 57/72 · HVS 70/80)</span><span class="font-mono font-bold text-navy">Rp 130 / hal</span></div>
+            <div class="py-2 flex justify-between font-bold bg-orange/5 px-2 rounded"><span>A5 / Unesco (BP 57 · HVS 70)</span><span class="font-mono text-orange">Rp 250 / hal (Standar)</span></div>
+            <div class="py-2 flex justify-between"><span>A5 / Unesco (BP 72 · HVS 80)</span><span class="font-mono font-bold text-navy">Rp 275 / hal</span></div>
+            <div class="py-2 flex justify-between"><span>B5 / A4 (BP 57 · HVS 70)</span><span class="font-mono font-bold text-navy">Rp 400 / hal</span></div>
+            <div class="py-2 flex justify-between"><span>B5 / A4 (BP 72 · HVS 80)</span><span class="font-mono font-bold text-navy">Rp 420 / hal</span></div>
+          </div>
+        </div>
+
+        <!-- Cetak Full Color (FC) -->
+        <div class="rounded-2xl border border-slate-200 p-4 shadow-2xs">
+          <h3 class="text-xs font-extrabold uppercase tracking-wider text-orange flex items-center gap-1.5">
+            <span class="h-2 w-2 rounded-full bg-orange"></span> CETAK FULL COLOR (FC)
+          </h3>
+          <div class="mt-3 divide-y divide-slate-100 text-xs">
+            <div class="py-2 flex justify-between"><span>A6 (BP 57/72 · HVS 70/80)</span><span class="font-mono font-bold text-navy">Rp 350 / hal</span></div>
+            <div class="py-2 flex justify-between"><span>A5 / Unesco (HVS 70 - 80)</span><span class="font-mono font-bold text-navy">Rp 520 / hal</span></div>
+            <div class="py-2 flex justify-between"><span>A5 / Unesco (BP 57 - 72)</span><span class="font-mono font-bold text-navy">Rp 550 / hal</span></div>
+            <div class="py-2 flex justify-between"><span>B5 / A4 (HVS 70 - 80)</span><span class="font-mono font-bold text-navy">Rp 1.050 / hal</span></div>
+            <div class="py-2 flex justify-between"><span>B5 / A4 (BP 57 - 72)</span><span class="font-mono font-bold text-navy">Rp 1.100 / hal</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hard Cover & Add-on Grid -->
+      <div class="mt-6 rounded-2xl border border-slate-200 bg-slate-50/50 p-4 text-xs">
+        <h3 class="font-extrabold text-navy uppercase text-[11px] tracking-wider">Layanan Tambahan & Finishing</h3>
+        <div class="mt-3 grid gap-2 sm:grid-cols-2 md:grid-cols-4">
+          <div class="bg-white p-2.5 rounded-xl border border-slate-200/80"><p class="text-slate-500 text-[10px]">E-Sertifikat Penulis</p><p class="font-mono font-bold text-navy mt-0.5">Rp 10.000</p></div>
+          <div class="bg-white p-2.5 rounded-xl border border-slate-200/80"><p class="text-slate-500 text-[10px]">Revisi Ringan Cover / Layout</p><p class="font-mono font-bold text-navy mt-0.5">Rp 10.000 / sesi</p></div>
+          <div class="bg-white p-2.5 rounded-xl border border-slate-200/80"><p class="text-slate-500 text-[10px]">Cetak 2 Dummy</p><p class="font-mono font-bold text-navy mt-0.5">Rp 200.000</p></div>
+          <div class="bg-white p-2.5 rounded-xl border border-slate-200/80"><p class="text-slate-500 text-[10px]">Video Promosi Buku</p><p class="font-mono font-bold text-navy mt-0.5">Rp 250.000</p></div>
+          <div class="bg-white p-2.5 rounded-xl border border-slate-200/80"><p class="text-slate-500 text-[10px]">Ebook Tanpa Watermark</p><p class="font-mono font-bold text-navy mt-0.5">Rp 250.000 (Gratis dg WM)</p></div>
+          <div class="bg-white p-2.5 rounded-xl border border-slate-200/80"><p class="text-slate-500 text-[10px]">Request Cover Khusus</p><p class="font-mono font-bold text-navy mt-0.5">Rp 500.000</p></div>
+          <div class="bg-white p-2.5 rounded-xl border border-slate-200/80"><p class="text-slate-500 text-[10px]">Request Layout Khusus</p><p class="font-mono font-bold text-navy mt-0.5">Rp 1.000.000</p></div>
+          <div class="bg-white p-2.5 rounded-xl border border-slate-200/80"><p class="text-slate-500 text-[10px]">Hard Cover (A5 / Unesco / B5)</p><p class="font-mono font-bold text-navy mt-0.5">Mulai Rp 25.000/eks</p></div>
+        </div>
+        <p class="mt-2.5 text-[10px] text-slate-500 italic">* Jika finishing mengambil Hard Cover, harga per halaman BW diskon Rp 10 dan halaman warna diskon Rp 50.</p>
+      </div>
     </div>
   </section>
 
-  <!-- Interactive Typewriter / Rotation Script -->
-  <script is:inline>
-    (function () {
-      function setupTypewriter(elementId, phrases, typeSpeed = 90, deleteSpeed = 45, holdTime = 2400) {
-        const el = document.getElementById(elementId);
-        if (!el) return;
-
-        let phraseIndex = 0;
-        let charIndex = phrases[0].length;
-        let isDeleting = false;
-
-        function tick() {
-          const currentPhrase = phrases[phraseIndex];
-
-          if (isDeleting) {
-            charIndex--;
-            el.textContent = currentPhrase.substring(0, charIndex);
-          } else {
-            charIndex++;
-            el.textContent = currentPhrase.substring(0, charIndex);
-          }
-
-          let delay = isDeleting ? deleteSpeed : typeSpeed;
-
-          if (!isDeleting && charIndex === currentPhrase.length) {
-            delay = holdTime;
-            isDeleting = true;
-          } else if (isDeleting && charIndex === 0) {
-            isDeleting = false;
-            phraseIndex = (phraseIndex + 1) % phrases.length;
-            delay = 400;
-          }
-
-          setTimeout(tick, delay);
-        }
-
-        // Start cycling after a staggered initial delay
-        const stagger = {
-          'typewriter-fiksi': 1200,
-          'typewriter-puisi': 2200,
-          'typewriter-drama': 3200,
-          'typewriter-memoar': 4200,
-        }[elementId] || 1500;
-
-        setTimeout(() => {
-          isDeleting = true;
-          tick();
-        }, stagger);
-      }
-
-      document.addEventListener('DOMContentLoaded', () => {
-        setupTypewriter('typewriter-fiksi', [
-          'Novel Metropop & Romance',
-          'Teenlit & Young Adult (YA)',
-          'Thriller & Misteri Urban',
-          'Sci-Fi & Urban Fantasy',
-          'Flash Fiction Kontemporer',
-        ]);
-
-        setupTypewriter('typewriter-puisi', [
-          'Prosa Liris & Puisi Estetik',
-          'Sajak Katarsis & Self-Healing',
-          'Spoken Word & Puisi Bebas',
-          'Kumpulan Quote Bernarasi',
-          'Puisi Kontemplasi Urban',
-        ]);
-
-        setupTypewriter('typewriter-drama', [
-          'Novelet Grafis & Webtoon',
-          'Skenario Film & Web Series',
-          'Cerita Pendek Bergambar',
-          'Naskah Drama Audio / Podcast',
-          'Komik Strip Naratif',
-        ]);
-
-        setupTypewriter('typewriter-memoar', [
-          'Esai Personal & Refleksi Diri',
-          'Catatan Hidup & Quarter-Life',
-          'Jurnal Perjalanan & City Living',
-          'Memoar Pribadi Inspiratif',
-          'Antologi Cerita Komunitas',
-        ]);
-
-        // Carousel controls for Keunggulan Utama ala referensi
-        const keunggulanTrack = document.getElementById('keunggulan-track');
-        const prevBtn = document.getElementById('carousel-btn-prev');
-        const nextBtn = document.getElementById('carousel-btn-next');
-
-        if (keunggulanTrack && prevBtn && nextBtn) {
-          prevBtn.addEventListener('click', () => {
-            keunggulanTrack.scrollBy({ left: -420, behavior: 'smooth' });
-          });
-          nextBtn.addEventListener('click', () => {
-            keunggulanTrack.scrollBy({ left: 420, behavior: 'smooth' });
-          });
-        }
-      });
-    })();
-  </script>
+  <!-- 4. Tahukah Anda & Alamat Resmi Redaksi -->
+  <section class="border-t border-slate-100 bg-[#0D1C3D] py-10 text-white">
+    <div class="mx-auto max-w-5xl px-4 sm:px-6">
+      <div class="grid gap-6 md:grid-cols-12 items-center">
+        <div class="md:col-span-7 space-y-2">
+          <span class="rounded bg-orange px-2 py-0.5 text-[10px] font-extrabold uppercase text-white">Tahukah Anda?</span>
+          <p class="text-sm sm:text-base font-semibold leading-relaxed text-slate-200">
+            Penerbit Novella.id sangat mengedepankan <strong>keramahan Customer Servis</strong>, <strong>kecepatan dalam membalas chatting</strong>, dan <strong>kesopanan dalam percakapan telepon</strong>.
+          </p>
+          <p class="text-xs text-slate-400 pt-1">
+            Alamat Kantor: Jl. Paingan (Depan Universitas Sanata Dharma), Krodan, Maguwoharjo, Depok, Sleman, D.I. Yogyakarta.
+          </p>
+        </div>
+        <div class="md:col-span-5 flex flex-col sm:flex-row gap-3 md:justify-end">
+          <a href="/portal" class="rounded-full bg-orange px-6 py-3 text-xs font-extrabold text-white text-center shadow-md hover:bg-orange-hover transition-all">
+            Buka Portal Penerbitan &rarr;
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
 </BaseLayout>

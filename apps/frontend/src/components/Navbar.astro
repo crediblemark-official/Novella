@@ -1,0 +1,151 @@
+---
+interface Props {
+  activeNav?: 'landing' | 'portal' | 'admin';
+}
+
+const { activeNav = 'landing' } = Astro.props;
+---
+
+<header class="sticky top-0 z-40 border-b border-slate-200/80 bg-white/95 backdrop-blur">
+  <div class="mx-auto flex max-w-5xl items-center justify-between px-4 py-3.5 sm:px-6">
+    <div class="flex items-center gap-6">
+      <a href="/" class="flex items-center focus:outline-none" aria-label="Beranda Novella.id">
+        <img src="/images/logo.png" alt="Novella.id Logo" class="h-9 w-auto object-contain" />
+      </a>
+      <nav class="hidden md:flex items-center gap-5 text-xs font-bold text-slate-600">
+        <a href="/#cara-kerja" class="transition-colors hover:text-navy">Cara Kerja</a>
+        <a
+          href="/portal"
+          class={`transition-colors ${activeNav === 'portal' ? 'text-orange font-extrabold' : 'hover:text-navy'}`}
+        >
+          Portal Penerbitan
+        </a>
+      </nav>
+    </div>
+
+    <div class="flex items-center gap-2.5 sm:gap-3">
+      <!-- Guest Links -->
+      <div id="nav-guest-links" class="flex items-center gap-2">
+        <a
+          href="/login"
+          class="rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 hover:border-navy hover:text-navy transition-colors"
+        >
+          Masuk
+        </a>
+        <a
+          href="/daftar"
+          class="hidden sm:inline-block rounded-full border border-orange bg-white px-3 py-1.5 text-xs font-bold text-orange hover:bg-orange/5 transition-colors"
+        >
+          Daftar
+        </a>
+      </div>
+
+      <!-- Logged-in Author Profile Menu (Moved from Page Body to Navbar) -->
+      <div id="nav-user-container" class="relative hidden">
+        <button
+          id="nav-user-pill"
+          type="button"
+          class="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 py-1 pl-1.5 pr-2.5 text-xs font-bold text-navy hover:border-navy hover:bg-white transition-all cursor-pointer shadow-2xs"
+          aria-expanded="false"
+          aria-haspopup="true"
+        >
+          <span id="nav-user-avatar" class="flex h-6 w-6 items-center justify-center rounded-full bg-navy text-[10px] font-extrabold text-white">R</span>
+          <span id="nav-user-name" class="max-w-[100px] sm:max-w-[130px] truncate">Penulis</span>
+          <svg class="h-3 w-3 text-slate-400 transition-transform duration-200" id="nav-user-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        <!-- Dropdown Panel -->
+        <div
+          id="nav-user-dropdown"
+          class="absolute right-0 mt-2 w-72 origin-top-right rounded-2xl border border-slate-200/90 bg-white p-3 shadow-xl ring-1 ring-black/5 hidden z-50 animate-in fade-in zoom-in-95 duration-100"
+        >
+          <!-- Author Info Card -->
+          <div class="flex items-start gap-3 p-2 rounded-xl bg-slate-50/80 border border-slate-100">
+            <div id="user-avatar" class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-navy to-slate-800 text-xs font-extrabold text-white shadow-xs">
+              R
+            </div>
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-1.5">
+                <p id="user-display-name" class="text-xs font-extrabold text-navy truncate">Penulis Novella</p>
+                <span class="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-1.5 py-0.2 text-[9px] font-bold text-emerald-700 border border-emerald-200/60 shrink-0">
+                  <span class="h-1 w-1 rounded-full bg-emerald-500"></span>
+                  Terhubung
+                </span>
+              </div>
+              <p id="user-display-email" class="text-[11px] text-slate-500 truncate mt-0.5">Memuat profil...</p>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="mt-2 space-y-1">
+            <button
+              id="toggle-history-btn"
+              type="button"
+              class="flex w-full items-center justify-between rounded-xl px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
+            >
+              <span class="flex items-center gap-2">
+                <svg class="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Riwayat Naskah</span>
+              </span>
+              <span id="user-orders-count" class="rounded-full bg-slate-200/70 px-2 py-0.5 text-[10px] font-extrabold text-slate-600">0</span>
+            </button>
+
+            <a
+              href="/portal"
+              class="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100 transition-colors"
+            >
+              <svg class="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+              <span>Portal Penerbitan</span>
+            </a>
+          </div>
+
+          <div class="my-1.5 border-t border-slate-100"></div>
+
+          <!-- Logout Button -->
+          <button
+            id="logout-btn"
+            type="button"
+            class="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-xs font-bold text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+          >
+            <svg class="h-4 w-4 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            <span>Keluar dari Akun</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Admin Button -->
+      <a
+        href="/admin"
+        class={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold transition-colors ${
+          activeNav === 'admin'
+            ? 'border-navy bg-navy text-white'
+            : 'border-slate-300 bg-white text-slate-700 hover:border-navy hover:text-navy'
+        }`}
+      >
+        <span>Admin</span>
+        <span id="nav-admin-badge" class="rounded-full bg-orange px-1.5 py-0.2 text-[10px] font-extrabold text-white">0</span>
+      </a>
+
+      <!-- CTA -->
+      <a
+        href="/portal"
+        class="rounded-full bg-orange px-4 py-1.5 text-xs font-extrabold text-white shadow-sm transition-colors hover:bg-orange-hover"
+      >
+        Terbitkan Buku
+      </a>
+    </div>
+  </div>
+</header>
+
+<script>
+  import { initNavbarController } from '../scripts/navbar-controller';
+  initNavbarController();
+</script>

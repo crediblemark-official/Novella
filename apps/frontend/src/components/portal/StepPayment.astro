@@ -1,0 +1,100 @@
+---
+/**
+ * StepPayment: Step 3 (Rincian Pembayaran & Konfirmasi WhatsApp) — Unboxed Flat Studio
+ * - Flat order summary breakdown with hairlines
+ * - Official bank account details with 1-click copy
+ * - WhatsApp confirmation CTA
+ * - Order cancellation (Tarik Naskah) & New Order triggers
+ */
+---
+
+<div id="step-pay" class="hidden max-w-2xl mx-auto py-2">
+  <div class="flex items-center justify-between border-b border-slate-100 pb-5">
+    <div>
+      <span class="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-700">Tahap 3 dari 3</span>
+      <h2 class="mt-2 text-xl font-extrabold text-navy">Rincian Pembayaran & Rekening</h2>
+      <p class="mt-0.5 text-xs text-slate-500">Transfer ke rekening resmi Novella.id untuk verifikasi dan proses naskah.</p>
+    </div>
+    <button id="btn-back-to-book" type="button" class="rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-bold text-slate-600 hover:border-slate-300 hover:bg-slate-50 transition-colors shadow-xs cursor-pointer">&larr; Ubah Berkas</button>
+  </div>
+
+  <!-- Ringkasan Pesanan (Flat Hairline List, NO nested box) -->
+  <div class="mt-6 border-t border-b border-slate-100 py-3.5 text-xs space-y-1.5">
+    <div class="flex justify-between items-baseline font-bold text-navy">
+      <span id="pay-book-title" class="text-sm">Buku: -</span>
+      <span id="pay-total-badge" class="text-base font-extrabold text-orange">Rp 150.000</span>
+    </div>
+    <p id="pay-specs" class="text-slate-600 font-medium">100 hal · 5 eks · A5</p>
+    <p id="pay-addons" class="text-slate-500 text-[11px]">Add-on: -</p>
+  </div>
+
+  <!-- Disclaimer Estimasi Halaman (Flat Footnote, NO nested box) -->
+  <p class="mt-3 text-[11px] text-slate-500 leading-relaxed">
+    <strong class="text-navy font-bold">Catatan Estimasi Halaman:</strong> Total biaya ini adalah estimasi berdasarkan jumlah halaman yang Anda masukkan. Jika setelah proses tata letak jumlah halaman bertambah melebihi batas paket, tim redaksi akan menginformasikan penyesuaian biaya melalui WhatsApp.
+  </p>
+
+  <!-- Rekening Resmi Novella.id (Flat Hairlines, NO nested cards) -->
+  <div class="mt-6">
+    <p class="text-xs font-bold text-navy mb-2">Nomor Rekening Resmi Penerbit Novella:</p>
+    <div class="divide-y divide-slate-100 border-t border-b border-slate-100">
+      <!-- BCA -->
+      <div class="py-3.5 flex items-center justify-between">
+        <div>
+          <p class="text-xs font-extrabold text-navy">Bank Central Asia (BCA)</p>
+          <p class="font-mono text-sm font-bold text-slate-800">8920-192-831</p>
+          <p class="text-[11px] text-slate-500">a.n. Penerbit Novella Nusantara</p>
+        </div>
+        <button
+          type="button"
+          class="copy-btn rounded-lg border border-slate-300 bg-white px-3.5 py-1.5 text-xs font-bold text-navy hover:bg-slate-50 transition-colors cursor-pointer"
+          data-copy="8920192831"
+        >
+          Salin
+        </button>
+      </div>
+
+      <!-- Mandiri -->
+      <div class="py-3.5 flex items-center justify-between">
+        <div>
+          <p class="text-xs font-extrabold text-navy">Bank Mandiri</p>
+          <p class="font-mono text-sm font-bold text-slate-800">137-00-1829102-4</p>
+          <p class="text-[11px] text-slate-500">a.n. Penerbit Novella Nusantara</p>
+        </div>
+        <button
+          type="button"
+          class="copy-btn rounded-lg border border-slate-300 bg-white px-3.5 py-1.5 text-xs font-bold text-navy hover:bg-slate-50 transition-colors cursor-pointer"
+          data-copy="1370018291024"
+        >
+          Salin
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tombol Aksi Utama -->
+  <div class="mt-8 space-y-3">
+    <button
+      id="btn-confirm-order"
+      type="button"
+      class="flex w-full items-center justify-center gap-2 rounded-full bg-emerald-600 py-3.5 text-sm font-extrabold text-white shadow-md hover:bg-emerald-700 transition-all hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
+    >
+      <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2z" />
+      </svg>
+      <span>Selesai & Konfirmasi ke WhatsApp Admin</span>
+    </button>
+
+    <div class="flex items-center justify-between pt-2">
+      <button
+        id="btn-withdraw-current"
+        type="button"
+        class="hidden text-xs font-bold text-rose-600 hover:underline cursor-pointer"
+      >
+        Tarik Naskah Ini (Batalkan Pesanan)
+      </button>
+      <a href="/portal/kalkulator" class="text-xs font-bold text-slate-500 hover:text-navy">
+        Buat Pesanan Baru
+      </a>
+    </div>
+  </div>
+</div>

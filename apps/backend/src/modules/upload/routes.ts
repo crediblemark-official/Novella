@@ -1,14 +1,8 @@
 import { Elysia, t } from 'elysia';
-import { existsSync, mkdirSync } from 'node:fs';
-import { join } from 'node:path';
 import { db } from '../../db';
 import { orders } from '../../db/schema';
 import { eq } from 'drizzle-orm';
-
-const uploadsDir = process.env.UPLOADS_DIR || join(import.meta.dir, '../../../../../uploads');
-if (!existsSync(uploadsDir)) {
-  mkdirSync(uploadsDir, { recursive: true });
-}
+import { readManuscriptFile, saveManuscriptFile } from '../../services/storage';
 
 const ALLOWED_EXTENSIONS = ['.pdf', '.doc', '.docx', '.txt'];
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB per PRD
@@ -37,17 +31,17 @@ export const uploadModule = new Elysia({ prefix: '/api' })
       }
 
       const safeName = `${Date.now()}_${Math.random().toString(36).substring(2, 8)}${ext}`;
-      const targetPath = join(uploadsDir, safeName);
-
-      const arrayBuffer = await file.arrayBuffer();
-      await Bun.write(targetPath, arrayBuffer);
+      const mimeType = file.type || 'application/octet-stream';
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      const saved = await saveManuscriptFile(safeName, bytes, mimeType);
 
       return {
         success: true,
-        fileName: safeName,
+        fileName: saved.fileName,
         fileOriginalName: originalName,
         fileSize: file.size,
-        fileMimeType: file.type || 'application/octet-stream',
+        fileMimeType: mimeType,
+        storage: saved.storage,
       };
     },
     {
@@ -59,12 +53,14 @@ export const uploadModule = new Elysia({ prefix: '/api' })
   .get('/files/:fileName', async ({ params, set }) => {
     const { fileName } = params;
 
-    // Check file access gatekeeper in DB: if any order linking this file is revoked, deny access
+    // Check file access gatekeeper in DB: if any order linking this file is revoked or expired
     const matchingOrders = await db.select().from(orders).where(eq(orders.fileName, fileName));
 
     if (matchingOrders.length > 0) {
-      const isRevoked = matchingOrders.some((o) => o.isRevoked === 1 || o.status === 'Ditarik Penulis');
-      if (isRevoked) {
+      const isRevokedOrDeleted = matchingOrders.some(
+        (o) => o.isRevoked === 1 || o.status === 'Ditarik Penulis' || o.status === 'Kedaluwarsa'
+      );
+      if (isRevokedOrDeleted) {
         set.status = 403;
         return {
           error: 'Akses naskah ditutup karena telah ditarik penulis (Access Revoked / Soft Deleted).',
@@ -72,15 +68,28 @@ export const uploadModule = new Elysia({ prefix: '/api' })
       }
     }
 
-    const filePath = join(uploadsDir, fileName);
-    const file = Bun.file(filePath);
-
-    if (!(await file.exists())) {
+    const result = await readManuscriptFile(fileName);
+    if (!result) {
       set.status = 404;
       return { error: 'Berkas naskah tidak ditemukan di server.' };
     }
 
     const firstOrder = matchingOrders[0];
-    set.headers['Content-Disposition'] = `attachment; filename="${firstOrder?.fileOriginalName || fileName}"`;
-    return file;
+    const disposition = `attachment; filename="${firstOrder?.fileOriginalName || fileName}"`;
+
+    if (result.kind === 's3') {
+      return new Response(result.response.body, {
+        status: 200,
+        headers: {
+          'Content-Type':
+            result.response.headers.get('content-type') ||
+            firstOrder?.fileMimeType ||
+            'application/octet-stream',
+          'Content-Disposition': disposition,
+        },
+      });
+    }
+
+    set.headers['Content-Disposition'] = disposition;
+    return result.file;
   });
