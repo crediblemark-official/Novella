@@ -14,19 +14,19 @@ import MobileStickyBar from './MobileStickyBar.astro';
     <div class="lg:col-span-7 min-w-0 space-y-4">
       
       <!-- 0. Informasi Naskah Buku -->
-      <div class="space-y-2">
+      <div class="space-y-2.5">
         <div class="flex items-center gap-2">
-          <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-navy text-[11px] font-extrabold text-white">1</span>
-          <h2 class="text-sm sm:text-[15px] font-extrabold text-navy">Informasi Naskah Buku</h2>
+          <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-navy text-xs font-extrabold text-white">1</span>
+          <h2 class="text-base font-extrabold text-navy">Informasi Naskah Buku</h2>
         </div>
         <div class="grid sm:grid-cols-2 gap-2.5">
           <div>
-            <label for="input-book-title" class="block text-xs font-bold text-navy mb-1">Judul Buku / Judul Kerja <span class="text-rose-500">*</span></label>
-            <input id="input-book-title" type="text" required placeholder="Contoh: Lembayung Jogja" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-[13px] font-semibold text-navy placeholder:text-slate-500 focus:border-navy focus:outline-none focus:ring-2 focus:ring-navy/5 shadow-2xs" />
+            <label for="input-book-title" class="block text-sm font-bold text-navy mb-1">Judul Buku / Judul Kerja <span class="text-rose-500">*</span></label>
+            <input id="input-book-title" type="text" required placeholder="Contoh: Lembayung Jogja" class="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-sm font-semibold text-navy placeholder:text-slate-500 focus:border-navy focus:outline-none focus:ring-2 focus:ring-navy/5 shadow-2xs" />
           </div>
           <div>
-            <label for="select-book-category" class="block text-xs font-bold text-navy mb-1">Kategori / Genre Sastra <span class="text-rose-500">*</span></label>
-            <select id="select-book-category" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-[13px] font-semibold text-navy focus:border-navy focus:outline-none shadow-2xs cursor-pointer">
+            <label for="select-book-category" class="block text-sm font-bold text-navy mb-1">Kategori / Genre Sastra <span class="text-rose-500">*</span></label>
+            <select id="select-book-category" class="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-sm font-semibold text-navy focus:border-navy focus:outline-none shadow-2xs cursor-pointer">
               <option value="Novel Sastra" selected>Novel Sastra & Populer</option>
               <option value="Kumpulan Cerpen">Kumpulan Cerpen</option>
               <option value="Antologi Puisi">Antologi Puisi</option>
@@ -39,79 +39,79 @@ import MobileStickyBar from './MobileStickyBar.astro';
       </div>
 
       <!-- Info Paket Dasar Penerbitan Rp 150.000 (Tanpa Box) -->
-      <div class="border-y border-slate-200/80 py-2.5 text-xs text-slate-700 space-y-1">
+      <div class="border-y border-slate-200/80 py-3 text-sm text-slate-700 space-y-1.5">
         <div class="flex items-center justify-between gap-2">
           <div class="flex items-center gap-1.5 min-w-0">
             <span class="text-orange shrink-0">
-              <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
             </span>
-            <p class="font-extrabold text-navy text-[13px] truncate">Paket Dasar Penerbitan Novella</p>
+            <p class="font-extrabold text-navy text-sm truncate">Paket Dasar Penerbitan Novella</p>
           </div>
-          <span class="shrink-0 rounded-full bg-orange/15 px-2 py-0.5 text-[10px] font-extrabold text-orange">Hemat Rp 300.000</span>
+          <span class="shrink-0 rounded-full bg-orange/15 px-2.5 py-0.5 text-xs font-extrabold text-orange">Hemat Rp 300.000</span>
         </div>
-        <p class="text-[11px] sm:text-xs leading-snug text-slate-700">
+        <p class="text-xs sm:text-sm leading-relaxed text-slate-700">
           Hanya <strong class="text-navy">Rp 150.000</strong> (<span class="line-through text-slate-500 font-semibold">Rp 450.000</span>) mendapatkan <strong class="text-navy">5 eksemplar</strong> buku fisik hingga <strong class="text-navy">100 halaman</strong> (format <strong class="text-navy">A5 / Unesco</strong>). Kertas isi: <strong class="text-navy">Bookpaper 57 gr</strong> atau <strong class="text-navy">HVS 70 gr</strong>.
         </p>
       </div>
 
       <!-- 1. Estimasi Ketebalan Halaman (Header Seimbang & 4 Grid Simetris) -->
-      <div class="space-y-2">
+      <div class="space-y-2.5">
         <div class="flex items-center justify-between gap-2">
           <div class="min-w-0">
             <div class="flex items-center gap-2">
-              <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-navy text-[11px] font-extrabold text-white">2</span>
-              <h2 class="text-sm sm:text-[15px] font-extrabold text-navy truncate">Estimasi Halaman Naskah</h2>
+              <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-navy text-xs font-extrabold text-white">2</span>
+              <h2 class="text-base font-extrabold text-navy truncate">Estimasi Halaman Naskah</h2>
             </div>
-            <p class="text-[11px] sm:text-xs text-slate-700 mt-0.5 truncate">Maksimal 100 halaman pada Paket Dasar.</p>
+            <p class="text-xs text-slate-700 mt-0.5 truncate">Maksimal 100 halaman pada Paket Dasar.</p>
           </div>
           <div class="inline-flex items-center rounded-xl border border-slate-200 bg-slate-50/80 p-0.5 shadow-2xs shrink-0">
-            <button id="btn-page-minus" type="button" class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-sm font-extrabold text-navy shadow-xs hover:bg-slate-100 cursor-pointer active:scale-95 transition-all" aria-label="Kurangi halaman">−</button>
-            <div class="flex items-center px-1.5">
-              <input id="input-pages" type="number" min="24" max="600" value="100" class="h-8 w-10 bg-transparent text-center font-mono text-[13px] font-extrabold text-navy focus:outline-none" />
-              <span class="text-[11px] font-bold text-slate-600">hal</span>
+            <button id="btn-page-minus" type="button" class="flex h-10 w-10 sm:h-9 sm:w-9 items-center justify-center rounded-lg bg-white text-base font-extrabold text-navy shadow-xs hover:bg-slate-100 cursor-pointer active:scale-95 transition-all" aria-label="Kurangi halaman">−</button>
+            <div class="flex items-center px-2">
+              <input id="input-pages" type="number" min="24" max="600" value="100" class="h-10 sm:h-9 w-11 bg-transparent text-center font-mono text-sm font-extrabold text-navy focus:outline-none" />
+              <span class="text-xs font-bold text-slate-600">hal</span>
             </div>
-            <button id="btn-page-plus" type="button" class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-sm font-extrabold text-navy shadow-xs hover:bg-slate-100 cursor-pointer active:scale-95 transition-all" aria-label="Tambah halaman">+</button>
+            <button id="btn-page-plus" type="button" class="flex h-10 w-10 sm:h-9 sm:w-9 items-center justify-center rounded-lg bg-white text-base font-extrabold text-navy shadow-xs hover:bg-slate-100 cursor-pointer active:scale-95 transition-all" aria-label="Tambah halaman">+</button>
           </div>
         </div>
         <div class="grid grid-cols-4 gap-1.5">
-          <button type="button" data-val="60" class="page-chip flex items-center justify-center rounded-lg border border-slate-200 bg-white py-1.5 text-center text-xs sm:text-[13px] font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer transition-all duration-150 active:scale-[0.98]">60 hal</button>
-          <button type="button" data-val="100" class="page-chip flex items-center justify-center gap-1 rounded-lg border-2 border-navy bg-navy py-1.5 text-center text-xs sm:text-[13px] font-bold text-white shadow-xs cursor-pointer transition-all duration-150 active:scale-[0.98]">
+          <button type="button" data-val="60" class="page-chip flex items-center justify-center rounded-lg border border-slate-200 bg-white py-1.5 text-center text-sm font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer transition-all duration-150 active:scale-[0.98]">60 hal</button>
+          <button type="button" data-val="100" class="page-chip flex items-center justify-center gap-1 rounded-lg border-2 border-navy bg-navy py-1.5 text-center text-sm font-bold text-white shadow-xs cursor-pointer transition-all duration-150 active:scale-[0.98]">
             <span>100 hal</span>
-            <svg class="h-3 w-3 text-amber-400 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg class="h-3.5 w-3.5 text-amber-400 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
           </button>
-          <button type="button" data-val="150" class="page-chip flex items-center justify-center rounded-lg border border-slate-200 bg-white py-1.5 text-center text-xs sm:text-[13px] font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer transition-all duration-150 active:scale-[0.98]">150 hal</button>
-          <button type="button" data-val="200" class="page-chip flex items-center justify-center rounded-lg border border-slate-200 bg-white py-1.5 text-center text-xs sm:text-[13px] font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer transition-all duration-150 active:scale-[0.98]">200 hal</button>
+          <button type="button" data-val="150" class="page-chip flex items-center justify-center rounded-lg border border-slate-200 bg-white py-1.5 text-center text-sm font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer transition-all duration-150 active:scale-[0.98]">150 hal</button>
+          <button type="button" data-val="200" class="page-chip flex items-center justify-center rounded-lg border border-slate-200 bg-white py-1.5 text-center text-sm font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer transition-all duration-150 active:scale-[0.98]">200 hal</button>
         </div>
       </div>
 
       <!-- 2. Jumlah Eksemplar Cetak (Header Seimbang & Tanpa Horizontal Scroll) -->
-      <div class="border-t border-slate-100 pt-3.5 space-y-2">
+      <div class="border-t border-slate-100 pt-4 space-y-2.5">
         <div class="flex items-center justify-between gap-2">
           <div class="min-w-0">
             <div class="flex items-center gap-2">
-              <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-navy text-[11px] font-extrabold text-white">3</span>
-              <h2 class="text-sm sm:text-[15px] font-extrabold text-navy truncate">Jumlah Cetak Buku Fisik</h2>
+              <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-navy text-xs font-extrabold text-white">3</span>
+              <h2 class="text-base font-extrabold text-navy truncate">Jumlah Cetak Buku Fisik</h2>
             </div>
-            <p class="text-[11px] sm:text-xs text-slate-700 mt-0.5 truncate">Minimal 5 eksemplar per pesanan.</p>
+            <p class="text-xs text-slate-700 mt-0.5 truncate">Minimal 5 eksemplar per pesanan.</p>
           </div>
           <div class="inline-flex items-center rounded-xl border border-slate-200 bg-slate-50/80 p-0.5 shadow-2xs shrink-0">
-            <button id="btn-copy-minus" type="button" class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-sm font-extrabold text-navy shadow-xs hover:bg-slate-100 cursor-pointer active:scale-95 transition-all" aria-label="Kurangi eksemplar">−</button>
-            <div class="flex items-center px-1.5">
-              <input id="input-copies" type="number" min="5" max="1000" value="5" class="h-8 w-10 bg-transparent text-center font-mono text-[13px] font-extrabold text-navy focus:outline-none" />
-              <span class="text-[11px] font-bold text-slate-600">eks</span>
+            <button id="btn-copy-minus" type="button" class="flex h-10 w-10 sm:h-9 sm:w-9 items-center justify-center rounded-lg bg-white text-base font-extrabold text-navy shadow-xs hover:bg-slate-100 cursor-pointer active:scale-95 transition-all" aria-label="Kurangi eksemplar">−</button>
+            <div class="flex items-center px-2">
+              <input id="input-copies" type="number" min="5" max="1000" value="5" class="h-10 sm:h-9 w-11 bg-transparent text-center font-mono text-sm font-extrabold text-navy focus:outline-none" />
+              <span class="text-xs font-bold text-slate-600">eks</span>
             </div>
-            <button id="btn-copy-plus" type="button" class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-sm font-extrabold text-navy shadow-xs hover:bg-slate-100 cursor-pointer active:scale-95 transition-all" aria-label="Tambah eksemplar">+</button>
+            <button id="btn-copy-plus" type="button" class="flex h-10 w-10 sm:h-9 sm:w-9 items-center justify-center rounded-lg bg-white text-base font-extrabold text-navy shadow-xs hover:bg-slate-100 cursor-pointer active:scale-95 transition-all" aria-label="Tambah eksemplar">+</button>
           </div>
         </div>
         <div class="grid grid-cols-3 sm:grid-cols-5 gap-1.5">
-          <button type="button" data-val="5" class="copy-chip flex items-center justify-center gap-1 rounded-lg border-2 border-navy bg-navy py-1.5 text-center text-xs sm:text-[13px] font-bold text-white shadow-xs cursor-pointer transition-all duration-150 active:scale-[0.98]">
+          <button type="button" data-val="5" class="copy-chip flex items-center justify-center gap-1 rounded-lg border-2 border-navy bg-navy py-1.5 text-center text-sm font-bold text-white shadow-xs cursor-pointer transition-all duration-150 active:scale-[0.98]">
             <span>5 eks</span>
-            <svg class="h-3 w-3 text-amber-400 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg class="h-3.5 w-3.5 text-amber-400 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
           </button>
-          <button type="button" data-val="10" class="copy-chip flex items-center justify-center rounded-lg border border-slate-200 bg-white py-1.5 text-center text-xs sm:text-[13px] font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer transition-all duration-150 active:scale-[0.98]">10 eks</button>
-          <button type="button" data-val="25" class="copy-chip flex items-center justify-center rounded-lg border border-slate-200 bg-white py-1.5 text-center text-xs sm:text-[13px] font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer transition-all duration-150 active:scale-[0.98]">25 eks</button>
-          <button type="button" data-val="50" class="copy-chip flex items-center justify-center rounded-lg border border-slate-200 bg-white py-1.5 text-center text-xs sm:text-[13px] font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer transition-all duration-150 active:scale-[0.98]">50 eks</button>
-          <button type="button" data-val="100" class="copy-chip flex items-center justify-center rounded-lg border border-slate-200 bg-white py-1.5 text-center text-xs sm:text-[13px] font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer transition-all duration-150 active:scale-[0.98]">100 eks</button>
+          <button type="button" data-val="10" class="copy-chip flex items-center justify-center rounded-lg border border-slate-200 bg-white py-1.5 text-center text-sm font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer transition-all duration-150 active:scale-[0.98]">10 eks</button>
+          <button type="button" data-val="25" class="copy-chip flex items-center justify-center rounded-lg border border-slate-200 bg-white py-1.5 text-center text-sm font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer transition-all duration-150 active:scale-[0.98]">25 eks</button>
+          <button type="button" data-val="50" class="copy-chip flex items-center justify-center rounded-lg border border-slate-200 bg-white py-1.5 text-center text-sm font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer transition-all duration-150 active:scale-[0.98]">50 eks</button>
+          <button type="button" data-val="100" class="copy-chip flex items-center justify-center rounded-lg border border-slate-200 bg-white py-1.5 text-center text-sm font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer transition-all duration-150 active:scale-[0.98]">100 eks</button>
         </div>
       </div>
 
@@ -151,18 +151,18 @@ import MobileStickyBar from './MobileStickyBar.astro';
           </div>
         </div>
 
-        <div class="divide-y divide-slate-100 text-[13px] text-slate-700 border-t border-b border-slate-100">
+        <div class="divide-y divide-slate-100 text-sm text-slate-700 border-t border-b border-slate-100">
           <div class="py-2.5 flex justify-between font-semibold text-slate-800">
             <div>
               <p>Paket Dasar (5 eks / 100 hal · A5/Unesco)</p>
-              <p class="mt-0.5 flex items-center gap-1 text-[11px] text-emerald-700 font-bold">
+              <p class="mt-0.5 flex items-center gap-1 text-xs text-emerald-700 font-bold">
                 <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
                 <span>Sudah Termasuk: ISBN, Cover, &amp; Layout</span>
               </p>
             </div>
             <div class="text-right">
               <span class="font-mono font-bold text-navy">Rp 150.000</span>
-              <span class="block text-[11px] text-slate-500 line-through">Rp 450.000</span>
+              <span class="block text-xs text-slate-500 line-through">Rp 450.000</span>
             </div>
           </div>
           <div id="row-summary-copies" class="py-2.5 hidden justify-between">
@@ -174,9 +174,9 @@ import MobileStickyBar from './MobileStickyBar.astro';
             <span id="val-summary-pages" class="font-mono font-bold text-orange">+ Rp 0</span>
           </div>
           <div class="py-2.5 space-y-1">
-            <div class="flex justify-between items-center text-[13px]">
+            <div class="flex justify-between items-center text-sm">
               <span class="text-slate-700 font-semibold">Format Buku:</span>
-              <span id="val-summary-size" class="shrink-0 whitespace-nowrap rounded bg-orange/15 px-2 py-0.5 text-[11px] font-bold text-orange">Paket Dasar</span>
+              <span id="val-summary-size" class="shrink-0 whitespace-nowrap rounded bg-orange/15 px-2 py-0.5 text-xs font-bold text-orange">Paket Dasar</span>
             </div>
             <p id="label-summary-size" class="text-xs font-medium text-slate-700">A5 · Hitam Putih (BW) · Bookpaper 57 gr · Soft Cover</p>
           </div>
@@ -187,7 +187,7 @@ import MobileStickyBar from './MobileStickyBar.astro';
         </div>
 
         <div class="rounded-xl border border-amber-200/80 bg-amber-50/50 p-3 text-xs text-amber-950 leading-relaxed space-y-1">
-          <p class="font-bold text-amber-900 flex items-center gap-1.5">
+          <p class="font-bold text-amber-900 flex items-center gap-1.5 text-sm">
             <svg class="h-4 w-4 text-amber-700 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" x2="6" y1="2" y2="4"/><line x1="10" x2="10" y1="2" y2="4"/></svg>
             <span>Ngobrol Santai Seperti Sahabat Sendiri</span>
           </p>
@@ -204,7 +204,7 @@ import MobileStickyBar from './MobileStickyBar.astro';
           >
             <span>Konsultasi Naskah ke Admin &rarr;</span>
           </button>
-          <p class="text-center text-[11px] text-slate-600 mt-2">Rincian pesanan akan dikonfirmasikan langsung ke WhatsApp Admin Novella</p>
+          <p class="text-center text-xs text-slate-600 mt-2">Rincian pesanan akan dikonfirmasikan langsung ke WhatsApp Admin Novella</p>
         </div>
       </div>
     </div>

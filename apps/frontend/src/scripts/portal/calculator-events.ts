@@ -126,14 +126,14 @@ export function bindCalculatorEvents() {
         btn.classList.remove('bg-orange/[0.06]');
         if (check) {
           check.textContent = '+';
-          check.className = 'addon-check flex h-5 w-5 items-center justify-center rounded-full border border-slate-300 text-xs font-bold text-slate-500 bg-white transition-all';
+          check.className = 'addon-check flex h-6 w-6 items-center justify-center rounded-full border border-slate-300 text-xs font-bold text-slate-500 bg-white transition-all';
         }
       } else {
         calcState.addons.push(addon);
         btn.classList.add('bg-orange/[0.06]');
         if (check) {
           check.textContent = '✓';
-          check.className = 'addon-check flex h-5 w-5 items-center justify-center rounded-full bg-orange border border-orange text-white text-[10px] font-extrabold transition-all shadow-2xs';
+          check.className = 'addon-check flex h-6 w-6 items-center justify-center rounded-full bg-orange border border-orange text-white text-[11px] font-extrabold transition-all shadow-2xs';
         }
       }
       updateCalculator();
@@ -166,7 +166,7 @@ export function bindCalculatorEvents() {
             const check = addonBtn.querySelector('.addon-check');
             if (check) {
               check.textContent = '✓';
-              check.className = 'addon-check flex h-5 w-5 items-center justify-center rounded-full bg-orange border border-orange text-white text-[10px] font-extrabold transition-all shadow-2xs';
+              check.className = 'addon-check flex h-6 w-6 items-center justify-center rounded-full bg-orange border border-orange text-white text-[11px] font-extrabold transition-all shadow-2xs';
             }
           }
         });
@@ -218,8 +218,8 @@ export function syncCalculatorUI() {
     if (check) {
       check.textContent = active ? '✓' : '+';
       check.className = active
-        ? 'addon-check flex h-5 w-5 items-center justify-center rounded-full bg-orange border border-orange text-white text-[10px] font-extrabold transition-all shadow-2xs'
-        : 'addon-check flex h-5 w-5 items-center justify-center rounded-full border border-slate-300 text-xs font-bold text-slate-500 bg-white transition-all';
+        ? 'addon-check flex h-6 w-6 items-center justify-center rounded-full bg-orange border border-orange text-white text-[11px] font-extrabold transition-all shadow-2xs'
+        : 'addon-check flex h-6 w-6 items-center justify-center rounded-full border border-slate-300 text-xs font-bold text-slate-500 bg-white transition-all';
     }
   });
 }
