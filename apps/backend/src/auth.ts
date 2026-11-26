@@ -85,6 +85,10 @@ export const auth = betterAuth({
   },
   account: {
     skipStateCookieCheck: true,
+    accountLinking: {
+      enabled: true,
+      trustedProviders: ['google'],
+    },
   },
   emailAndPassword: {
     enabled: true,
