@@ -123,19 +123,17 @@ export function bindCalculatorEvents() {
       const check = btn.querySelector('.addon-check');
       if (calcState.addons.includes(addon)) {
         calcState.addons = calcState.addons.filter((a) => a !== addon);
-        btn.classList.remove('border-2', 'border-orange', 'bg-orange/5', 'shadow-xs');
-        btn.classList.add('border-slate-200', 'bg-white');
+        btn.classList.remove('bg-orange/[0.06]');
         if (check) {
           check.textContent = '+';
-          check.className = 'addon-check flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-slate-300 text-xs font-bold text-slate-400 bg-white transition-all';
+          check.className = 'addon-check flex h-5 w-5 items-center justify-center rounded-full border border-slate-300 text-xs font-bold text-slate-500 bg-white transition-all';
         }
       } else {
         calcState.addons.push(addon);
-        btn.classList.remove('border-slate-200', 'bg-white');
-        btn.classList.add('border-2', 'border-orange', 'bg-orange/5', 'shadow-xs');
+        btn.classList.add('bg-orange/[0.06]');
         if (check) {
           check.textContent = '✓';
-          check.className = 'addon-check flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-orange border border-orange text-white text-[10px] font-extrabold transition-all shadow-2xs';
+          check.className = 'addon-check flex h-5 w-5 items-center justify-center rounded-full bg-orange border border-orange text-white text-[10px] font-extrabold transition-all shadow-2xs';
         }
       }
       updateCalculator();
@@ -164,12 +162,11 @@ export function bindCalculatorEvents() {
         calcState.addons.push(targetAddon);
         document.querySelectorAll<HTMLButtonElement>('.addon-btn').forEach((addonBtn) => {
           if (addonBtn.getAttribute('data-addon') === targetAddon) {
-            addonBtn.classList.remove('border-slate-200', 'bg-white');
-            addonBtn.classList.add('border-2', 'border-orange', 'bg-orange/5', 'shadow-xs');
+            addonBtn.classList.add('bg-orange/[0.06]');
             const check = addonBtn.querySelector('.addon-check');
             if (check) {
               check.textContent = '✓';
-              check.className = 'addon-check flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-orange border border-orange text-white text-[10px] font-extrabold transition-all shadow-2xs';
+              check.className = 'addon-check flex h-5 w-5 items-center justify-center rounded-full bg-orange border border-orange text-white text-[10px] font-extrabold transition-all shadow-2xs';
             }
           }
         });
@@ -216,18 +213,13 @@ export function syncCalculatorUI() {
   document.querySelectorAll<HTMLButtonElement>('.addon-btn').forEach((btn) => {
     const addon = btn.getAttribute('data-addon') || '';
     const active = calcState.addons.includes(addon);
-    btn.classList.toggle('border-2', active);
-    btn.classList.toggle('border-orange', active);
-    btn.classList.toggle('bg-orange/5', active);
-    btn.classList.toggle('shadow-xs', active);
-    btn.classList.toggle('border-slate-200', !active);
-    btn.classList.toggle('bg-white', !active);
+    btn.classList.toggle('bg-orange/[0.06]', active);
     const check = btn.querySelector('.addon-check');
     if (check) {
       check.textContent = active ? '✓' : '+';
       check.className = active
-        ? 'addon-check flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-orange border border-orange text-white text-[10px] font-extrabold transition-all shadow-2xs'
-        : 'addon-check flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-slate-300 text-xs font-bold text-slate-400 bg-white transition-all';
+        ? 'addon-check flex h-5 w-5 items-center justify-center rounded-full bg-orange border border-orange text-white text-[10px] font-extrabold transition-all shadow-2xs'
+        : 'addon-check flex h-5 w-5 items-center justify-center rounded-full border border-slate-300 text-xs font-bold text-slate-500 bg-white transition-all';
     }
   });
 }
