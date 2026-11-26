@@ -133,6 +133,51 @@ export function bindCalculatorEvents() {
     });
   });
 
+  // Event handler interaktif untuk Saran Harga Genap (Tambah Eks / Add-on)
+  const suggestionItems = document.getElementById('suggestion-items');
+  suggestionItems?.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.btn-apply-suggestion');
+    if (!btn) return;
+
+    const action = btn.getAttribute('data-action');
+    if (action === 'apply-copies') {
+      const targetCopies = Number(btn.getAttribute('data-copies'));
+      if (targetCopies) {
+        calcState.copies = targetCopies;
+        const inputCopies = document.getElementById('input-copies') as HTMLInputElement | null;
+        if (inputCopies) inputCopies.value = String(targetCopies);
+        syncChips('.copy-chip', 'data-val', targetCopies);
+        updateCalculator();
+      }
+    } else if (action === 'apply-addon') {
+      const targetAddon = btn.getAttribute('data-addon');
+      if (targetAddon && !calcState.addons.includes(targetAddon)) {
+        calcState.addons.push(targetAddon);
+        document.querySelectorAll<HTMLButtonElement>('.addon-btn').forEach((addonBtn) => {
+          if (addonBtn.getAttribute('data-addon') === targetAddon) {
+            addonBtn.classList.remove('border-slate-200', 'bg-white');
+            addonBtn.classList.add('border-2', 'border-orange', 'bg-orange/5', 'shadow-xs');
+            const check = addonBtn.querySelector('.addon-check');
+            if (check) {
+              check.textContent = '✓';
+              check.className = 'addon-check flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-orange border border-orange text-white text-[10px] font-extrabold transition-all shadow-2xs';
+            }
+          }
+        });
+        updateCalculator();
+      }
+    }
+  });
+
+  document.getElementById('mobile-suggestion-badge')?.addEventListener('click', () => {
+    const box = document.getElementById('suggestion-box');
+    if (box) {
+      box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      box.classList.add('ring-2', 'ring-orange');
+      setTimeout(() => box.classList.remove('ring-2', 'ring-orange'), 1500);
+    }
+  });
+
   const mainSubmit = document.getElementById('btn-submit-consultation');
   const stickyBar = document.getElementById('mobile-sticky-bar');
   mainSubmit?.addEventListener('click', () => submitConsultationOrder());

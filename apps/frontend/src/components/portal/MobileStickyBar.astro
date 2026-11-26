@@ -8,7 +8,10 @@
 <div id="mobile-sticky-bar" class="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-white/95 backdrop-blur-md border-t border-slate-200/90 px-4 py-3 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] transition-all duration-200">
   <div class="max-w-md mx-auto flex items-center justify-between gap-3">
     <div class="min-w-0">
-      <span class="text-[10px] font-bold text-slate-400 block tracking-tight">Estimasi Biaya:</span>
+      <div class="flex items-center gap-1.5">
+        <span class="text-[10px] font-bold text-slate-400 block tracking-tight">Estimasi Biaya:</span>
+        <button id="mobile-suggestion-badge" type="button" class="hidden text-[9px] font-extrabold text-amber-800 bg-amber-100 hover:bg-amber-200 px-2 py-0.5 rounded-full transition-all cursor-pointer">💡 Saran Genap</button>
+      </div>
       <div class="flex items-baseline gap-1.5">
         <span id="mobile-summary-total" class="font-mono text-lg font-black text-navy leading-none">Rp 150.000</span>
         <span id="mobile-summary-original" class="font-mono text-[10px] text-slate-400 line-through">Rp 450.000</span>

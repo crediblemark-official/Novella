@@ -87,6 +87,82 @@ export async function updateCalculator() {
       }
     }
 
+    // Render saran harga genap (upsell cerdas jika harga ganjil)
+    const suggestionBox = document.getElementById('suggestion-box');
+    const suggestionItems = document.getElementById('suggestion-items');
+    const mobileSuggestionBadge = document.getElementById('mobile-suggestion-badge');
+
+    const suggestions = pricing.suggestions;
+    const hasSuggestions = suggestions && suggestions.isOdd && (suggestions.copies || suggestions.addon);
+
+    if (suggestionBox && suggestionItems) {
+      if (hasSuggestions) {
+        suggestionBox.classList.remove('hidden');
+        if (mobileSuggestionBadge) mobileSuggestionBadge.classList.remove('hidden');
+
+        let html = '';
+        if (suggestions.copies) {
+          const c = suggestions.copies;
+          html += `
+            <div class="rounded-xl border border-amber-200/90 bg-white/95 p-2.5 text-xs text-navy shadow-2xs hover:border-orange/60 transition-all">
+              <div class="flex items-start justify-between gap-2.5">
+                <div class="min-w-0">
+                  <div class="flex items-center gap-1.5 flex-wrap">
+                    <span class="font-extrabold text-xs text-navy">📚 Tambah jadi ${c.targetCopies} eks</span>
+                    <span class="rounded bg-emerald-100 px-1.5 py-0.5 text-[9px] font-black text-emerald-800">Genap ${formatRp(c.newTotal)}</span>
+                  </div>
+                  <p class="text-[11px] text-slate-600 mt-1 leading-snug">
+                    ${c.description}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  data-action="apply-copies"
+                  data-copies="${c.targetCopies}"
+                  class="btn-apply-suggestion shrink-0 rounded-lg bg-orange px-3 py-1.5 text-xs font-bold text-white hover:bg-orange/90 active:scale-95 transition-all shadow-xs cursor-pointer"
+                >
+                  Pilih ${c.targetCopies} Eks
+                </button>
+              </div>
+            </div>
+          `;
+        }
+
+        if (suggestions.addon) {
+          const a = suggestions.addon;
+          html += `
+            <div class="rounded-xl border border-amber-200/90 bg-white/95 p-2.5 text-xs text-navy shadow-2xs hover:border-navy/60 transition-all">
+              <div class="flex items-start justify-between gap-2.5">
+                <div class="min-w-0">
+                  <div class="flex items-center gap-1.5 flex-wrap">
+                    <span class="font-extrabold text-xs text-navy">✨ ${a.addonName}</span>
+                    <span class="rounded bg-emerald-100 px-1.5 py-0.5 text-[9px] font-black text-emerald-800">Genap ${formatRp(a.newTotal)}</span>
+                  </div>
+                  <p class="text-[11px] text-slate-600 mt-1 leading-snug">
+                    ${a.description}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  data-action="apply-addon"
+                  data-addon="${a.addonName}"
+                  class="btn-apply-suggestion shrink-0 rounded-lg bg-navy px-3 py-1.5 text-xs font-bold text-white hover:bg-navy/90 active:scale-95 transition-all shadow-xs cursor-pointer"
+                >
+                  + Tambah
+                </button>
+              </div>
+            </div>
+          `;
+        }
+
+        suggestionItems.innerHTML = html;
+      } else {
+        suggestionBox.classList.add('hidden');
+        if (mobileSuggestionBadge) mobileSuggestionBadge.classList.add('hidden');
+        suggestionItems.innerHTML = '';
+      }
+    }
+
     saveDraftState();
   } catch (err) {
     console.error('Calculation error', err);

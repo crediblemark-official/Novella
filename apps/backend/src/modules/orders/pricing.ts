@@ -8,6 +8,31 @@ export interface PricingParams {
   coverType?: 'Soft Cover' | 'Hard Cover' | string;
 }
 
+export interface PriceSuggestionCopies {
+  targetCopies: number;
+  addedCopies: number;
+  newTotal: number;
+  diff: number;
+  newPricePerBook: number;
+  label: string;
+  description: string;
+}
+
+export interface PriceSuggestionAddon {
+  addonName: string;
+  addonPrice: number;
+  newTotal: number;
+  diff: number;
+  label: string;
+  description: string;
+}
+
+export interface PriceSuggestions {
+  isOdd: boolean;
+  copies?: PriceSuggestionCopies;
+  addon?: PriceSuggestionAddon;
+}
+
 export interface PricingResult {
   basePrice: number;
   originalPrice: number;
@@ -17,6 +42,7 @@ export interface PricingResult {
   addonsCost: number;
   totalPrice: number;
   pricePerBook: number;
+  suggestions?: PriceSuggestions;
   details: {
     baseCopies: number;
     basePages: number;
@@ -146,6 +172,16 @@ export function calculatePrice(params: PricingParams): PricingResult {
   const extraPages = copies * Math.max(0, pages - BASE_PAGES) * pageRate;
   const sizeCost = Math.max(0, (pageRate - 250) * pages * copies) + (isHardCover ? hardCoverRate * copies : 0);
 
+  const suggestions = findPriceSuggestions(
+    copies,
+    costPerBook,
+    prepressServiceFee,
+    addonsCost,
+    totalPrice,
+    pricePerBook,
+    params.addons || [],
+  );
+
   return {
     basePrice: BASE_PRICE,
     originalPrice,
@@ -155,6 +191,7 @@ export function calculatePrice(params: PricingParams): PricingResult {
     addonsCost,
     totalPrice,
     pricePerBook,
+    suggestions,
     details: {
       baseCopies: BASE_COPIES,
       basePages: BASE_PAGES,
@@ -165,5 +202,120 @@ export function calculatePrice(params: PricingParams): PricingResult {
       addonItems,
       standardSpecs: STANDARD_SPECS,
     },
+  };
+}
+
+function findPriceSuggestions(
+  currentCopies: number,
+  costPerBook: number,
+  prepressServiceFee: number,
+  addonsCost: number,
+  totalPrice: number,
+  currentPricePerBook: number,
+  currentAddons: string[],
+): PriceSuggestions | undefined {
+  const isOdd = totalPrice % 50_000 !== 0;
+  if (!isOdd) return undefined;
+
+  const presetChips = [10, 25, 50, 100];
+  const candidates: number[] = [];
+
+  // 1. Presets > current
+  for (const p of presetChips) {
+    if (p > currentCopies) candidates.push(p);
+  }
+
+  // 2. Multiples of 5 > current (up to +30)
+  for (let n = currentCopies + 1; n <= Math.min(1000, currentCopies + 30); n++) {
+    if (n % 5 === 0 && !candidates.includes(n)) candidates.push(n);
+  }
+
+  // 3. Small increments > current (up to +5)
+  for (let n = currentCopies + 1; n <= Math.min(1000, currentCopies + 5); n++) {
+    if (!candidates.includes(n)) candidates.push(n);
+  }
+
+  let bestCopy: PriceSuggestionCopies | undefined;
+  let bestCopyScore = -Infinity;
+
+  for (const c of candidates) {
+    const candTotal = Math.max(BASE_PRICE, (c * costPerBook) + prepressServiceFee + addonsCost);
+    if (candTotal % 50_000 === 0) {
+      const isPreset = presetChips.includes(c);
+      const isMultipleOf100k = candTotal % 100_000 === 0;
+      const isMultipleOf5 = c % 5 === 0;
+
+      let score = 0;
+      if (isPreset) score += 500;
+      if (isMultipleOf100k) score += 300;
+      if (isMultipleOf5) score += 150;
+      score -= (c - currentCopies) * 5;
+
+      if (score > bestCopyScore) {
+        bestCopyScore = score;
+        const diff = candTotal - totalPrice;
+        const addedCopies = c - currentCopies;
+        const newPricePerBook = Math.round(candTotal / c);
+        const formatId = (val: number) => 'Rp ' + Math.round(val).toLocaleString('id-ID');
+
+        bestCopy = {
+          targetCopies: c,
+          addedCopies,
+          newTotal: candTotal,
+          diff,
+          newPricePerBook,
+          label: `Tambah jadi ${c} eks (${formatId(candTotal)})`,
+          description: `Cukup tambah +${formatId(diff)} untuk dapat ${addedCopies} buku lagi (total pas ${formatId(candTotal)}). Biaya per buku jadi lebih hemat ${formatId(newPricePerBook)}/eks!`,
+        };
+      }
+    }
+  }
+
+  // Add-on suggestions
+  const CANDIDATE_ADDONS = [
+    'Pembatas Buku Custom',
+    'E-Sertifikat Penulis',
+    'Revisi Ringan Cover',
+    'Revisi Ringan Layout',
+    'Penyuntingan (Proofreading)',
+    'Cetak 2 Dummy',
+    'File Ebook Tanpa Watermark',
+    'Video Promosi',
+  ];
+
+  let bestAddon: PriceSuggestionAddon | undefined;
+  let bestAddonScore = -Infinity;
+
+  for (const name of CANDIDATE_ADDONS) {
+    if (currentAddons.includes(name)) continue;
+    const price = ADDON_PRICES[name];
+    if (typeof price !== 'number') continue;
+
+    const candTotal = totalPrice + price;
+    if (candTotal % 50_000 === 0) {
+      let score = 1000 - (price / 1000);
+      if (candTotal % 100_000 === 0) score += 200;
+
+      if (score > bestAddonScore) {
+        bestAddonScore = score;
+        const formatId = (val: number) => 'Rp ' + Math.round(val).toLocaleString('id-ID');
+        bestAddon = {
+          addonName: name,
+          addonPrice: price,
+          newTotal: candTotal,
+          diff: price,
+          label: `Tambah ${name} (+${formatId(price)})`,
+          description: `Cukup tambah +${formatId(price)} agar total pas ${formatId(candTotal)} sekaligus mendapatkan ${name}.`,
+        };
+      }
+    }
+  }
+
+  if (!bestCopy && !bestAddon) return undefined;
+
+  return {
+    isOdd,
+    copies: bestCopy,
+    addon: bestAddon,
   };
 }

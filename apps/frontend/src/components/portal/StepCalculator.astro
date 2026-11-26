@@ -137,6 +137,23 @@ import MobileStickyBar from './MobileStickyBar.astro';
             <span id="summary-original" class="font-mono text-base sm:text-lg font-bold text-slate-400 line-through">Rp 450.000</span>
           </div>
           <p id="summary-perbook" class="mt-0.5 text-xs font-semibold text-slate-500">Sekitar Rp 30.000 / buku (5 eksemplar)</p>
+
+          <!-- Card Saran Genap / Upsell Cerdas (Tampil jika harga ganjil) -->
+          <div id="suggestion-box" class="hidden mt-3.5 rounded-2xl border border-amber-300/80 bg-gradient-to-br from-amber-50/90 to-orange/5 p-3.5 space-y-2.5 shadow-xs transition-all">
+            <div class="flex items-center justify-between gap-1">
+              <div class="flex items-center gap-1.5 text-amber-900 font-extrabold text-xs">
+                <span class="text-sm">💡</span>
+                <span>Saran Biar Harga Pas & Genap:</span>
+              </div>
+              <span class="rounded-full bg-amber-200/70 px-2 py-0.5 text-[9px] font-black text-amber-900">Tips Hemat</span>
+            </div>
+            <p class="text-[11px] text-amber-950/80 leading-snug">
+              Total biaya saat ini bernilai nanggung/ganjil. Pilih opsi di bawah agar biayanya pas sekaligus lebih menguntungkan:
+            </p>
+            <div id="suggestion-items" class="space-y-2 pt-0.5">
+              <!-- Dynamically populated suggestions -->
+            </div>
+          </div>
         </div>
 
         <div class="divide-y divide-slate-100 text-xs text-slate-600 border-t border-b border-slate-100">
