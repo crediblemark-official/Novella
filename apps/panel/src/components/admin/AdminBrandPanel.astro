@@ -1,0 +1,274 @@
+---
+/**
+ * AdminBrandPanel: Brand Guideline & Asset Kit Resmi Novella.id
+ * Menyediakan palet warna, tipografi, aturan penggunaan logo, serta unduhan PNG transparan & paket ZIP.
+ */
+const colors = [
+  { name: 'Novella Navy', hex: '#0F1F40', role: 'Warna utama teks, tombol primer, dan latar gelap', darkText: false },
+  { name: 'Novella Orange', hex: '#E67E22', role: 'Aksen CTA, highlight, dan penanda editorial', darkText: false },
+  { name: 'Editorial Slate', hex: '#334155', role: 'Teks isi paragraf dan label sekunder', darkText: false },
+  { name: 'Pure White', hex: '#FFFFFF', role: 'Latar kanvas utama dan logo varian putih', darkText: true },
+];
+
+const logosNoTagline = [
+  { file: 'novella-horizontal-navy.png', label: 'Horizontal — Navy', darkBg: false },
+  { file: 'novella-horizontal-putih.png', label: 'Horizontal — Putih', darkBg: true },
+  { file: 'novella-vertikal-kotak-navy.png', label: 'Vertikal Kotak — Navy', darkBg: false },
+  { file: 'novella-vertikal-kotak-putih.png', label: 'Vertikal Kotak — Putih', darkBg: true },
+  { file: 'novella-icon-only-navy.png', label: 'Icon Only — Navy', darkBg: false },
+  { file: 'novella-icon-only-putih.png', label: 'Icon Only — Putih', darkBg: true },
+  { file: 'novella-wordmark-only-navy.png', label: 'Wordmark Only — Navy', darkBg: false },
+  { file: 'novella-wordmark-only-putih.png', label: 'Wordmark Only — Putih', darkBg: true },
+];
+
+const logosWithTagline = [
+  { file: 'novella-horizontal-ruang-tumbuh-navy.png', label: 'Horizontal Tagline — Navy', darkBg: false },
+  { file: 'novella-horizontal-ruang-tumbuh-putih.png', label: 'Horizontal Tagline — Putih', darkBg: true },
+  { file: 'novella-vertikal-kotak-ruang-tumbuh-navy.png', label: 'Vertikal Tagline — Navy', darkBg: false },
+  { file: 'novella-vertikal-kotak-ruang-tumbuh-putih.png', label: 'Vertikal Tagline — Putih', darkBg: true },
+];
+---
+
+<div id="panel-brand" class="admin-panel hidden w-full p-4 sm:p-6 space-y-8">
+  <!-- Header & ZIP Download -->
+  <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-4">
+    <div>
+      <h2 class="text-base font-extrabold text-navy">Brand Guideline Novella.id</h2>
+      <p class="mt-0.5 text-xs text-slate-500">Panduan identitas visual, palet warna, dan aset logo resmi PNG transparan untuk kebutuhan redaksi &amp; promosi.</p>
+    </div>
+    <a
+      href="/brand/novella-logo-transparan-ruang-tumbuh.zip"
+      download="novella-logo-transparan-ruang-tumbuh.zip"
+      class="inline-flex items-center gap-2 rounded-xl bg-navy px-4 py-2 text-xs font-extrabold text-white hover:bg-slate-800 transition-colors"
+    >
+      <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+      </svg>
+      <span>Unduh Semua Logo (.ZIP)</span>
+    </a>
+  </div>
+
+  <!-- 1. Palet Warna Resmi -->
+  <section class="space-y-3">
+    <div>
+      <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-500">1. Palet Warna Resmi</h3>
+      <p class="text-[11px] text-slate-400">Klik kartu warna untuk menyalin kode HEX.</p>
+    </div>
+    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {colors.map((c) => (
+        <button
+          type="button"
+          data-copy-hex={c.hex}
+          class="brand-copy-hex group text-left rounded-xl border border-slate-200 bg-white overflow-hidden hover:border-navy transition-colors cursor-pointer"
+        >
+          <div
+            class="h-16 w-full border-b border-slate-100 flex items-end justify-between p-2.5"
+            style={`background-color: ${c.hex};`}
+          >
+            <span class={`font-mono text-[11px] font-extrabold ${c.darkText ? 'text-navy' : 'text-white'}`}>{c.hex}</span>
+            <span class={`text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity ${c.darkText ? 'text-slate-500' : 'text-white/80'}`}>Salin</span>
+          </div>
+          <div class="p-3">
+            <p class="text-xs font-extrabold text-navy">{c.name}</p>
+            <p class="mt-0.5 text-[11px] text-slate-500 leading-snug">{c.role}</p>
+          </div>
+        </button>
+      ))}
+    </div>
+  </section>
+
+  <!-- 2. Logo Tanpa Tagline -->
+  <section class="space-y-3">
+    <div class="flex flex-col items-start gap-2.5">
+      <div>
+        <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-500">2. Logo Utama — Tanpa Tagline (8 Varian)</h3>
+        <span class="font-mono text-[10px] text-slate-400">01-Tanpa-Tagline/</span>
+      </div>
+      <div class="flex flex-wrap items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50/80 px-2.5 py-1.5">
+        <span class="text-[10px] font-bold text-slate-500 mr-1">Uji Latar:</span>
+        <button type="button" data-bg-preset="default" class="brand-bg-btn rounded-md border border-slate-300 bg-white px-2 py-0.5 text-[10px] font-bold text-navy ring-2 ring-orange ring-offset-1 hover:bg-slate-100 cursor-pointer">Default</button>
+        <button type="button" data-bg-preset="#FFFFFF" title="Putih" class="brand-bg-btn h-5 w-5 rounded-full border border-slate-300 bg-white cursor-pointer"></button>
+        <button type="button" data-bg-preset="#0F1F40" title="Navy" class="brand-bg-btn h-5 w-5 rounded-full border border-slate-300 bg-[#0F1F40] cursor-pointer"></button>
+        <button type="button" data-bg-preset="#E67E22" title="Oranye" class="brand-bg-btn h-5 w-5 rounded-full border border-slate-300 bg-[#E67E22] cursor-pointer"></button>
+        <button type="button" data-bg-preset="#059669" title="Hijau" class="brand-bg-btn h-5 w-5 rounded-full border border-slate-300 bg-[#059669] cursor-pointer"></button>
+        <button type="button" data-bg-preset="#09090B" title="Hitam" class="brand-bg-btn h-5 w-5 rounded-full border border-slate-300 bg-[#09090B] cursor-pointer"></button>
+        <input id="brand-custom-bg" type="color" value="#F8FAFC" title="Pilih warna latar bebas" class="h-5 w-6 rounded border border-slate-300 bg-white p-0 cursor-pointer" />
+        <span id="brand-bg-label" class="ml-1 font-mono text-[10px] font-bold text-slate-500">Default</span>
+      </div>
+    </div>
+    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {logosNoTagline.map((item) => (
+        <div class="rounded-xl border border-slate-200 bg-white overflow-hidden flex flex-col">
+          <div
+            data-default-bg={item.darkBg ? '#0F1F40' : '#F8FAFC'}
+            data-logo-variant={item.darkBg ? 'white' : 'navy'}
+            class={`brand-preview-bg relative h-32 flex items-center justify-center p-5 transition-colors ${item.darkBg ? 'bg-[#0F1F40]' : 'bg-slate-50'}`}
+          >
+            <span class="brand-contrast-warn hidden absolute top-2 left-2 rounded bg-amber-100/95 border border-amber-300 px-1.5 py-0.5 text-[9px] font-extrabold text-amber-900 shadow-2xs"></span>
+            <img
+              src={`/brand/01-Tanpa-Tagline/${item.file}`}
+              alt={item.label}
+              class="max-h-full max-w-full object-contain"
+              loading="lazy"
+            />
+          </div>
+          <div class="p-3 flex items-center justify-between gap-2 border-t border-slate-100">
+            <div class="min-w-0">
+              <p class="text-xs font-bold text-navy truncate">{item.label}</p>
+              <p class="font-mono text-[10px] text-slate-400 truncate">{item.file}</p>
+            </div>
+            <a
+              href={`/brand/01-Tanpa-Tagline/${item.file}`}
+              download={item.file}
+              title={`Unduh ${item.file}`}
+              class="shrink-0 flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-navy transition-colors"
+            >
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- 3. Logo Dengan Tagline -->
+  <section class="space-y-3">
+    <div class="flex items-baseline justify-between gap-2">
+      <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-500">3. Logo Dengan Tagline — "Ruang Tumbuh" (4 Varian)</h3>
+      <span class="font-mono text-[10px] text-slate-400">03-Tagline-Ruang-Tumbuh/</span>
+    </div>
+    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {logosWithTagline.map((item) => (
+        <div class="rounded-xl border border-slate-200 bg-white overflow-hidden flex flex-col">
+          <div
+            data-default-bg={item.darkBg ? '#0F1F40' : '#F8FAFC'}
+            data-logo-variant={item.darkBg ? 'white' : 'navy'}
+            class={`brand-preview-bg relative h-32 flex items-center justify-center p-5 transition-colors ${item.darkBg ? 'bg-[#0F1F40]' : 'bg-slate-50'}`}
+          >
+            <span class="brand-contrast-warn hidden absolute top-2 left-2 rounded bg-amber-100/95 border border-amber-300 px-1.5 py-0.5 text-[9px] font-extrabold text-amber-900 shadow-2xs"></span>
+            <img
+              src={`/brand/03-Tagline-Ruang-Tumbuh/${item.file}`}
+              alt={item.label}
+              class="max-h-full max-w-full object-contain"
+              loading="lazy"
+            />
+          </div>
+          <div class="p-3 flex items-center justify-between gap-2 border-t border-slate-100">
+            <div class="min-w-0">
+              <p class="text-xs font-bold text-navy truncate">{item.label}</p>
+              <p class="font-mono text-[10px] text-slate-400 truncate">{item.file}</p>
+            </div>
+            <a
+              href={`/brand/03-Tagline-Ruang-Tumbuh/${item.file}`}
+              download={item.file}
+              title={`Unduh ${item.file}`}
+              class="shrink-0 flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-navy transition-colors"
+            >
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- 4. Tipografi & Aturan Penggunaan -->
+  <section class="grid gap-4 md:grid-cols-2 border-t border-slate-200 pt-6">
+    <div class="rounded-xl border border-slate-200 bg-slate-50/60 p-4 space-y-2">
+      <h3 class="text-xs font-extrabold uppercase tracking-wider text-navy">Tipografi Resmi</h3>
+      <ul class="text-xs text-slate-600 space-y-1.5 leading-relaxed">
+        <li><strong class="text-navy">Judul &amp; UI:</strong> Plus Jakarta Sans / Inter (Bold / ExtraBold untuk heading).</li>
+        <li><strong class="text-navy">Angka &amp; Kode Pesanan:</strong> JetBrains Mono / Monospace (`tabular-nums`).</li>
+      </ul>
+    </div>
+    <div class="rounded-xl border border-slate-200 bg-slate-50/60 p-4 space-y-2">
+      <h3 class="text-xs font-extrabold uppercase tracking-wider text-navy">Aturan Latar Warna Beragam</h3>
+      <ul class="text-xs text-slate-600 space-y-1.5 leading-relaxed">
+        <li><strong class="text-navy">Latar Terang / Pastel:</strong> Gunakan varian <strong class="text-navy">Navy</strong> (putih, krem, kuning muda, abu muda).</li>
+        <li><strong class="text-navy">Latar Gelap / Pekat:</strong> Gunakan varian <strong class="text-navy">Putih</strong> (navy, hitam, biru tua, hijau tua, merah marun).</li>
+        <li><strong class="text-navy">Latar Warna Tengah / Foto Ramai:</strong> Jika kontras kurang terbaca (misal oranye/foto warna-warni), tempatkan logo di dalam badge/kontainer putih atau overlay gelap transparan.</li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.brand-copy-hex').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const hex = btn.getAttribute('data-copy-hex');
+      if (!hex) return;
+      try {
+        await navigator.clipboard.writeText(hex);
+        const toast = document.getElementById('admin-toast');
+        if (toast) {
+          toast.textContent = `Kode warna ${hex} disalin.`;
+          toast.classList.remove('hidden');
+          setTimeout(() => toast.classList.add('hidden'), 2500);
+        }
+      } catch {}
+    });
+  });
+
+  function getHexLuminance(hex: string): number {
+    const clean = hex.replace('#', '');
+    if (clean.length !== 6) return 0.5;
+    const r = parseInt(clean.slice(0, 2), 16) / 255;
+    const g = parseInt(clean.slice(2, 4), 16) / 255;
+    const b = parseInt(clean.slice(4, 6), 16) / 255;
+    return (0.299 * r) + (0.587 * g) + (0.114 * b);
+  }
+
+  function applyBrandPreviewBg(color: string) {
+    const isDefault = color === 'default';
+    const labelEl = document.getElementById('brand-bg-label');
+    const customInput = document.getElementById('brand-custom-bg') as HTMLInputElement | null;
+    if (labelEl) labelEl.textContent = isDefault ? 'Default' : color.toUpperCase();
+    if (customInput) customInput.value = isDefault ? '#F8FAFC' : color;
+
+    document.querySelectorAll<HTMLButtonElement>('.brand-bg-btn').forEach((btn) => {
+      const active = btn.getAttribute('data-bg-preset') === color;
+      btn.classList.toggle('ring-2', active);
+      btn.classList.toggle('ring-orange', active);
+      btn.classList.toggle('ring-offset-1', active);
+    });
+
+    const lum = isDefault ? 0.5 : getHexLuminance(color);
+    document.querySelectorAll<HTMLElement>('.brand-preview-bg').forEach((box) => {
+      box.style.backgroundColor = isDefault ? (box.getAttribute('data-default-bg') || '#F8FAFC') : color;
+      const warn = box.querySelector<HTMLElement>('.brand-contrast-warn');
+      if (!warn) return;
+      if (isDefault) {
+        warn.classList.add('hidden');
+        return;
+      }
+      const variant = box.getAttribute('data-logo-variant');
+      if (lum > 0.65 && variant === 'white') {
+        warn.textContent = 'Kontras rendah — pakai varian Navy';
+        warn.classList.remove('hidden');
+      } else if (lum < 0.35 && variant === 'navy') {
+        warn.textContent = 'Kontras rendah — pakai varian Putih';
+        warn.classList.remove('hidden');
+      } else if (lum >= 0.35 && lum <= 0.65) {
+        warn.textContent = 'Warna tengah — pertimbangkan kontainer/overlay';
+        warn.classList.remove('hidden');
+      } else {
+        warn.classList.add('hidden');
+      }
+    });
+  }
+
+  document.querySelectorAll<HTMLButtonElement>('.brand-bg-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const preset = btn.getAttribute('data-bg-preset') || 'default';
+      applyBrandPreviewBg(preset);
+    });
+  });
+
+  document.getElementById('brand-custom-bg')?.addEventListener('input', (e) => {
+    applyBrandPreviewBg((e.target as HTMLInputElement).value);
+  });
+</script>

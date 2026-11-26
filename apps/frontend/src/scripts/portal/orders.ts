@@ -80,6 +80,8 @@ export async function submitConsultationOrder() {
   }
 }
 
+let cachedAdminWa = '6289629625458';
+
 export async function loadBankAccounts() {
   const container = document.getElementById('payment-bank-accounts');
   if (!container) return;
@@ -87,6 +89,7 @@ export async function loadBankAccounts() {
     const res = await fetch(`${API_BASE}/settings`);
     if (!res.ok) return;
     const data = await res.json();
+    if (data.adminWa) cachedAdminWa = data.adminWa;
     const banks = data.bankAccounts || [];
     if (banks.length === 0) {
       container.innerHTML = '<div class="py-3 text-center text-xs text-slate-400">Hubungi WhatsApp redaksi untuk rekening pembayaran.</div>';
@@ -147,7 +150,7 @@ export async function loadAuthorOrders() {
       const isConsulting = o.status === 'Menunggu Konsultasi' || o.status === 'Menunggu Verifikasi';
       const statusBadge = isConsulting ? 'bg-amber-100 text-amber-800' : o.status === 'Diproses' ? 'bg-blue-100 text-blue-800' : o.status === 'Selesai' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800';
       const waFollowupText = encodeURIComponent(`Halo Redaksi Novella.id, saya ingin menanyakan progres naskah saya "${o.bookTitle}" (Kode: ${o.orderCode}). Terima kasih!`);
-      const waFollowupUrl = `https://wa.me/6289629625458?text=${waFollowupText}`;
+      const waFollowupUrl = `https://wa.me/${cachedAdminWa}?text=${waFollowupText}`;
 
       const trackingHtml = o.shippingTrackingNumber ? `<div class="mt-1 text-[10px] font-bold text-emerald-700">Resi ${o.shippingCourier || 'Ekspedisi'}: <span class="font-mono">${o.shippingTrackingNumber}</span></div>` : '';
 
