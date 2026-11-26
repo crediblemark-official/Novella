@@ -7,13 +7,13 @@ import CatalogLayout from '../layouts/CatalogLayout.astro';
   <section class="border-b border-slate-200/80 bg-slate-50/60 py-10 sm:py-14">
     <div class="mx-auto max-w-[1080px] px-4 sm:px-6">
       <div class="mx-auto max-w-2xl text-center space-y-3.5">
-        <div class="inline-flex items-center gap-2 rounded-full border border-orange/30 bg-orange/10 px-3 py-1 text-[11px] font-extrabold tracking-wide text-orange">
+        <div class="inline-flex items-center gap-2 rounded-full border border-amber-400/70 bg-amber-50 px-3.5 py-1 text-xs sm:text-[13px] font-extrabold tracking-wide text-[#B45309]">
           <span>Etalase Resmi Novella.id</span>
         </div>
         <h1 class="text-2xl font-extrabold tracking-tight text-navy sm:text-4xl sm:leading-[1.15]">
           Katalog Karya Penulis Nusantara
         </h1>
-        <p class="text-xs leading-relaxed text-slate-600 sm:text-sm">
+        <p class="text-sm leading-relaxed text-slate-700 sm:text-base">
           Temukan novel sastra, kumpulan cerpen, antologi puisi, dan non-fiksi yang lahir bersama Novella.id.
         </p>
 
@@ -21,7 +21,7 @@ import CatalogLayout from '../layouts/CatalogLayout.astro';
         <div class="pt-2">
           <div class="relative mx-auto max-w-lg">
             <svg
-              class="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+              class="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-600"
               fill="none"
               stroke="currentColor"
               stroke-width="2"
@@ -33,7 +33,7 @@ import CatalogLayout from '../layouts/CatalogLayout.astro';
               id="catalog-search"
               type="search"
               placeholder="Cari judul, penulis, atau ISBN..."
-              class="w-full min-h-[44px] rounded-full border border-slate-300 bg-white py-2.5 pl-11 pr-5 text-sm font-medium text-navy shadow-2xs transition-all placeholder:text-slate-400 focus:border-navy focus:outline-none focus:ring-4 focus:ring-navy/10"
+              class="w-full min-h-[44px] rounded-full border border-slate-300 bg-white py-2.5 pl-11 pr-5 text-[15px] font-medium text-navy shadow-2xs transition-all placeholder:text-slate-600 focus:border-navy focus:outline-none focus:ring-4 focus:ring-navy/10"
             />
           </div>
         </div>
@@ -53,18 +53,18 @@ import CatalogLayout from '../layouts/CatalogLayout.astro';
         <button
           type="button"
           data-category="Semua"
-          class="category-pill shrink-0 snap-start min-h-[34px] rounded-full bg-navy px-3.5 py-1.5 text-xs font-bold text-white transition-all cursor-pointer"
+          class="category-pill shrink-0 snap-start min-h-[36px] rounded-full bg-navy px-4 py-1.5 text-[13px] font-bold text-white transition-all cursor-pointer"
         >
           Semua
         </button>
       </div>
 
       <div class="flex items-center justify-between gap-3 sm:justify-end shrink-0">
-        <span id="catalog-count" class="font-mono text-[11px] font-bold tracking-wider text-slate-500">Memuat...</span>
+        <span id="catalog-count" class="font-mono text-xs font-bold tracking-wider text-slate-700">Memuat...</span>
         <select
           id="catalog-sort"
           aria-label="Urutkan buku"
-          class="min-h-[36px] rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-navy focus:border-navy focus:outline-none cursor-pointer"
+          class="min-h-[38px] rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-[13px] font-bold text-navy focus:border-navy focus:outline-none cursor-pointer"
         >
           <option value="newest">Terbaru</option>
           <option value="title">Judul (A–Z)</option>
@@ -83,12 +83,12 @@ import CatalogLayout from '../layouts/CatalogLayout.astro';
 
     <!-- Empty State -->
     <div id="catalog-empty" class="hidden py-14 text-center">
-      <p class="text-sm font-extrabold text-navy">Tidak ada buku yang cocok</p>
-      <p class="mt-1 text-xs text-slate-500">Ubah kata kunci pencarian atau pilih kategori lain.</p>
+      <p class="text-base font-extrabold text-navy">Tidak ada buku yang cocok</p>
+      <p class="mt-1.5 text-sm text-slate-700">Ubah kata kunci pencarian atau pilih kategori lain.</p>
       <button
         id="btn-reset-filter"
         type="button"
-        class="mt-4 min-h-[40px] rounded-full border border-navy px-4 py-2 text-xs font-bold text-navy hover:bg-navy hover:text-white transition-colors cursor-pointer"
+        class="mt-4 min-h-[40px] rounded-full border border-navy px-5 py-2 text-[13px] font-bold text-navy hover:bg-navy hover:text-white transition-colors cursor-pointer"
       >
         Reset
       </button>
@@ -99,19 +99,19 @@ import CatalogLayout from '../layouts/CatalogLayout.astro';
   <section class="border-t border-slate-200/80 bg-slate-50/70 py-12">
     <div class="mx-auto max-w-[1080px] px-4 text-center sm:px-6">
       <h2 class="text-xl font-extrabold tracking-tight text-navy sm:text-2xl">Punya Naskah Siap Terbit?</h2>
-      <p class="mx-auto mt-1.5 max-w-lg text-xs leading-relaxed text-slate-600 sm:text-sm">
+      <p class="mx-auto mt-1.5 max-w-lg text-sm leading-relaxed text-slate-700 sm:text-base">
         Hitung estimasi biaya cetak secara transparan mulai Rp 150.000 di portal penerbitan Novella.id.
       </p>
       <div class="mt-5 flex flex-wrap items-center justify-center gap-3">
         <a
           href="https://novella.id/portal"
-          class="inline-flex min-h-[44px] items-center justify-center rounded-full bg-orange px-6 py-2.5 text-xs font-extrabold text-white shadow-sm transition-all hover:bg-orange-hover hover:scale-[1.02] active:scale-[0.98]"
+          class="inline-flex min-h-[44px] items-center justify-center rounded-full bg-orange px-6 py-2.5 text-[13px] font-extrabold text-white shadow-sm transition-all hover:bg-orange-hover hover:scale-[1.02] active:scale-[0.98]"
         >
           Terbitkan Sekarang
         </a>
         <a
           href="https://novella.id"
-          class="inline-flex min-h-[44px] items-center justify-center rounded-full border border-navy px-6 py-2.5 text-xs font-extrabold text-navy transition-colors hover:bg-navy hover:text-white"
+          class="inline-flex min-h-[44px] items-center justify-center rounded-full border border-navy px-6 py-2.5 text-[13px] font-extrabold text-navy transition-colors hover:bg-navy hover:text-white"
         >
           Cara Kerja
         </a>
