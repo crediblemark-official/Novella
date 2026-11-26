@@ -16,17 +16,17 @@ import MobileStickyBar from './MobileStickyBar.astro';
       <!-- 0. Informasi Naskah Buku -->
       <div class="space-y-3">
         <div class="flex items-center gap-2">
-          <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-navy text-[10px] font-extrabold text-white">1</span>
-          <h2 class="text-sm font-extrabold text-navy">Informasi Naskah Buku</h2>
+          <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-navy text-[11px] font-extrabold text-white">1</span>
+          <h2 class="text-sm sm:text-[15px] font-extrabold text-navy">Informasi Naskah Buku</h2>
         </div>
         <div class="grid sm:grid-cols-2 gap-3 pt-0.5">
           <div>
-            <label for="input-book-title" class="block text-[11px] font-bold text-navy mb-1">Judul Buku / Judul Kerja <span class="text-rose-500">*</span></label>
-            <input id="input-book-title" type="text" required placeholder="Contoh: Lembayung Jogja" class="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-xs font-semibold text-navy focus:border-navy focus:outline-none focus:ring-2 focus:ring-navy/5 shadow-2xs" />
+            <label for="input-book-title" class="block text-xs font-bold text-navy mb-1">Judul Buku / Judul Kerja <span class="text-rose-500">*</span></label>
+            <input id="input-book-title" type="text" required placeholder="Contoh: Lembayung Jogja" class="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-[13px] font-semibold text-navy placeholder:text-slate-500 focus:border-navy focus:outline-none focus:ring-2 focus:ring-navy/5 shadow-2xs" />
           </div>
           <div>
-            <label for="select-book-category" class="block text-[11px] font-bold text-navy mb-1">Kategori / Genre Sastra <span class="text-rose-500">*</span></label>
-            <select id="select-book-category" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-navy focus:border-navy focus:outline-none shadow-2xs cursor-pointer">
+            <label for="select-book-category" class="block text-xs font-bold text-navy mb-1">Kategori / Genre Sastra <span class="text-rose-500">*</span></label>
+            <select id="select-book-category" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-[13px] font-semibold text-navy focus:border-navy focus:outline-none shadow-2xs cursor-pointer">
               <option value="Novel Sastra" selected>Novel Sastra & Populer</option>
               <option value="Kumpulan Cerpen">Kumpulan Cerpen</option>
               <option value="Antologi Puisi">Antologi Puisi</option>
@@ -39,18 +39,18 @@ import MobileStickyBar from './MobileStickyBar.astro';
       </div>
 
       <!-- Info Paket Dasar Penerbitan Rp 150.000 (Tanpa Box) -->
-      <div class="border-y border-slate-200/80 py-3.5 text-xs text-slate-700 space-y-2">
+      <div class="border-y border-slate-200/80 py-3 text-xs text-slate-700 space-y-1.5">
         <div class="flex items-center justify-between gap-2">
           <div class="flex items-center gap-2 min-w-0">
             <span class="text-orange shrink-0">
               <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
             </span>
-            <p class="font-extrabold text-navy text-xs sm:text-sm truncate">Paket Dasar Penerbitan Novella</p>
+            <p class="font-extrabold text-navy text-[13px] sm:text-sm truncate">Paket Dasar Penerbitan Novella</p>
           </div>
-          <span class="shrink-0 rounded-full bg-orange/15 px-2.5 py-0.5 text-[10px] font-extrabold text-orange">Hemat Rp 300.000</span>
+          <span class="shrink-0 rounded-full bg-orange/15 px-2.5 py-0.5 text-[11px] font-extrabold text-orange">Hemat Rp 300.000</span>
         </div>
-        <p class="text-[11px] leading-relaxed text-slate-600">
-          Hanya <strong class="text-navy">Rp 150.000</strong> (<span class="line-through text-slate-400 font-semibold">Rp 450.000</span>) mendapatkan <strong class="text-navy">5 eksemplar</strong> buku fisik hingga <strong class="text-navy">100 halaman</strong> (format <strong class="text-navy">A5 / Unesco</strong>). Kertas isi: <strong class="text-navy">Bookpaper 57 gr</strong> atau <strong class="text-navy">HVS 70 gr</strong>.
+        <p class="text-xs leading-relaxed text-slate-700">
+          Hanya <strong class="text-navy">Rp 150.000</strong> (<span class="line-through text-slate-500 font-semibold">Rp 450.000</span>) mendapatkan <strong class="text-navy">5 eksemplar</strong> buku fisik hingga <strong class="text-navy">100 halaman</strong> (format <strong class="text-navy">A5 / Unesco</strong>). Kertas isi: <strong class="text-navy">Bookpaper 57 gr</strong> atau <strong class="text-navy">HVS 70 gr</strong>.
         </p>
       </div>
 
@@ -59,25 +59,25 @@ import MobileStickyBar from './MobileStickyBar.astro';
         <div class="flex items-center justify-between gap-2">
           <div class="min-w-0">
             <div class="flex items-center gap-2">
-              <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-navy text-[10px] font-extrabold text-white">2</span>
-              <h2 class="text-xs sm:text-sm font-extrabold text-navy truncate">Estimasi Halaman Naskah</h2>
+              <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-navy text-[11px] font-extrabold text-white">2</span>
+              <h2 class="text-sm sm:text-[15px] font-extrabold text-navy truncate">Estimasi Halaman Naskah</h2>
             </div>
-            <p class="text-[10px] sm:text-[11px] text-slate-500 mt-0.5 truncate">Maksimal 100 halaman pada Paket Dasar.</p>
+            <p class="text-xs text-slate-700 mt-0.5 truncate">Maksimal 100 halaman pada Paket Dasar.</p>
           </div>
           <div class="inline-flex items-center rounded-xl border border-slate-200 bg-slate-50/80 p-0.5 shadow-2xs shrink-0">
             <button id="btn-page-minus" type="button" class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-sm font-extrabold text-navy shadow-xs hover:bg-slate-100 cursor-pointer active:scale-95 transition-all" aria-label="Kurangi halaman">−</button>
             <div class="flex items-center px-2">
-              <input id="input-pages" type="number" min="24" max="600" value="100" class="h-8 w-11 bg-transparent text-center font-mono text-xs sm:text-sm font-extrabold text-navy focus:outline-none" />
-              <span class="text-[10px] sm:text-[11px] font-bold text-slate-400">hal</span>
+              <input id="input-pages" type="number" min="24" max="600" value="100" class="h-8 w-11 bg-transparent text-center font-mono text-[13px] sm:text-sm font-extrabold text-navy focus:outline-none" />
+              <span class="text-xs font-bold text-slate-600">hal</span>
             </div>
             <button id="btn-page-plus" type="button" class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-sm font-extrabold text-navy shadow-xs hover:bg-slate-100 cursor-pointer active:scale-95 transition-all" aria-label="Tambah halaman">+</button>
           </div>
         </div>
         <div class="grid grid-cols-4 gap-2 pt-0.5">
-          <button type="button" data-val="60" class="page-chip rounded-xl border border-slate-200 bg-white py-2 text-center text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer transition-all duration-150 hover:scale-[1.01] active:scale-[0.98]">60 hal</button>
-          <button type="button" data-val="100" class="page-chip rounded-xl border-2 border-navy bg-navy py-2 text-center text-xs font-bold text-white shadow-xs cursor-pointer transition-all duration-150 hover:scale-[1.01] active:scale-[0.98]">100 hal ★</button>
-          <button type="button" data-val="150" class="page-chip rounded-xl border border-slate-200 bg-white py-2 text-center text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer transition-all duration-150 hover:scale-[1.01] active:scale-[0.98]">150 hal</button>
-          <button type="button" data-val="200" class="page-chip rounded-xl border border-slate-200 bg-white py-2 text-center text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer transition-all duration-150 hover:scale-[1.01] active:scale-[0.98]">200 hal</button>
+          <button type="button" data-val="60" class="page-chip rounded-xl border border-slate-200 bg-white py-2 text-center text-[13px] font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer transition-all duration-150 hover:scale-[1.01] active:scale-[0.98]">60 hal</button>
+          <button type="button" data-val="100" class="page-chip rounded-xl border-2 border-navy bg-navy py-2 text-center text-[13px] font-bold text-white shadow-xs cursor-pointer transition-all duration-150 hover:scale-[1.01] active:scale-[0.98]">100 hal ★</button>
+          <button type="button" data-val="150" class="page-chip rounded-xl border border-slate-200 bg-white py-2 text-center text-[13px] font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer transition-all duration-150 hover:scale-[1.01] active:scale-[0.98]">150 hal</button>
+          <button type="button" data-val="200" class="page-chip rounded-xl border border-slate-200 bg-white py-2 text-center text-[13px] font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer transition-all duration-150 hover:scale-[1.01] active:scale-[0.98]">200 hal</button>
         </div>
       </div>
 
@@ -86,26 +86,26 @@ import MobileStickyBar from './MobileStickyBar.astro';
         <div class="flex items-center justify-between gap-2">
           <div class="min-w-0">
             <div class="flex items-center gap-2">
-              <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-navy text-[10px] font-extrabold text-white">3</span>
-              <h2 class="text-xs sm:text-sm font-extrabold text-navy truncate">Jumlah Cetak Buku Fisik</h2>
+              <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-navy text-[11px] font-extrabold text-white">3</span>
+              <h2 class="text-sm sm:text-[15px] font-extrabold text-navy truncate">Jumlah Cetak Buku Fisik</h2>
             </div>
-            <p class="text-[10px] sm:text-[11px] text-slate-500 mt-0.5 truncate">Minimal 5 eksemplar per pesanan.</p>
+            <p class="text-xs text-slate-700 mt-0.5 truncate">Minimal 5 eksemplar per pesanan.</p>
           </div>
           <div class="inline-flex items-center rounded-xl border border-slate-200 bg-slate-50/80 p-0.5 shadow-2xs shrink-0">
             <button id="btn-copy-minus" type="button" class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-sm font-extrabold text-navy shadow-xs hover:bg-slate-100 cursor-pointer active:scale-95 transition-all" aria-label="Kurangi eksemplar">−</button>
             <div class="flex items-center px-2">
-              <input id="input-copies" type="number" min="5" max="1000" value="5" class="h-8 w-11 bg-transparent text-center font-mono text-xs sm:text-sm font-extrabold text-navy focus:outline-none" />
-              <span class="text-[10px] sm:text-[11px] font-bold text-slate-400">eks</span>
+              <input id="input-copies" type="number" min="5" max="1000" value="5" class="h-8 w-11 bg-transparent text-center font-mono text-[13px] sm:text-sm font-extrabold text-navy focus:outline-none" />
+              <span class="text-xs font-bold text-slate-600">eks</span>
             </div>
             <button id="btn-copy-plus" type="button" class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-sm font-extrabold text-navy shadow-xs hover:bg-slate-100 cursor-pointer active:scale-95 transition-all" aria-label="Tambah eksemplar">+</button>
           </div>
         </div>
         <div class="grid grid-cols-5 gap-1.5 pt-0.5">
-          <button type="button" data-val="5" class="copy-chip rounded-xl border-2 border-navy bg-navy py-2 text-center text-xs font-bold text-white shadow-xs cursor-pointer transition-all duration-150 hover:scale-[1.01] active:scale-[0.98]">5 eks ★</button>
-          <button type="button" data-val="10" class="copy-chip rounded-xl border border-slate-200 bg-white py-2 text-center text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer transition-all duration-150 hover:scale-[1.01] active:scale-[0.98]">10 eks</button>
-          <button type="button" data-val="25" class="copy-chip rounded-xl border border-slate-200 bg-white py-2 text-center text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer transition-all duration-150 hover:scale-[1.01] active:scale-[0.98]">25 eks</button>
-          <button type="button" data-val="50" class="copy-chip rounded-xl border border-slate-200 bg-white py-2 text-center text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer transition-all duration-150 hover:scale-[1.01] active:scale-[0.98]">50 eks</button>
-          <button type="button" data-val="100" class="copy-chip rounded-xl border border-slate-200 bg-white py-2 text-center text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer transition-all duration-150 hover:scale-[1.01] active:scale-[0.98]">100 eks</button>
+          <button type="button" data-val="5" class="copy-chip rounded-xl border-2 border-navy bg-navy py-2 text-center text-xs sm:text-[13px] font-bold text-white shadow-xs cursor-pointer transition-all duration-150 hover:scale-[1.01] active:scale-[0.98]">5 eks ★</button>
+          <button type="button" data-val="10" class="copy-chip rounded-xl border border-slate-200 bg-white py-2 text-center text-xs sm:text-[13px] font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer transition-all duration-150 hover:scale-[1.01] active:scale-[0.98]">10 eks</button>
+          <button type="button" data-val="25" class="copy-chip rounded-xl border border-slate-200 bg-white py-2 text-center text-xs sm:text-[13px] font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer transition-all duration-150 hover:scale-[1.01] active:scale-[0.98]">25 eks</button>
+          <button type="button" data-val="50" class="copy-chip rounded-xl border border-slate-200 bg-white py-2 text-center text-xs sm:text-[13px] font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer transition-all duration-150 hover:scale-[1.01] active:scale-[0.98]">50 eks</button>
+          <button type="button" data-val="100" class="copy-chip rounded-xl border border-slate-200 bg-white py-2 text-center text-xs sm:text-[13px] font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer transition-all duration-150 hover:scale-[1.01] active:scale-[0.98]">100 eks</button>
         </div>
       </div>
 
@@ -122,22 +122,22 @@ import MobileStickyBar from './MobileStickyBar.astro';
         <div>
           <div class="flex items-center justify-between">
             <span class="rounded-full bg-orange/10 px-3 py-1 text-xs font-bold text-orange">Paket Terbit Spesial</span>
-            <span class="text-[11px] font-bold text-emerald-700 flex items-center gap-1.5">
+            <span class="text-xs font-bold text-emerald-700 flex items-center gap-1.5">
               <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
               Real-time
             </span>
           </div>
           <div class="mt-3 flex flex-wrap items-baseline gap-x-2.5 gap-y-0.5">
             <p id="summary-total" class="whitespace-nowrap font-mono text-2xl sm:text-3xl font-black text-navy tracking-tight">Rp 150.000</p>
-            <span id="summary-original" class="whitespace-nowrap font-mono text-sm sm:text-base font-bold text-slate-400 line-through">Rp 450.000</span>
+            <span id="summary-original" class="whitespace-nowrap font-mono text-sm sm:text-base font-bold text-slate-500 line-through">Rp 450.000</span>
           </div>
-          <p id="summary-perbook" class="mt-0.5 text-xs font-semibold text-slate-500">Sekitar Rp 30.000 / buku (5 eksemplar)</p>
+          <p id="summary-perbook" class="mt-0.5 text-[13px] font-semibold text-slate-700">Sekitar Rp 30.000 / buku (5 eksemplar)</p>
 
           <!-- Saran Genap / Upsell Cerdas (Borderless Hairline Strip) -->
           <div id="suggestion-box" class="hidden mt-4 border-l-2 border-orange pl-3.5 space-y-2">
             <div class="flex items-center justify-between gap-2">
-              <span class="text-[11px] font-extrabold uppercase tracking-wider text-navy">Saran Harga Pas &amp; Genap</span>
-              <span class="text-[10px] font-bold text-orange">Tips Hemat</span>
+              <span class="text-xs font-extrabold uppercase tracking-wider text-navy">Saran Harga Pas &amp; Genap</span>
+              <span class="text-[11px] font-bold text-orange">Tips Hemat</span>
             </div>
             <div id="suggestion-items" class="divide-y divide-slate-100">
               <!-- Dynamically populated suggestions -->
@@ -145,15 +145,15 @@ import MobileStickyBar from './MobileStickyBar.astro';
           </div>
         </div>
 
-        <div class="divide-y divide-slate-100 text-xs text-slate-600 border-t border-b border-slate-100">
+        <div class="divide-y divide-slate-100 text-[13px] text-slate-700 border-t border-b border-slate-100">
           <div class="py-2.5 flex justify-between font-semibold text-slate-800">
             <div>
               <p>Paket Dasar (5 eks / 100 hal · A5/Unesco)</p>
-              <p class="text-[10px] text-emerald-600 font-bold">✓ Sudah Termasuk: ISBN, Cover, & Layout</p>
+              <p class="text-[11px] text-emerald-700 font-bold">✓ Sudah Termasuk: ISBN, Cover, & Layout</p>
             </div>
             <div class="text-right">
               <span class="font-mono font-bold text-navy">Rp 150.000</span>
-              <span class="block text-[10px] text-slate-400 line-through">Rp 450.000</span>
+              <span class="block text-[11px] text-slate-500 line-through">Rp 450.000</span>
             </div>
           </div>
           <div id="row-summary-copies" class="py-2.5 hidden justify-between">
@@ -165,24 +165,24 @@ import MobileStickyBar from './MobileStickyBar.astro';
             <span id="val-summary-pages" class="font-mono font-bold text-orange">+ Rp 0</span>
           </div>
           <div class="py-2.5 space-y-1">
-            <div class="flex justify-between items-center text-xs">
-              <span class="text-slate-600 font-semibold">Format Buku:</span>
-              <span id="val-summary-size" class="shrink-0 whitespace-nowrap rounded bg-orange/15 px-2 py-0.5 text-[10px] font-bold text-orange">Paket Dasar</span>
+            <div class="flex justify-between items-center text-[13px]">
+              <span class="text-slate-700 font-semibold">Format Buku:</span>
+              <span id="val-summary-size" class="shrink-0 whitespace-nowrap rounded bg-orange/15 px-2 py-0.5 text-[11px] font-bold text-orange">Paket Dasar</span>
             </div>
-            <p id="label-summary-size" class="text-[11px] font-medium text-slate-700">A5 · Hitam Putih (BW) · Bookpaper 57 gr · Soft Cover</p>
+            <p id="label-summary-size" class="text-xs font-medium text-slate-700">A5 · Hitam Putih (BW) · Bookpaper 57 gr · Soft Cover</p>
           </div>
           <div id="row-summary-addons" class="py-2.5 hidden space-y-1">
-            <p class="text-[11px] font-bold text-slate-400">Add-on Terpilih:</p>
-            <div id="list-summary-addons" class="space-y-1 font-mono text-[11px]"></div>
+            <p class="text-xs font-bold text-slate-600">Add-on Terpilih:</p>
+            <div id="list-summary-addons" class="space-y-1 font-mono text-xs"></div>
           </div>
         </div>
 
-        <div class="rounded-xl border border-amber-200/80 bg-amber-50/50 p-3 text-[11px] text-amber-950 leading-relaxed space-y-1">
+        <div class="rounded-xl border border-amber-200/80 bg-amber-50/50 p-3 text-xs text-amber-950 leading-relaxed space-y-1">
           <p class="font-bold text-amber-900 flex items-center gap-1.5">
             <svg class="h-4 w-4 text-amber-700 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" x2="6" y1="2" y2="4"/><line x1="10" x2="10" y1="2" y2="4"/></svg>
             <span>Ngobrol Santai Seperti Sahabat Sendiri</span>
           </p>
-          <p class="text-[11px] text-amber-900/90">
+          <p class="text-xs text-amber-900/95">
             Di Novella.id, konsultasi naskah dengan admin redaksi rasanya hangat dan akrab seperti mengobrol dengan sahabat sendiri — bebas bertanya dan berdiskusi tanpa canggung.
           </p>
         </div>
@@ -195,7 +195,7 @@ import MobileStickyBar from './MobileStickyBar.astro';
           >
             <span>Konsultasi Naskah ke Admin &rarr;</span>
           </button>
-          <p class="text-center text-[10px] text-slate-400 mt-2">Rincian pesanan akan dikonfirmasikan langsung ke WhatsApp Admin Novella</p>
+          <p class="text-center text-[11px] text-slate-600 mt-2">Rincian pesanan akan dikonfirmasikan langsung ke WhatsApp Admin Novella</p>
         </div>
       </div>
     </div>
