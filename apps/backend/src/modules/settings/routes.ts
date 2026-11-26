@@ -11,7 +11,7 @@ export const settingsModule = new Elysia()
       return {
         adminWa: '6281995100401',
         companyAddress: 'Jl. Paingan (Depan Universitas Sanata Dharma), Krodan, Maguwoharjo, Depok, Sleman, D.I. Yogyakarta',
-        companyTagline: 'Mitra Penerbitan Sastra Nusantara Terpercaya',
+        companyTagline: 'Ruang Tumbuh Penulis Nusantara',
         bankAccounts: [
           { bankName: 'Bank Central Asia (BCA)', accountNumber: '8920192831', accountHolder: 'Penerbit Novella Nusantara' },
           { bankName: 'Bank Mandiri', accountNumber: '1370018291024', accountHolder: 'Penerbit Novella Nusantara' },
