@@ -1,0 +1,301 @@
+---
+import CatalogLayout from '../layouts/CatalogLayout.astro';
+---
+
+<CatalogLayout title="Detail Buku — Katalog Novella.id">
+  <section class="mx-auto max-w-[1080px] px-4 py-8 sm:px-6 sm:py-10">
+    <!-- Top Back Bar -->
+    <div class="mb-6 flex items-center justify-between gap-4 border-b border-slate-200/80 pb-4">
+      <a
+        href="/"
+        class="inline-flex min-h-[38px] items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-1.5 text-xs font-bold text-navy hover:border-navy hover:bg-slate-50 transition-colors"
+      >
+        <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+        </svg>
+        <span>Kembali ke Katalog</span>
+      </a>
+
+      <button
+        id="detail-share-btn"
+        type="button"
+        aria-label="Salin tautan buku"
+        class="inline-flex min-h-[38px] items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-bold text-slate-700 hover:border-navy hover:text-navy transition-colors cursor-pointer"
+      >
+        <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+        </svg>
+        <span>Salin Tautan</span>
+      </button>
+    </div>
+
+    <!-- Loading State -->
+    <div id="detail-loading" class="py-20 text-center text-xs font-semibold text-slate-500">
+      Memuat detail buku...
+    </div>
+
+    <!-- Not Found State -->
+    <div id="detail-not-found" class="hidden py-20 text-center space-y-3">
+      <p class="text-base font-extrabold text-navy">Buku tidak ditemukan</p>
+      <p class="text-xs text-slate-500">Tautan buku mungkin sudah berubah atau belum dipublikasikan.</p>
+      <a
+        href="/"
+        class="inline-flex min-h-[40px] items-center rounded-full bg-navy px-5 py-2 text-xs font-bold text-white hover:bg-slate-800 transition-colors"
+      >
+        Lihat Semua Buku
+      </a>
+    </div>
+
+    <!-- Book Detail Content -->
+    <div id="detail-content" class="hidden grid gap-8 md:grid-cols-12 md:items-start">
+      <!-- Left Sticky Sidebar: Full-Bleed Cover + Price + Actions + Technical Specs -->
+      <aside class="md:col-span-4 md:sticky md:top-20 overflow-hidden rounded-2xl border border-slate-200 bg-slate-50/70">
+        <div class="w-full" id="detail-cover-container"></div>
+
+        <div class="p-5 sm:p-6 space-y-5">
+          <!-- Price & Actions -->
+          <div class="space-y-3">
+            <div class="flex items-baseline justify-between">
+              <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Harga Resmi</span>
+              <span id="detail-price" class="font-mono text-xl font-extrabold tracking-tight text-orange"></span>
+            </div>
+
+            <div class="flex flex-col gap-2">
+              <a
+                id="detail-wa-btn"
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl bg-orange px-4 py-2.5 text-xs font-extrabold text-white shadow-xs transition-all hover:bg-orange-hover hover:scale-[1.01] active:scale-[0.98]"
+              >
+                <svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+                <span>Pesan via WhatsApp</span>
+              </a>
+              <a
+                id="detail-buy-btn"
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="hidden inline-flex min-h-[42px] w-full items-center justify-center gap-1.5 rounded-xl border border-navy bg-white px-4 py-2 text-xs font-extrabold text-navy transition-all hover:bg-navy hover:text-white active:scale-[0.98]"
+              >
+                <span>Beli di Marketplace</span>
+                <svg class="h-3.5 w-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- Technical Specs -->
+          <dl class="divide-y divide-slate-200/80 border-t border-slate-200/80 text-xs">
+            <div class="flex items-center justify-between gap-2 py-2">
+              <dt class="font-semibold text-slate-500">Halaman</dt>
+              <dd id="detail-pages" class="font-mono font-bold text-navy"></dd>
+            </div>
+            <div class="flex items-center justify-between gap-2 py-2">
+              <dt class="font-semibold text-slate-500">Ukuran</dt>
+              <dd id="detail-size" class="font-bold text-navy"></dd>
+            </div>
+            <div class="flex items-center justify-between gap-2 py-2">
+              <dt class="font-semibold text-slate-500">ISBN</dt>
+              <dd id="detail-isbn" class="font-mono font-bold text-navy"></dd>
+            </div>
+            <div class="flex items-center justify-between gap-2 py-2">
+              <dt class="font-semibold text-slate-500">Tahun Terbit</dt>
+              <dd id="detail-year" class="font-mono font-bold text-navy"></dd>
+            </div>
+          </dl>
+        </div>
+      </aside>
+
+      <!-- Right Editorial Reading Column: Title + Author + Full Uncut Synopsis -->
+      <article class="md:col-span-8 space-y-6">
+        <header class="space-y-2 border-b border-slate-200/80 pb-5">
+          <span id="detail-category" class="inline-block rounded-full bg-orange/10 px-3 py-0.5 text-[11px] font-extrabold uppercase tracking-wider text-orange"></span>
+          <h1 id="detail-book-title" class="text-2xl sm:text-4xl font-extrabold tracking-tight text-navy leading-tight"></h1>
+          <p id="detail-author" class="text-sm sm:text-base font-bold text-slate-700"></p>
+          <p id="detail-author-bio" class="text-xs sm:text-sm text-slate-500 leading-relaxed hidden"></p>
+        </header>
+
+        <div class="space-y-3">
+          <h2 class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400">Sinopsis</h2>
+          <div id="detail-synopsis" class="space-y-4 font-literary text-sm sm:text-[15.5px] leading-[1.8] text-slate-700 max-w-prose [&_h2]:font-sans [&_h2]:text-lg [&_h2]:font-extrabold [&_h2]:text-navy [&_h2]:pt-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_blockquote]:border-l-2 [&_blockquote]:border-orange [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-slate-600 [&_hr]:border-slate-200 [&_hr]:my-4 [&_[data-block=callout]]:rounded-xl [&_[data-block=callout]]:bg-orange/10 [&_[data-block=callout]]:px-4 [&_[data-block=callout]]:py-3 [&_[data-block=callout]]:font-sans [&_[data-block=callout]]:text-xs [&_[data-block=callout]]:font-semibold [&_[data-block=callout]]:text-navy"></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Toast Notification -->
+  <div
+    id="catalog-toast"
+    class="pointer-events-none fixed bottom-5 right-5 z-50 hidden rounded-xl bg-navy px-4 py-2.5 text-xs font-bold text-white shadow-lg"
+  ></div>
+
+  <script>
+    (function () {
+      const apiBase =
+        typeof window !== 'undefined' && (window.location.port === '4322' || window.location.port === '4321')
+          ? 'http://localhost:3001/api'
+          : (import.meta.env.PUBLIC_API_BASE || '/api');
+
+      function formatPrice(price?: number | null): string {
+        if (!price || price <= 0) return 'Hubungi Redaksi';
+        return 'Rp ' + Number(price).toLocaleString('id-ID');
+      }
+
+      function escapeHtml(str: string): string {
+        return String(str || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      function showToast(msg: string) {
+        const toast = document.getElementById('catalog-toast');
+        if (!toast) return;
+        toast.textContent = msg;
+        toast.classList.remove('hidden');
+        setTimeout(() => toast.classList.add('hidden'), 2600);
+      }
+
+      function renderCoverMarkup(book: any): string {
+        if (book.coverUrl) {
+          return `<img src="${escapeHtml(book.coverUrl)}" alt="Sampul ${escapeHtml(book.title)}" class="aspect-[3/4] w-full object-cover" />`;
+        }
+        return `
+          <div class="aspect-[3/4] w-full bg-gradient-to-br from-[#0D1C3D] via-navy to-slate-800 p-6 text-white flex flex-col justify-between relative overflow-hidden">
+            <span class="relative text-[9px] font-extrabold text-orange uppercase tracking-wider truncate">${escapeHtml(book.category)}</span>
+            <p class="relative font-literary text-2xl font-bold italic leading-snug line-clamp-3">${escapeHtml(book.title)}</p>
+            <div class="relative flex items-center justify-between gap-1 text-[10px] text-slate-300 border-t border-white/15 pt-2">
+              <span class="truncate">${escapeHtml(book.authorName)}</span>
+              <span class="font-mono shrink-0">${book.pages}h</span>
+            </div>
+          </div>
+        `;
+      }
+
+      document.addEventListener('DOMContentLoaded', async () => {
+        const params = new URLSearchParams(window.location.search);
+        const slug = params.get('slug') || params.get('buku');
+        const loadingEl = document.getElementById('detail-loading');
+        const notFoundEl = document.getElementById('detail-not-found');
+        const contentEl = document.getElementById('detail-content');
+
+        document.getElementById('detail-share-btn')?.addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText(window.location.href);
+            showToast('Tautan disalin');
+          } catch {
+            showToast('Salin tautan dari browser.');
+          }
+        });
+
+        if (!slug) {
+          loadingEl?.classList.add('hidden');
+          notFoundEl?.classList.remove('hidden');
+          return;
+        }
+
+        try {
+          let adminWa = '6289629625458';
+          const [bookRes, settingsRes] = await Promise.all([
+            fetch(`${apiBase}/books/${encodeURIComponent(slug)}`),
+            fetch(`${apiBase}/settings`).catch(() => null),
+          ]);
+
+          if (settingsRes && settingsRes.ok) {
+            const settings = await settingsRes.json();
+            if (settings?.adminWa) adminWa = settings.adminWa;
+          }
+
+          loadingEl?.classList.add('hidden');
+
+          if (!bookRes.ok) {
+            notFoundEl?.classList.remove('hidden');
+            return;
+          }
+
+          const book = await bookRes.json();
+          document.title = `${book.title} — Katalog Novella.id`;
+
+          (document.getElementById('detail-cover-container') as HTMLElement).innerHTML = renderCoverMarkup(book);
+          (document.getElementById('detail-category') as HTMLElement).textContent = book.category;
+          (document.getElementById('detail-book-title') as HTMLElement).textContent = book.title;
+          (document.getElementById('detail-author') as HTMLElement).textContent = `Oleh ${book.authorName}`;
+
+          const bioEl = document.getElementById('detail-author-bio') as HTMLElement;
+          if (book.authorBio) {
+            bioEl.textContent = book.authorBio;
+            bioEl.classList.remove('hidden');
+          }
+
+          const rawSynopsis =
+            book.synopsis || 'Karya terbitan resmi penulis Nusantara bersama penerbit Novella.id.';
+          const synopsisEl = document.getElementById('detail-synopsis') as HTMLElement;
+          if (/<(p|div|h2|h3|ul|ol|blockquote|hr|br|b|strong|i|em|u)\b/i.test(rawSynopsis)) {
+            const doc = new DOMParser().parseFromString(rawSynopsis, 'text/html');
+            const allowed = new Set(['P', 'H2', 'H3', 'HR', 'BR', 'B', 'STRONG', 'I', 'EM', 'U', 'UL', 'OL', 'LI', 'BLOCKQUOTE', 'DIV']);
+            const cleanNode = (node: Node): Node | null => {
+              if (node.nodeType === Node.TEXT_NODE) return node.cloneNode(true);
+              if (node.nodeType !== Node.ELEMENT_NODE) return null;
+              const el = node as HTMLElement;
+              if (!allowed.has(el.tagName)) {
+                const frag = document.createDocumentFragment();
+                el.childNodes.forEach((c) => { const n = cleanNode(c); if (n) frag.appendChild(n); });
+                return frag;
+              }
+              const out = document.createElement((el.tagName === 'DIV' && el.getAttribute('data-block') !== 'callout' ? 'P' : el.tagName).toLowerCase());
+              if (el.getAttribute('data-block') === 'callout') out.setAttribute('data-block', 'callout');
+              el.childNodes.forEach((c) => { const n = cleanNode(c); if (n) out.appendChild(n); });
+              return out;
+            };
+            synopsisEl.innerHTML = '';
+            doc.body.childNodes.forEach((c) => { const n = cleanNode(c); if (n) synopsisEl.appendChild(n); });
+          } else {
+            synopsisEl.innerHTML = rawSynopsis
+              .split(/\n+/)
+              .map((p: string) => p.trim())
+              .filter(Boolean)
+              .map((p: string) => `<p>${escapeHtml(p)}</p>`)
+              .join('');
+          }
+
+          (document.getElementById('detail-pages') as HTMLElement).textContent = `${book.pages} hal`;
+          (document.getElementById('detail-size') as HTMLElement).textContent = book.bookSize;
+          (document.getElementById('detail-isbn') as HTMLElement).textContent = book.isbn || 'Proses';
+          (document.getElementById('detail-year') as HTMLElement).textContent = book.publishedYear ? String(book.publishedYear) : '—';
+          (document.getElementById('detail-price') as HTMLElement).textContent = formatPrice(book.price);
+
+          const waMsg = [
+            `Halo Admin Novella.id, saya tertarik memesan buku dari katalog buku.novella.id:`,
+            `• Judul: ${book.title}`,
+            `• Penulis: ${book.authorName}`,
+            book.isbn ? `• ISBN: ${book.isbn}` : null,
+            `• Harga: ${formatPrice(book.price)}`,
+            ``,
+            `Mohon info ketersediaan dan cara pemesanannya. Terima kasih!`,
+          ]
+            .filter(Boolean)
+            .join('\n');
+
+          (document.getElementById('detail-wa-btn') as HTMLAnchorElement).href =
+            `https://wa.me/${adminWa}?text=${encodeURIComponent(waMsg)}`;
+
+          const buyBtn = document.getElementById('detail-buy-btn') as HTMLAnchorElement;
+          if (book.buyUrl) {
+            buyBtn.href = book.buyUrl;
+            buyBtn.classList.remove('hidden');
+          }
+
+          contentEl?.classList.remove('hidden');
+        } catch {
+          loadingEl?.classList.add('hidden');
+          notFoundEl?.classList.remove('hidden');
+        }
+      });
+    })();
+  </script>
+</CatalogLayout>

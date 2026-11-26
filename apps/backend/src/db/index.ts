@@ -113,24 +113,47 @@ export async function initDatabase() {
       company_address TEXT NOT NULL,
       company_tagline TEXT NOT NULL,
       bank_accounts TEXT NOT NULL,
+      qris_image_url TEXT,
+      qris_merchant_name TEXT,
       updated_at TIMESTAMP NOT NULL DEFAULT NOW()
     )
   `;
 
+  await client`ALTER TABLE "settings" ADD COLUMN IF NOT EXISTS qris_image_url TEXT`;
+  await client`ALTER TABLE "settings" ADD COLUMN IF NOT EXISTS qris_merchant_name TEXT`;
+
   await client`
     CREATE TABLE IF NOT EXISTS "published_books" (
       id SERIAL PRIMARY KEY,
+      slug TEXT UNIQUE,
       title TEXT NOT NULL,
       author_name TEXT NOT NULL,
+      author_bio TEXT,
       category TEXT NOT NULL,
       pages INTEGER NOT NULL DEFAULT 100,
       book_size TEXT NOT NULL DEFAULT 'A5',
+      isbn TEXT,
+      published_year INTEGER,
+      price INTEGER,
       cover_url TEXT,
       synopsis TEXT,
+      buy_url TEXT,
+      is_featured BOOLEAN NOT NULL DEFAULT FALSE,
       is_published BOOLEAN NOT NULL DEFAULT TRUE,
-      created_at TIMESTAMP NOT NULL DEFAULT NOW()
+      created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMP NOT NULL DEFAULT NOW()
     )
   `;
+
+  await client`ALTER TABLE "published_books" ADD COLUMN IF NOT EXISTS slug TEXT`;
+  await client`ALTER TABLE "published_books" ADD COLUMN IF NOT EXISTS author_bio TEXT`;
+  await client`ALTER TABLE "published_books" ADD COLUMN IF NOT EXISTS isbn TEXT`;
+  await client`ALTER TABLE "published_books" ADD COLUMN IF NOT EXISTS published_year INTEGER`;
+  await client`ALTER TABLE "published_books" ADD COLUMN IF NOT EXISTS price INTEGER`;
+  await client`ALTER TABLE "published_books" ADD COLUMN IF NOT EXISTS buy_url TEXT`;
+  await client`ALTER TABLE "published_books" ADD COLUMN IF NOT EXISTS is_featured BOOLEAN NOT NULL DEFAULT FALSE`;
+  await client`ALTER TABLE "published_books" ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP NOT NULL DEFAULT NOW()`;
+  await client`CREATE UNIQUE INDEX IF NOT EXISTS published_books_slug_idx ON "published_books"(slug)`;
 
   await client`
     CREATE TABLE IF NOT EXISTS "testimonials" (

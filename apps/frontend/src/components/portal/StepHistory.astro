@@ -1,0 +1,41 @@
+---
+/**
+ * StepHistory: Dedicated Author Manuscript & Order History Page (/portal/riwayat)
+ * Shows author's active and previous orders with live status, WA follow-up, and 1-click withdraw action.
+ */
+---
+
+<div id="step-history" class="hidden space-y-6">
+  <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200/80 pb-4">
+    <div>
+      <button id="btn-history-back" type="button" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-navy transition-colors cursor-pointer">
+        <span>&larr; Kembali ke Kalkulator</span>
+      </button>
+      <h1 class="mt-2 text-lg sm:text-xl font-extrabold text-navy tracking-tight">Riwayat Naskah Saya</h1>
+      <p class="mt-0.5 text-xs text-slate-500">Pantau status penerbitan, cetak, resi pengiriman, atau batalkan pengajuan yang belum diproses.</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <button
+        id="btn-history-refresh"
+        type="button"
+        class="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-navy transition-colors cursor-pointer"
+      >
+        <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        </svg>
+        <span>Muat Ulang</span>
+      </button>
+      <button
+        id="btn-history-new"
+        type="button"
+        class="inline-flex items-center gap-1.5 rounded-xl bg-navy px-4 py-2 text-xs font-extrabold text-white hover:bg-navy/90 transition-colors cursor-pointer"
+      >
+        <span>+ Ajukan Naskah</span>
+      </button>
+    </div>
+  </div>
+
+  <div id="history-list" class="space-y-3">
+    <p class="text-xs text-slate-400">Memuat riwayat...</p>
+  </div>
+</div>

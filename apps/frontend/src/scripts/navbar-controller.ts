@@ -10,22 +10,35 @@ export function renderNavUser(user: any) {
   const dispAvatar = document.getElementById('user-avatar');
   const dispEmail = document.getElementById('user-display-email');
 
+  const mobGuest = document.getElementById('mobile-guest-links');
+  const mobUser = document.getElementById('mobile-user-section');
+  const mobLogout = document.getElementById('mobile-logout-btn');
+  const mobAvatar = document.getElementById('mobile-user-avatar');
+  const mobName = document.getElementById('mobile-user-name');
+  const mobEmail = document.getElementById('mobile-user-email');
+
   if (guestLinks) guestLinks.classList.add('hidden');
   if (container) container.classList.remove('hidden');
+  if (mobGuest) mobGuest.classList.add('hidden');
+  if (mobUser) mobUser.classList.remove('hidden');
+  if (mobLogout) mobLogout.classList.remove('hidden');
 
   const name = user.name || 'Penulis';
   const initial = name[0].toUpperCase();
+  const subText = user.email + (user.phone ? ' · ' + user.phone : '');
   if (pillName) pillName.textContent = name;
   if (pillAvatar) pillAvatar.textContent = initial;
   if (dispName) dispName.textContent = name;
   if (dispAvatar) dispAvatar.textContent = initial;
-  if (dispEmail) {
-    dispEmail.textContent = user.email + (user.phone ? ' · ' + user.phone : '');
-  }
+  if (dispEmail) dispEmail.textContent = subText;
+  if (mobName) mobName.textContent = name;
+  if (mobAvatar) mobAvatar.textContent = initial;
+  if (mobEmail) mobEmail.textContent = subText;
 
   const isAdmin = user.role === 'admin' || Boolean(localStorage.getItem('novella_admin_session'));
   if (isAdmin) {
     document.getElementById('nav-dropdown-admin-link')?.classList.remove('hidden');
+    document.getElementById('mobile-admin-link')?.classList.remove('hidden');
   }
 }
 
@@ -54,19 +67,49 @@ export function initNavbarController() {
     }
   });
 
-  document.getElementById('toggle-history-btn')?.addEventListener('click', () => {
-    toggleDropdown(false);
-    const box = document.getElementById('history-box');
-    if (box) {
-      box.classList.toggle('hidden');
-      box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    } else {
-      window.location.href = '/portal';
-    }
+  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+  const mobileDrawer = document.getElementById('mobile-nav-drawer');
+  const mobileBackdrop = document.getElementById('mobile-nav-backdrop');
+  const mobileCloseBtn = document.getElementById('mobile-drawer-close');
+
+  function toggleMobileDrawer(show?: boolean) {
+    if (!mobileDrawer || !mobileBackdrop) return;
+    const shouldOpen = show !== undefined ? show : mobileDrawer.classList.contains('translate-x-full');
+    mobileDrawer.classList.toggle('translate-x-full', !shouldOpen);
+    mobileBackdrop.classList.toggle('hidden', !shouldOpen);
+    mobileMenuBtn?.setAttribute('aria-expanded', String(shouldOpen));
+    document.body.classList.toggle('overflow-hidden', shouldOpen);
+  }
+
+  mobileMenuBtn?.addEventListener('click', () => toggleMobileDrawer(true));
+  mobileCloseBtn?.addEventListener('click', () => toggleMobileDrawer(false));
+  mobileBackdrop?.addEventListener('click', () => toggleMobileDrawer(false));
+  document.querySelectorAll('.mobile-nav-link').forEach((el) => {
+    el.addEventListener('click', () => toggleMobileDrawer(false));
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') toggleMobileDrawer(false);
   });
 
-  document.getElementById('nav-edit-profile-btn')?.addEventListener('click', () => {
+  const openHistory = () => {
     toggleDropdown(false);
+    toggleMobileDrawer(false);
+    if (window.location.pathname.startsWith('/portal') && document.getElementById('step-history')) {
+      const card = document.getElementById('profile-card');
+      const wizard = document.getElementById('wizard-container');
+      if (card && wizard) {
+        card.classList.add('hidden');
+        wizard.classList.remove('hidden');
+      }
+      window.dispatchEvent(new CustomEvent('novella:navigate-step', { detail: { step: 3 } }));
+    } else {
+      window.location.href = '/portal/riwayat';
+    }
+  };
+
+  const openEditProfile = () => {
+    toggleDropdown(false);
+    toggleMobileDrawer(false);
     if (window.location.pathname.startsWith('/portal')) {
       const card = document.getElementById('profile-card');
       const wizard = document.getElementById('wizard-container');
@@ -80,11 +123,11 @@ export function initNavbarController() {
     } else {
       window.location.href = '/portal?edit_profile=1';
     }
-  });
+  };
 
-  document.getElementById('logout-btn')?.addEventListener('click', async (e) => {
+  const performLogout = async (e: Event) => {
     e.preventDefault();
-    const btn = document.getElementById('logout-btn');
+    const btn = e.currentTarget as HTMLElement | null;
     btn?.setAttribute('disabled', 'true');
     const span = btn?.querySelector('span');
     if (span) span.textContent = 'Keluar...';
@@ -105,7 +148,18 @@ export function initNavbarController() {
     localStorage.removeItem('novella_admin_session');
     sessionStorage.removeItem('novella_portal_draft');
     window.location.replace('/login?logged_out=1');
+  };
+
+  document.getElementById('toggle-history-btn')?.addEventListener('click', openHistory);
+  document.getElementById('mobile-history-btn')?.addEventListener('click', openHistory);
+  document.getElementById('nav-edit-profile-btn')?.addEventListener('click', openEditProfile);
+  document.getElementById('mobile-edit-profile-btn')?.addEventListener('click', openEditProfile);
+  document.getElementById('mobile-testimonial-btn')?.addEventListener('click', () => {
+    toggleMobileDrawer(false);
+    document.getElementById('nav-testimonial-btn')?.click();
   });
+  document.getElementById('logout-btn')?.addEventListener('click', performLogout);
+  document.getElementById('mobile-logout-btn')?.addEventListener('click', performLogout);
 
   if (isLoggedOut) {
     localStorage.removeItem(AUTH_KEY);

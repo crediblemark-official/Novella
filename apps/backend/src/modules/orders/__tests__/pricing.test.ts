@@ -119,4 +119,26 @@ describe('Pricing Engine', () => {
     expect(evenResult.totalPrice).toBe(150_000);
     expect(evenResult.suggestions).toBeUndefined();
   });
+
+  it('does not double-count extraCopies and extraPages breakdown and adds addons after BASE_PRICE floor', () => {
+    // 150 pages, 10 copies, A5 BW Soft Cover -> total = 400.000
+    // Breakdown: BASE_PRICE (150.000) + extraCopies (187.500) + extraPages (62.500) = 400.000
+    const breakdown = calculatePrice({
+      pages: 150,
+      copies: 10,
+      bookSize: 'A5',
+      addons: [],
+    });
+    expect(breakdown.totalPrice).toBe(400_000);
+    expect(breakdown.basePrice + breakdown.extraCopies + breakdown.extraPages).toBe(breakdown.totalPrice);
+
+    // Sub-100 pages with addon: 50 pages, 5 copies + E-Sertifikat (10.000) -> 150.000 + 10.000 = 160.000
+    const subBaseWithAddon = calculatePrice({
+      pages: 50,
+      copies: 5,
+      bookSize: 'A5',
+      addons: ['E-Sertifikat Penulis'],
+    });
+    expect(subBaseWithAddon.totalPrice).toBe(160_000);
+  });
 });

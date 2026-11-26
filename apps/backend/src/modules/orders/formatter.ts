@@ -1,4 +1,4 @@
-const ADMIN_WA_NUMBER = process.env.ADMIN_WA_NUMBER || '6281995100401';
+const ADMIN_WA_NUMBER = process.env.ADMIN_WA_NUMBER || '6289629625458';
 
 export function formatWaMessage(order: {
   orderCode: string;

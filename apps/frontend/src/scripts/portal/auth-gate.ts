@@ -162,12 +162,13 @@ export function bindAuthEvents() {
 
 export async function restoreSession() {
   loadDraftState();
+  const PANEL_URL = typeof window !== 'undefined' && window.location.port === '4321' ? 'http://localhost:4323' : 'https://panel.novella.id';
   const cached = localStorage.getItem(AUTH_USER_KEY);
   if (cached) {
     try {
       const user = JSON.parse(cached);
       if (user?.email) {
-        if (user.role === 'admin') { window.location.replace('/admin'); return; }
+        if (user.role === 'admin') { window.location.replace(PANEL_URL); return; }
         applyUserSession(user);
         syncUserWithDatabase(user.email);
         return;
@@ -191,7 +192,7 @@ export async function restoreSession() {
 
         if (fullUser.role === 'admin') {
           localStorage.setItem(AUTH_USER_KEY, JSON.stringify(fullUser));
-          window.location.replace('/admin');
+          window.location.replace(PANEL_URL);
           return;
         }
 

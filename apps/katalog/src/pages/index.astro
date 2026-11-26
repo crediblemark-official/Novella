@@ -1,0 +1,306 @@
+---
+import CatalogLayout from '../layouts/CatalogLayout.astro';
+---
+
+<CatalogLayout>
+  <!-- Hero & Search Bar -->
+  <section class="border-b border-slate-200/80 bg-slate-50/60 py-10 sm:py-14">
+    <div class="mx-auto max-w-[1080px] px-4 sm:px-6">
+      <div class="mx-auto max-w-2xl text-center space-y-3.5">
+        <div class="inline-flex items-center gap-2 rounded-full border border-orange/30 bg-orange/10 px-3 py-1 text-[11px] font-extrabold tracking-wide text-orange">
+          <span>Etalase Resmi Novella.id</span>
+        </div>
+        <h1 class="text-2xl font-extrabold tracking-tight text-navy sm:text-4xl sm:leading-[1.15]">
+          Katalog Karya Penulis Nusantara
+        </h1>
+        <p class="text-xs leading-relaxed text-slate-600 sm:text-sm">
+          Temukan novel sastra, kumpulan cerpen, antologi puisi, dan non-fiksi yang lahir bersama Novella.id.
+        </p>
+
+        <!-- Search Input -->
+        <div class="pt-2">
+          <div class="relative mx-auto max-w-lg">
+            <svg
+              class="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
+            </svg>
+            <input
+              id="catalog-search"
+              type="search"
+              placeholder="Cari judul, penulis, atau ISBN..."
+              class="w-full min-h-[44px] rounded-full border border-slate-300 bg-white py-2.5 pl-11 pr-5 text-sm font-medium text-navy shadow-2xs transition-all placeholder:text-slate-400 focus:border-navy focus:outline-none focus:ring-4 focus:ring-navy/10"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Catalog Filter & Grid -->
+  <section class="mx-auto max-w-[1080px] px-4 py-10 sm:px-6">
+    <!-- Filter & Sort Bar -->
+    <div class="flex flex-col gap-3 border-b border-slate-200/80 pb-4 sm:flex-row sm:items-center sm:justify-between">
+      <div
+        id="category-pills"
+        class="flex items-center gap-2 overflow-x-auto snap-x pb-1 sm:pb-0 sm:flex-wrap"
+        style="scrollbar-width: none;"
+      >
+        <button
+          type="button"
+          data-category="Semua"
+          class="category-pill shrink-0 snap-start min-h-[34px] rounded-full bg-navy px-3.5 py-1.5 text-xs font-bold text-white transition-all cursor-pointer"
+        >
+          Semua
+        </button>
+      </div>
+
+      <div class="flex items-center justify-between gap-3 sm:justify-end shrink-0">
+        <span id="catalog-count" class="font-mono text-[11px] font-bold tracking-wider text-slate-500">Memuat...</span>
+        <select
+          id="catalog-sort"
+          aria-label="Urutkan buku"
+          class="min-h-[36px] rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-navy focus:border-navy focus:outline-none cursor-pointer"
+        >
+          <option value="newest">Terbaru</option>
+          <option value="title">Judul (A–Z)</option>
+          <option value="price_asc">Harga Terendah</option>
+          <option value="price_desc">Harga Tertinggi</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Books Grid -->
+    <div id="catalog-grid" class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 sm:gap-5">
+      <div class="col-span-full py-16 text-center text-xs font-semibold text-slate-500">
+        Memuat koleksi buku Nusantara...
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div id="catalog-empty" class="hidden py-14 text-center">
+      <p class="text-sm font-extrabold text-navy">Tidak ada buku yang cocok</p>
+      <p class="mt-1 text-xs text-slate-500">Ubah kata kunci pencarian atau pilih kategori lain.</p>
+      <button
+        id="btn-reset-filter"
+        type="button"
+        class="mt-4 min-h-[40px] rounded-full border border-navy px-4 py-2 text-xs font-bold text-navy hover:bg-navy hover:text-white transition-colors cursor-pointer"
+      >
+        Reset
+      </button>
+    </div>
+  </section>
+
+  <!-- Cross-Domain CTA Banner -->
+  <section class="border-t border-slate-200/80 bg-slate-50/70 py-12">
+    <div class="mx-auto max-w-[1080px] px-4 text-center sm:px-6">
+      <h2 class="text-xl font-extrabold tracking-tight text-navy sm:text-2xl">Punya Naskah Siap Terbit?</h2>
+      <p class="mx-auto mt-1.5 max-w-lg text-xs leading-relaxed text-slate-600 sm:text-sm">
+        Hitung estimasi biaya cetak secara transparan mulai Rp 150.000 di portal penerbitan Novella.id.
+      </p>
+      <div class="mt-5 flex flex-wrap items-center justify-center gap-3">
+        <a
+          href="https://novella.id/portal"
+          class="inline-flex min-h-[44px] items-center justify-center rounded-full bg-orange px-6 py-2.5 text-xs font-extrabold text-white shadow-sm transition-all hover:bg-orange-hover hover:scale-[1.02] active:scale-[0.98]"
+        >
+          Terbitkan Sekarang
+        </a>
+        <a
+          href="https://novella.id"
+          class="inline-flex min-h-[44px] items-center justify-center rounded-full border border-navy px-6 py-2.5 text-xs font-extrabold text-navy transition-colors hover:bg-navy hover:text-white"
+        >
+          Cara Kerja
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    (function () {
+      const legacySlug = new URLSearchParams(window.location.search).get('buku');
+      if (legacySlug) {
+        window.location.replace(`/buku?slug=${encodeURIComponent(legacySlug)}`);
+        return;
+      }
+
+      const apiBase =
+        typeof window !== 'undefined' && (window.location.port === '4322' || window.location.port === '4321')
+          ? 'http://localhost:3001/api'
+          : (import.meta.env.PUBLIC_API_BASE || '/api');
+
+      let allBooks: any[] = [];
+      let activeCategory = 'Semua';
+      let searchQuery = '';
+      let sortMode = 'newest';
+
+      function formatPrice(price?: number | null): string {
+        if (!price || price <= 0) return 'Hubungi Redaksi';
+        return 'Rp ' + Number(price).toLocaleString('id-ID');
+      }
+
+      function escapeHtml(str: string): string {
+        return String(str || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      function renderCoverMarkup(book: any): string {
+        if (book.coverUrl) {
+          return `<img src="${escapeHtml(book.coverUrl)}" alt="Sampul ${escapeHtml(book.title)}" class="aspect-[3/4] w-full object-cover" loading="lazy" />`;
+        }
+        return `
+          <div class="aspect-[3/4] w-full bg-gradient-to-br from-[#0D1C3D] via-navy to-slate-800 p-4 text-white flex flex-col justify-between relative overflow-hidden">
+            <span class="relative text-[9px] font-extrabold text-orange uppercase tracking-wider truncate">${escapeHtml(book.category)}</span>
+            <p class="relative font-literary text-lg font-bold italic leading-snug line-clamp-3">${escapeHtml(book.title)}</p>
+            <div class="relative flex items-center justify-between gap-1 text-[10px] text-slate-300 border-t border-white/15 pt-2">
+              <span class="truncate">${escapeHtml(book.authorName)}</span>
+              <span class="font-mono shrink-0">${book.pages}h</span>
+            </div>
+          </div>
+        `;
+      }
+
+      function renderCard(book: any): string {
+        const slug = book.slug || String(book.id);
+        return `
+          <a
+            href="/buku?slug=${encodeURIComponent(slug)}"
+            class="group overflow-hidden rounded-xl border border-slate-200 bg-white transition-all hover:-translate-y-0.5 hover:border-navy/40 hover:shadow-sm active:scale-[0.99] flex flex-col justify-between"
+          >
+            <div>
+              ${renderCoverMarkup(book)}
+              <div class="p-3.5 pb-2 space-y-1">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="text-[10px] font-extrabold uppercase tracking-wider text-orange truncate">${escapeHtml(book.category)}</span>
+                  <span class="font-mono text-[10px] text-slate-500 shrink-0">${book.pages}h · ${escapeHtml(book.bookSize)}</span>
+                </div>
+                <h3 class="text-sm font-extrabold text-navy group-hover:text-orange transition-colors line-clamp-2">${escapeHtml(book.title)}</h3>
+                <p class="text-xs font-medium text-slate-500 truncate">${escapeHtml(book.authorName)}</p>
+              </div>
+            </div>
+            <div class="px-3.5 pb-3.5 pt-2.5 flex items-center justify-between border-t border-slate-100">
+              <span class="font-mono text-xs font-extrabold text-navy">${formatPrice(book.price)}</span>
+              <span class="text-[11px] font-bold text-orange">Detail &rarr;</span>
+            </div>
+          </a>
+        `;
+      }
+
+      function renderCategoryPills() {
+        const container = document.getElementById('category-pills');
+        if (!container) return;
+        const categories = ['Semua', ...Array.from(new Set(allBooks.map((b) => b.category).filter(Boolean)))];
+        container.innerHTML = categories
+          .map((cat) => {
+            const active = cat === activeCategory;
+            return `
+              <button
+                type="button"
+                data-category="${escapeHtml(cat)}"
+                class="category-pill shrink-0 snap-start min-h-[34px] rounded-full px-3.5 py-1.5 text-xs font-bold transition-all cursor-pointer ${
+                  active
+                    ? 'bg-navy text-white'
+                    : 'border border-slate-200 bg-white text-slate-600 hover:border-navy hover:text-navy'
+                }"
+              >
+                ${escapeHtml(cat)}
+              </button>
+            `;
+          })
+          .join('');
+
+        container.querySelectorAll('.category-pill').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            activeCategory = btn.getAttribute('data-category') || 'Semua';
+            renderCategoryPills();
+            renderCatalog();
+          });
+        });
+      }
+
+      function renderCatalog() {
+        const grid = document.getElementById('catalog-grid');
+        const empty = document.getElementById('catalog-empty');
+        const countEl = document.getElementById('catalog-count');
+        if (!grid || !empty) return;
+
+        let filtered = [...allBooks];
+        if (activeCategory !== 'Semua') {
+          filtered = filtered.filter((b) => b.category === activeCategory);
+        }
+        if (searchQuery.trim()) {
+          const q = searchQuery.trim().toLowerCase();
+          filtered = filtered.filter(
+            (b) =>
+              b.title.toLowerCase().includes(q) ||
+              b.authorName.toLowerCase().includes(q) ||
+              (b.isbn && b.isbn.toLowerCase().includes(q)) ||
+              b.category.toLowerCase().includes(q)
+          );
+        }
+
+        if (sortMode === 'title') {
+          filtered.sort((a, b) => a.title.localeCompare(b.title, 'id'));
+        } else if (sortMode === 'price_asc') {
+          filtered.sort((a, b) => (a.price ?? Number.MAX_SAFE_INTEGER) - (b.price ?? Number.MAX_SAFE_INTEGER));
+        } else if (sortMode === 'price_desc') {
+          filtered.sort((a, b) => (b.price ?? -1) - (a.price ?? -1));
+        } else {
+          filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        }
+
+        if (countEl) countEl.textContent = `${filtered.length} buku`;
+
+        if (filtered.length === 0) {
+          grid.innerHTML = '';
+          empty.classList.remove('hidden');
+        } else {
+          empty.classList.add('hidden');
+          grid.innerHTML = filtered.map(renderCard).join('');
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', async () => {
+        document.getElementById('catalog-search')?.addEventListener('input', (e) => {
+          searchQuery = (e.target as HTMLInputElement).value;
+          renderCatalog();
+        });
+
+        document.getElementById('catalog-sort')?.addEventListener('change', (e) => {
+          sortMode = (e.target as HTMLSelectElement).value;
+          renderCatalog();
+        });
+
+        document.getElementById('btn-reset-filter')?.addEventListener('click', () => {
+          activeCategory = 'Semua';
+          searchQuery = '';
+          const searchInput = document.getElementById('catalog-search') as HTMLInputElement | null;
+          if (searchInput) searchInput.value = '';
+          renderCategoryPills();
+          renderCatalog();
+        });
+
+        try {
+          const booksRes = await fetch(`${apiBase}/books`);
+          if (booksRes.ok) {
+            allBooks = await booksRes.json();
+            renderCategoryPills();
+            renderCatalog();
+          }
+        } catch {
+          const grid = document.getElementById('catalog-grid');
+          if (grid) {
+            grid.innerHTML =
+              '<div class="col-span-full py-16 text-center text-xs font-semibold text-rose-600">Gagal memuat katalog buku. Muat ulang halaman.</div>';
+          }
+        }
+      });
+    })();
+  </script>
+</CatalogLayout>

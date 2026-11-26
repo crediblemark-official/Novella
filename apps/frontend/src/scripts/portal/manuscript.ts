@@ -131,7 +131,7 @@ export function bindManuscriptEvents() {
       bookState.title = title;
       bookState.category = category;
       saveDraftState();
-      setStep(3, true);
+      setStep(2, true);
     });
   }
 }

@@ -1,8 +1,10 @@
 import { bindRoutingEvents } from './portal/router';
 import { updateCalculator, bindCalculatorEvents } from './portal/calculator';
+import { syncCalculatorUI } from './portal/calculator-events';
 import { bindManuscriptEvents } from './portal/manuscript';
 import { bindOrderEvents } from './portal/orders';
 import { bindAuthEvents, restoreSession } from './portal/auth-gate';
+import { bindTestimonialEvents } from './portal/testimonials';
 
 /**
  * Master Portal Controller Orchestrator
@@ -14,7 +16,9 @@ export function initPortalController() {
   bindManuscriptEvents();
   bindOrderEvents();
   bindAuthEvents();
+  bindTestimonialEvents();
 
-  updateCalculator();
   restoreSession();
+  syncCalculatorUI();
+  updateCalculator();
 }

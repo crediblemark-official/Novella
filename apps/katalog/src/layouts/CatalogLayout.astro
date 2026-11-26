@@ -1,0 +1,139 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Katalog Buku Novella.id — Karya Penulis Nusantara',
+  description = 'Jelajahi koleksi buku sastra, novel, kumpulan cerpen, antologi puisi, dan non-fiksi karya penulis Nusantara bersama Novella.id.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="id" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/images/logo.png" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="min-h-screen overflow-x-clip bg-white text-navy antialiased flex flex-col justify-between">
+    <!-- Dedicated Subdomain Header (buku.novella.id) -->
+    <header class="sticky top-0 z-40 border-b border-slate-200/80 bg-white/95 backdrop-blur">
+      <div class="mx-auto flex max-w-[1080px] items-center justify-between gap-4 px-4 py-3 sm:px-6">
+        <div class="flex items-center gap-2.5">
+          <a href="/" class="flex items-center gap-2.5 focus:outline-none" aria-label="Katalog Buku Novella.id">
+            <img src="/images/logo.png" alt="Novella.id Logo" class="h-8 w-auto object-contain" />
+          </a>
+          <span class="rounded-full border border-orange/30 bg-orange/10 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-orange">
+            Katalog
+          </span>
+        </div>
+
+        <nav class="flex items-center gap-3 sm:gap-4 text-xs font-bold">
+          <a
+            href="https://novella.id"
+            class="hidden sm:inline-flex items-center gap-1 text-slate-600 hover:text-navy transition-colors"
+          >
+            Beranda
+          </a>
+          <a
+            href="https://novella.id/portal"
+            class="inline-flex min-h-[38px] items-center justify-center rounded-full bg-orange px-4 py-2 text-xs font-extrabold text-white shadow-xs transition-all hover:bg-orange-hover hover:scale-[1.02] active:scale-[0.98]"
+          >
+            Terbitkan
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow">
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200/80 bg-white py-8 text-slate-600">
+      <div class="mx-auto max-w-[1080px] px-4 sm:px-6">
+        <div class="flex flex-col items-center gap-5 md:flex-row md:items-center md:justify-between">
+          <nav aria-label="Navigasi Footer" class="flex flex-wrap items-center justify-center md:justify-start gap-x-3 gap-y-2 text-xs font-medium text-slate-600">
+            <a href="https://novella.id/tentang-kami" class="hover:text-navy transition-colors">Tentang Kami</a>
+            <span class="text-slate-300 select-none" aria-hidden="true">|</span>
+            <a href="https://novella.id/syarat-ketentuan" class="hover:text-navy transition-colors">Syarat &amp; Ketentuan</a>
+            <span class="text-slate-300 select-none" aria-hidden="true">|</span>
+            <a href="https://novella.id/kebijakan-privasi" class="hover:text-navy transition-colors">Kebijakan Privasi</a>
+            <span class="text-slate-300 select-none" aria-hidden="true">|</span>
+            <a href="https://wa.me/6289629625458" target="_blank" rel="noopener noreferrer" class="hover:text-navy transition-colors">Kontak</a>
+          </nav>
+
+          <div class="flex items-center justify-center gap-2.5 shrink-0">
+            <a
+              href="https://novella.id"
+              aria-label="Laman Utama Novella.id"
+              title="Laman Utama"
+              class="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-navy transition-colors"
+            >
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              </svg>
+            </a>
+            <a
+              href="https://novella.id/portal"
+              aria-label="Portal Penerbitan Mandiri"
+              title="Portal Penulis"
+              class="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-navy transition-colors"
+            >
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+              </svg>
+            </a>
+            <a
+              href="https://wa.me/6289629625458"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="WhatsApp Redaksi Novella.id"
+              title="WhatsApp Redaksi (0896-2962-5458)"
+              class="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-navy transition-colors"
+            >
+              <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12.031 2c-5.516 0-9.969 4.453-9.969 9.969 0 1.766.469 3.484 1.344 5l-1.406 5.156 5.281-1.375c1.469.797 3.109 1.219 4.75 1.219 5.516 0 9.969-4.453 9.969-9.969S17.547 2 12.031 2zm5.813 14.125c-.25.703-1.438 1.344-2 1.422-.516.078-1.172.109-1.906-.125-.453-.141-1.031-.328-1.766-.656-3.094-1.344-5.109-4.469-5.266-4.672-.156-.203-1.266-1.688-1.266-3.219s.797-2.281 1.078-2.594c.281-.313.609-.391.813-.391.203 0 .406 0 .578.016.188.016.438-.078.688.531.25.609.859 2.094.938 2.25.078.156.125.344.031.547-.094.203-.156.328-.313.5-.156.172-.328.391-.469.516-.156.156-.313.328-.141.641.172.313.781 1.297 1.672 2.094 1.156 1.031 2.125 1.344 2.438 1.5.313.156.484.125.672-.078.188-.203.766-.891.969-1.203.203-.313.406-.266.688-.156.281.109 1.797.844 2.109 1 .313.156.516.234.594.359.078.125.078.734-.172 1.438z" />
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="my-6 border-t border-slate-200/80"></div>
+
+        <div class="flex flex-col items-center gap-3 text-center text-xs md:flex-row md:items-center md:justify-between md:text-left">
+          <div class="hidden md:flex flex-wrap items-center gap-2 text-slate-600">
+            <span class="font-extrabold tracking-tight text-navy">buku.novella<span class="text-orange">.id</span></span>
+            <span class="text-slate-300">&middot;</span>
+            <span class="font-bold text-navy uppercase tracking-wide text-[11px]">Etalase Karya Penulis Nusantara</span>
+            <span class="text-slate-300">|</span>
+            <span class="inline-flex items-center gap-1.5 text-slate-500">
+              <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+              Layanan Aktif
+            </span>
+          </div>
+
+          <p class="text-xs text-slate-500">
+            Copyright &copy; {new Date().getFullYear()} Novella.id. All Rights Reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

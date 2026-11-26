@@ -1,0 +1,57 @@
+---
+/**
+ * AdminBooksPanel: Full-Width Edge-to-Edge Katalog Buku Workspace (buku.novella.id)
+ */
+---
+
+<div id="panel-books" class="admin-panel hidden w-full">
+  <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-slate-50/60 px-4 py-3 sm:px-6">
+    <div class="flex flex-wrap items-center gap-3">
+      <span id="books-count" class="text-xs font-bold text-slate-600">Memuat katalog...</span>
+      <a
+        id="btn-open-katalog-site"
+        href="https://buku.novella.id"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-1 rounded-full border border-orange/30 bg-orange/10 px-2.5 py-0.5 text-[11px] font-bold text-orange hover:bg-orange/20 transition-colors"
+      >
+        <span>buku.novella.id</span>
+        <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+      </a>
+    </div>
+    <div class="flex items-center gap-2">
+      <input
+        id="books-search-input"
+        type="search"
+        placeholder="Cari judul, penulis, ISBN..."
+        class="min-h-[34px] w-44 sm:w-56 rounded-lg border border-slate-300 bg-white px-3 py-1 text-xs font-medium text-navy placeholder:text-slate-400 focus:border-navy focus:outline-none"
+      />
+      <a
+        href="/katalog/form"
+        class="inline-flex min-h-[34px] items-center gap-1.5 rounded-lg bg-navy px-3.5 py-1.5 text-xs font-bold text-white hover:bg-slate-800 transition-colors"
+      >
+        <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+        <span>Tambah</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Full-Width Hairline Table -->
+  <div class="w-full overflow-x-auto bg-white">
+    <table class="w-full text-left text-xs">
+      <thead class="border-b border-slate-200 bg-slate-50/80 text-[11px] font-extrabold uppercase tracking-wider text-slate-600">
+        <tr>
+          <th class="px-4 py-3 sm:pl-6">Judul Buku</th>
+          <th class="px-4 py-3">Kategori</th>
+          <th class="px-4 py-3">Penulis</th>
+          <th class="px-4 py-3">Spesifikasi &amp; Harga</th>
+          <th class="px-4 py-3">Status</th>
+          <th class="px-4 py-3 sm:pr-6 text-right">Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="books-tbody" class="divide-y divide-slate-200/80 border-b border-slate-200">
+        <tr><td colspan="6" class="px-4 py-8 text-center text-slate-500">Memuat data buku...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>

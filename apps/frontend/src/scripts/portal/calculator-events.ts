@@ -7,18 +7,24 @@ export function bindCalculatorEvents() {
   const inputCopies = document.getElementById('input-copies') as HTMLInputElement | null;
 
   inputPages?.addEventListener('input', () => {
-    calcState.pages = Math.max(24, Math.min(600, Number(inputPages.value) || 24));
+    calcState.pages = Math.max(24, Math.min(600, Math.round(Number(inputPages.value) || 24)));
+    syncChips('.page-chip', 'data-val', calcState.pages);
     updateCalculator();
+  });
+  inputPages?.addEventListener('blur', () => {
+    inputPages.value = String(calcState.pages);
   });
 
   document.getElementById('btn-page-minus')?.addEventListener('click', () => {
     calcState.pages = Math.max(24, calcState.pages - 10);
     if (inputPages) inputPages.value = String(calcState.pages);
+    syncChips('.page-chip', 'data-val', calcState.pages);
     updateCalculator();
   });
   document.getElementById('btn-page-plus')?.addEventListener('click', () => {
     calcState.pages = Math.min(600, calcState.pages + 10);
     if (inputPages) inputPages.value = String(calcState.pages);
+    syncChips('.page-chip', 'data-val', calcState.pages);
     updateCalculator();
   });
 
@@ -33,9 +39,12 @@ export function bindCalculatorEvents() {
   });
 
   inputCopies?.addEventListener('input', () => {
-    calcState.copies = Math.max(5, Math.min(1000, Number(inputCopies.value) || 5));
+    calcState.copies = Math.max(5, Math.min(1000, Math.round(Number(inputCopies.value) || 5)));
     syncChips('.copy-chip', 'data-val', calcState.copies);
     updateCalculator();
+  });
+  inputCopies?.addEventListener('blur', () => {
+    inputCopies.value = String(calcState.copies);
   });
 
   document.getElementById('btn-copy-minus')?.addEventListener('click', () => {
@@ -189,6 +198,38 @@ export function bindCalculatorEvents() {
       stickyBar.classList.toggle('pointer-events-none', entry.isIntersecting);
     }, { threshold: 0.1 }).observe(mainSubmit);
   }
+}
+
+export function syncCalculatorUI() {
+  const inputPages = document.getElementById('input-pages') as HTMLInputElement | null;
+  const inputCopies = document.getElementById('input-copies') as HTMLInputElement | null;
+  if (inputPages) inputPages.value = String(calcState.pages);
+  if (inputCopies) inputCopies.value = String(calcState.copies);
+
+  syncChips('.page-chip', 'data-val', calcState.pages);
+  syncChips('.copy-chip', 'data-val', calcState.copies);
+  syncSelectionCard('.size-card', 'data-size', calcState.bookSize, '.size-indicator');
+  syncSelectionCard('.print-chip', 'data-print', calcState.printType, '.print-indicator');
+  syncSelectionCard('.cover-chip', 'data-cover', calcState.coverType, '.cover-indicator');
+  syncSelectionCard('.paper-chip', 'data-paper', calcState.paperType, '.paper-indicator');
+
+  document.querySelectorAll<HTMLButtonElement>('.addon-btn').forEach((btn) => {
+    const addon = btn.getAttribute('data-addon') || '';
+    const active = calcState.addons.includes(addon);
+    btn.classList.toggle('border-2', active);
+    btn.classList.toggle('border-orange', active);
+    btn.classList.toggle('bg-orange/5', active);
+    btn.classList.toggle('shadow-xs', active);
+    btn.classList.toggle('border-slate-200', !active);
+    btn.classList.toggle('bg-white', !active);
+    const check = btn.querySelector('.addon-check');
+    if (check) {
+      check.textContent = active ? '✓' : '+';
+      check.className = active
+        ? 'addon-check flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-orange border border-orange text-white text-[10px] font-extrabold transition-all shadow-2xs'
+        : 'addon-check flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-slate-300 text-xs font-bold text-slate-400 bg-white transition-all';
+    }
+  });
 }
 
 function syncChips(selector: string, attr: string, activeVal: number) {

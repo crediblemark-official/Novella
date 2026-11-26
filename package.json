@@ -6,8 +6,10 @@
   ],
   "scripts": {
     "dev:frontend": "cd apps/frontend && bun run dev",
+    "dev:katalog": "cd apps/katalog && bun run dev",
+    "dev:panel": "cd apps/panel && bun run dev",
     "dev:backend": "cd apps/backend && bun run dev",
-    "dev": "concurrently \"bun run dev:backend\" \"bun run dev:frontend\"",
+    "dev": "concurrently \"bun run dev:backend\" \"bun run dev:frontend\" \"bun run dev:katalog\" \"bun run dev:panel\"",
     "build": "bun --filter '*' build",
     "typecheck": "bun --filter '*' typecheck",
     "test": "bun test",

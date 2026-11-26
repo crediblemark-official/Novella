@@ -15,6 +15,14 @@ const { activeNav = 'landing' } = Astro.props;
       <nav class="hidden md:flex items-center gap-5 text-xs font-bold text-slate-600">
         <a href="/#cara-kerja" class="transition-colors hover:text-navy">Cara Kerja</a>
         <a
+          href="https://buku.novella.id"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="transition-colors hover:text-navy"
+        >
+          Katalog Buku
+        </a>
+        <a
           href="/portal"
           class={`transition-colors ${activeNav === 'portal' ? 'text-orange font-extrabold' : 'hover:text-navy'}`}
         >
@@ -23,44 +31,46 @@ const { activeNav = 'landing' } = Astro.props;
       </nav>
     </div>
 
-    <div class="flex items-center gap-2.5 sm:gap-3">
-      <!-- Guest Links -->
-      <div id="nav-guest-links" class="flex items-center gap-2">
-        <a
-          href="/login"
-          class="rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 hover:border-navy hover:text-navy transition-colors"
-        >
-          Masuk
-        </a>
-        <a
-          href="/daftar"
-          class="hidden sm:inline-block rounded-full border border-orange bg-white px-3 py-1.5 text-xs font-bold text-orange hover:bg-orange/5 transition-colors"
-        >
-          Daftar
-        </a>
-      </div>
+    <div class="flex items-center gap-2 sm:gap-3">
+      <div class="hidden md:flex items-center gap-2.5">
+        <!-- Guest Links -->
+        <div id="nav-guest-links" class="flex items-center gap-2">
+          <a
+            href="/login"
+            class="rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 hover:border-navy hover:text-navy transition-colors"
+          >
+            Masuk
+          </a>
+          <a
+            href="/daftar"
+            class="rounded-full border border-orange bg-white px-3 py-1.5 text-xs font-bold text-orange hover:bg-orange/5 transition-colors"
+          >
+            Daftar
+          </a>
+        </div>
 
-      <!-- Logged-in Author Profile Menu (Moved from Page Body to Navbar) -->
-      <div id="nav-user-container" class="relative hidden">
-        <button
-          id="nav-user-pill"
-          type="button"
-          class="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 py-1 pl-1.5 pr-2.5 text-xs font-bold text-navy hover:border-navy hover:bg-white transition-all cursor-pointer shadow-2xs"
-          aria-expanded="false"
-          aria-haspopup="true"
-        >
-          <span id="nav-user-avatar" class="flex h-6 w-6 items-center justify-center rounded-full bg-navy text-[10px] font-extrabold text-white">R</span>
-          <span id="nav-user-name" class="max-w-[100px] sm:max-w-[130px] truncate">Penulis</span>
-          <svg class="h-3 w-3 text-slate-400 transition-transform duration-200" id="nav-user-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
+        <!-- Logged-in Author Profile Menu (Desktop) -->
+        <div id="nav-user-container" class="relative hidden">
+          <button
+            id="nav-user-pill"
+            type="button"
+            class="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 py-1 pl-1.5 pr-2.5 text-xs font-bold text-navy hover:border-navy hover:bg-white transition-all cursor-pointer shadow-2xs"
+            aria-expanded="false"
+            aria-haspopup="true"
+            aria-label="Menu Akun Penulis"
+          >
+            <span id="nav-user-avatar" class="flex h-6 w-6 items-center justify-center rounded-full bg-navy text-[10px] font-extrabold text-white">R</span>
+            <span id="nav-user-name" class="max-w-[130px] truncate">Penulis</span>
+            <svg class="h-3 w-3 text-slate-400 transition-transform duration-200" id="nav-user-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
 
-        <!-- Dropdown Panel -->
-        <div
-          id="nav-user-dropdown"
-          class="absolute right-0 mt-2 w-72 origin-top-right rounded-2xl border border-slate-200/90 bg-white p-3 shadow-xl ring-1 ring-black/5 hidden z-50 animate-in fade-in zoom-in-95 duration-100"
-        >
+          <!-- Dropdown Panel (Desktop) -->
+          <div
+            id="nav-user-dropdown"
+            class="absolute right-0 mt-2 w-72 origin-top-right rounded-2xl border border-slate-200/90 bg-white p-3 shadow-xl ring-1 ring-black/5 hidden z-50 animate-in fade-in zoom-in-95 duration-100"
+          >
           <!-- Author Info Card -->
           <div class="flex items-start gap-3 p-2 rounded-xl bg-slate-50/80 border border-slate-100">
             <div id="user-avatar" class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-navy to-slate-800 text-xs font-extrabold text-white shadow-xs">
@@ -95,6 +105,17 @@ const { activeNav = 'landing' } = Astro.props;
             </button>
 
             <button
+              id="nav-testimonial-btn"
+              type="button"
+              class="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
+            >
+              <svg class="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+              </svg>
+              <span>Kirim Testimoni</span>
+            </button>
+
+            <button
               id="nav-edit-profile-btn"
               type="button"
               class="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
@@ -117,7 +138,7 @@ const { activeNav = 'landing' } = Astro.props;
 
             <a
               id="nav-dropdown-admin-link"
-              href="/admin"
+              href="https://panel.novella.id"
               class="hidden flex w-full items-center gap-2 rounded-xl px-3 py-2 text-xs font-bold text-navy hover:bg-orange/10 transition-colors"
             >
               <svg class="h-4 w-4 text-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -140,19 +161,107 @@ const { activeNav = 'landing' } = Astro.props;
             </svg>
             <span>Keluar dari Akun</span>
           </button>
+          </div>
         </div>
       </div>
 
       <!-- CTA -->
       <a
         href="/portal"
-        class="rounded-full bg-orange px-4 py-1.5 text-xs font-extrabold text-white shadow-sm transition-colors hover:bg-orange-hover"
+        class="rounded-full bg-orange px-3.5 sm:px-4 py-1.5 text-xs font-extrabold text-white shadow-sm transition-colors hover:bg-orange-hover whitespace-nowrap"
       >
         Terbitkan Buku
       </a>
+
+      <!-- Mobile Hamburger Button -->
+      <button
+        id="mobile-menu-btn"
+        type="button"
+        aria-label="Buka Menu"
+        aria-expanded="false"
+        aria-controls="mobile-nav-drawer"
+        class="md:hidden flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-navy hover:bg-slate-50 transition-colors cursor-pointer"
+      >
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
     </div>
   </div>
 </header>
+
+<!-- Mobile Slide-in Drawer -->
+<div id="mobile-nav-backdrop" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-[1px] hidden md:hidden" aria-hidden="true"></div>
+<aside
+  id="mobile-nav-drawer"
+  aria-label="Menu Navigasi Mobile"
+  class="fixed inset-y-0 right-0 z-50 flex w-72 max-w-[85vw] translate-x-full flex-col bg-white shadow-2xl transition-transform duration-200 ease-out md:hidden"
+>
+  <div class="flex items-center justify-between border-b border-slate-100 px-4 py-3.5">
+    <img src="/images/logo.png" alt="Novella.id" class="h-7 w-auto object-contain" />
+    <button
+      id="mobile-drawer-close"
+      type="button"
+      aria-label="Tutup Menu"
+      class="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-navy cursor-pointer"
+    >
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+
+  <div class="flex-1 overflow-y-auto p-4 space-y-5">
+    <!-- Mobile Logged-in User Section -->
+    <div id="mobile-user-section" class="hidden space-y-2">
+      <div class="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50/80 p-3">
+        <div id="mobile-user-avatar" class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-navy text-xs font-extrabold text-white">R</div>
+        <div class="min-w-0 flex-1">
+          <p id="mobile-user-name" class="text-xs font-extrabold text-navy truncate">Penulis Novella</p>
+          <p id="mobile-user-email" class="text-[11px] text-slate-500 truncate mt-0.5">-</p>
+        </div>
+      </div>
+
+      <div class="space-y-1">
+        <button id="mobile-history-btn" type="button" class="flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-100 cursor-pointer">
+          <span>Riwayat Naskah</span>
+          <span id="mobile-orders-count" class="rounded-full bg-slate-200/70 px-2 py-0.5 text-[10px] font-extrabold text-slate-600">0</span>
+        </button>
+        <button id="mobile-testimonial-btn" type="button" class="flex w-full items-center rounded-xl px-3 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-100 cursor-pointer">
+          Kirim Testimoni
+        </button>
+        <button id="mobile-edit-profile-btn" type="button" class="flex w-full items-center rounded-xl px-3 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-100 cursor-pointer">
+          Ubah Profil &amp; Alamat
+        </button>
+        <a id="mobile-admin-link" href="https://panel.novella.id" class="hidden flex w-full items-center rounded-xl px-3 py-2.5 text-xs font-bold text-amber-700 hover:bg-amber-50">
+          Portal Redaksi (Admin)
+        </a>
+      </div>
+    </div>
+
+    <!-- Mobile Guest Links -->
+    <div id="mobile-guest-links" class="grid grid-cols-2 gap-2">
+      <a href="/login" class="rounded-xl border border-slate-300 bg-white py-2 text-center text-xs font-bold text-slate-700 hover:border-navy">Masuk</a>
+      <a href="/daftar" class="rounded-xl border border-orange bg-white py-2 text-center text-xs font-bold text-orange hover:bg-orange/5">Daftar</a>
+    </div>
+
+    <!-- Mobile Navigation Links -->
+    <nav class="space-y-1 border-t border-slate-100 pt-4 text-xs font-bold text-slate-700">
+      <a href="/#cara-kerja" class="mobile-nav-link block rounded-xl px-3 py-2.5 hover:bg-slate-100">Cara Kerja</a>
+      <a href="https://buku.novella.id" target="_blank" rel="noopener noreferrer" class="mobile-nav-link block rounded-xl px-3 py-2.5 hover:bg-slate-100">Katalog Buku</a>
+      <a href="/portal" class="mobile-nav-link block rounded-xl px-3 py-2.5 hover:bg-slate-100">Portal Penerbitan</a>
+    </nav>
+  </div>
+
+  <div class="border-t border-slate-100 p-4 space-y-2">
+    <a href="/portal" class="block w-full rounded-xl bg-orange py-2.5 text-center text-xs font-extrabold text-white shadow-sm hover:bg-orange-hover">
+      Terbitkan Buku
+    </a>
+    <button id="mobile-logout-btn" type="button" class="hidden w-full rounded-xl border border-rose-200 py-2 text-center text-xs font-bold text-rose-600 hover:bg-rose-50 cursor-pointer">
+      Keluar dari Akun
+    </button>
+  </div>
+</aside>
 
 <script>
   import { initNavbarController } from '../scripts/navbar-controller';

@@ -80,9 +80,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       </div>
 
       <div class="mt-2.5 text-center">
-        <a href="/admin" class="inline-flex items-center gap-1.5 text-[11px] font-bold text-slate-400 hover:text-navy transition-colors">
+        <a href="https://panel.novella.id" class="inline-flex items-center gap-1.5 text-[11px] font-bold text-slate-400 hover:text-navy transition-colors">
           <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-          <span>Khusus Staf Redaksi? Masuk di sini &rarr;</span>
+          <span>Khusus Staf Redaksi? Masuk di panel.novella.id &rarr;</span>
         </a>
       </div>
     </div>
@@ -90,6 +90,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
   <script is:inline>
     const API_BASE = '/api';
+    const PANEL_URL = typeof window !== 'undefined' && window.location.port === '4321' ? 'http://localhost:4323' : 'https://panel.novella.id';
     const AUTH_KEY = 'novella_auth_user';
     const ADMIN_KEY = 'novella_admin_session';
     const isLoggedOut = typeof window !== 'undefined' && window.location.search.includes('logged_out=1');
@@ -99,11 +100,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       localStorage.removeItem(ADMIN_KEY);
     } else {
       if (localStorage.getItem(ADMIN_KEY)) {
-        window.location.replace('/admin');
+        window.location.replace(PANEL_URL);
       } else if (localStorage.getItem(AUTH_KEY)) {
         try {
           const u = JSON.parse(localStorage.getItem(AUTH_KEY) || '{}');
-          window.location.replace(u.role === 'admin' ? '/admin' : '/portal');
+          window.location.replace(u.role === 'admin' ? PANEL_URL : '/portal');
         } catch { window.location.replace('/portal'); }
       }
 
@@ -114,7 +115,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             const session = await res.json();
             if (session?.user) {
               localStorage.setItem(AUTH_KEY, JSON.stringify(session.user));
-              window.location.replace(session.user.role === 'admin' ? '/admin' : '/portal');
+              window.location.replace(session.user.role === 'admin' ? PANEL_URL : '/portal');
             }
           }
         } catch {}
@@ -164,7 +165,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         if (res.ok) {
           if (data?.user) {
             localStorage.setItem(AUTH_KEY, JSON.stringify(data.user));
-            if (data.user.role === 'admin') { window.location.href = '/admin'; return; }
+            if (data.user.role === 'admin') { window.location.href = PANEL_URL; return; }
           }
           window.location.href = '/portal';
           return;
@@ -182,7 +183,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           if (admRes.ok && admData.success) {
             localStorage.setItem(ADMIN_KEY, admData.token);
             if (admData.user) localStorage.setItem(AUTH_KEY, JSON.stringify(admData.user));
-            window.location.href = '/admin';
+            window.location.href = PANEL_URL;
             return;
           }
         } catch {}

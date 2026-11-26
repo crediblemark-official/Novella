@@ -89,21 +89,31 @@ export const settings = pgTable('settings', {
   companyAddress: text('company_address').notNull(),
   companyTagline: text('company_tagline').notNull(),
   bankAccounts: text('bank_accounts').notNull(), // JSON string array
+  qrisImageUrl: text('qris_image_url'),
+  qrisMerchantName: text('qris_merchant_name'),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
 // Published Books Showcase Table
 export const publishedBooks = pgTable('published_books', {
   id: serial('id').primaryKey(),
+  slug: text('slug').unique(),
   title: text('title').notNull(),
   authorName: text('author_name').notNull(),
+  authorBio: text('author_bio'),
   category: text('category').notNull(),
   pages: integer('pages').notNull().default(100),
   bookSize: text('book_size').notNull().default('A5'),
+  isbn: text('isbn'),
+  publishedYear: integer('published_year'),
+  price: integer('price'),
   coverUrl: text('cover_url'),
   synopsis: text('synopsis'),
+  buyUrl: text('buy_url'),
+  isFeatured: boolean('is_featured').notNull().default(false),
   isPublished: boolean('is_published').notNull().default(true),
   createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
 // Testimonials Table

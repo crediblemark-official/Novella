@@ -1,7 +1,7 @@
 import { Elysia, t } from 'elysia';
 import { db } from '../../db';
 import { orders, user } from '../../db/schema';
-import { desc, eq } from 'drizzle-orm';
+import { and, desc, eq } from 'drizzle-orm';
 import { verifyAdminRequest } from './routes';
 
 export const adminCrmModule = new Elysia({ prefix: '/api/admin' })
@@ -32,6 +32,20 @@ export const adminCrmModule = new Elysia({ prefix: '/api/admin' })
     });
 
     return authorsWithMetrics;
+  })
+  // 1b. Delete Author Account
+  .delete('/authors/:id', async ({ params, request, set }) => {
+    const isAuthorized = await verifyAdminRequest(request);
+    if (!isAuthorized) { set.status = 401; return { error: 'Unauthorized' }; }
+
+    const existing = await db.select({ id: user.id }).from(user).where(and(eq(user.id, params.id), eq(user.role, 'author')));
+    if (existing.length === 0) {
+      set.status = 404;
+      return { error: 'Penulis tidak ditemukan' };
+    }
+
+    await db.delete(user).where(and(eq(user.id, params.id), eq(user.role, 'author')));
+    return { success: true, deletedId: params.id };
   })
   // 2. Orders CSV Export
   .get('/orders/export-csv', async ({ request, set }) => {

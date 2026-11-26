@@ -105,20 +105,41 @@ export async function loadBankAccounts() {
       navigator.clipboard.writeText(b.getAttribute('data-copy') || '');
       showToast('Nomor rekening disalin!');
     }));
+
+    const qrisBox = document.getElementById('payment-qris-box');
+    const qrisImg = document.getElementById('payment-qris-img') as HTMLImageElement | null;
+    const qrisMerchant = document.getElementById('payment-qris-merchant');
+    const qrisDownload = document.getElementById('payment-qris-download') as HTMLAnchorElement | null;
+    if (qrisBox && qrisImg && data.qrisImageUrl) {
+      qrisImg.src = data.qrisImageUrl;
+      if (qrisMerchant) qrisMerchant.textContent = data.qrisMerchantName || 'Novella.id';
+      if (qrisDownload) qrisDownload.href = data.qrisImageUrl;
+      qrisBox.classList.remove('hidden');
+    } else if (qrisBox) {
+      qrisBox.classList.add('hidden');
+    }
+
+    const waFab = document.getElementById('portal-wa-fab') as HTMLAnchorElement | null;
+    if (waFab && data.adminWa) {
+      const msg = encodeURIComponent('Halo Admin Novella.id, saya sedang berada di Portal Penerbitan dan ingin berkonsultasi.');
+      waFab.href = `https://wa.me/${data.adminWa}?text=${msg}`;
+    }
   } catch {}
 }
 
 export async function loadAuthorOrders() {
   const historyList = document.getElementById('history-list');
-  const userOrdersCount = document.getElementById('user-orders-count');
-  if (!portalState.currentUser?.email || !historyList) return;
+    const userOrdersCount = document.getElementById('user-orders-count');
+    const mobileOrdersCount = document.getElementById('mobile-orders-count');
+    if (!portalState.currentUser?.email || !historyList) return;
 
-  try {
-    const res = await fetch(`${API_BASE}/orders?email=${encodeURIComponent(portalState.currentUser.email)}`);
-    const orders = await res.json();
-    if (userOrdersCount) userOrdersCount.textContent = String(orders.length);
+    try {
+      const res = await fetch(`${API_BASE}/orders?email=${encodeURIComponent(portalState.currentUser.email)}`);
+      const orders = await res.json();
+      if (userOrdersCount) userOrdersCount.textContent = String(orders.length);
+      if (mobileOrdersCount) mobileOrdersCount.textContent = String(orders.length);
     if (orders.length === 0) {
-      historyList.innerHTML = '<p class="text-xs text-slate-400">Belum ada pesanan yang dibuat.</p>';
+      historyList.innerHTML = '<div class="rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-8 text-center"><p class="text-xs font-bold text-slate-600">Belum ada naskah yang diajukan.</p><p class="mt-1 text-[11px] text-slate-400">Hitung estimasi biaya di kalkulator untuk mulai menerbitkan karya Anda.</p></div>';
       return;
     }
 
@@ -126,7 +147,7 @@ export async function loadAuthorOrders() {
       const isConsulting = o.status === 'Menunggu Konsultasi' || o.status === 'Menunggu Verifikasi';
       const statusBadge = isConsulting ? 'bg-amber-100 text-amber-800' : o.status === 'Diproses' ? 'bg-blue-100 text-blue-800' : o.status === 'Selesai' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800';
       const waFollowupText = encodeURIComponent(`Halo Redaksi Novella.id, saya ingin menanyakan progres naskah saya "${o.bookTitle}" (Kode: ${o.orderCode}). Terima kasih!`);
-      const waFollowupUrl = `https://wa.me/6281995100401?text=${waFollowupText}`;
+      const waFollowupUrl = `https://wa.me/6289629625458?text=${waFollowupText}`;
 
       const trackingHtml = o.shippingTrackingNumber ? `<div class="mt-1 text-[10px] font-bold text-emerald-700">Resi ${o.shippingCourier || 'Ekspedisi'}: <span class="font-mono">${o.shippingTrackingNumber}</span></div>` : '';
 
@@ -179,7 +200,11 @@ export function bindOrderEvents() {
   };
 
   document.getElementById('btn-view-author-history')?.addEventListener('click', () => {
-    const box = document.getElementById('history-box');
-    if (box) { box.classList.remove('hidden'); box.scrollIntoView({ behavior: 'smooth' }); }
+    setStep(3, true);
+    loadAuthorOrders();
+  });
+
+  document.getElementById('btn-history-refresh')?.addEventListener('click', () => {
+    loadAuthorOrders();
   });
 }

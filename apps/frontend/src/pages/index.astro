@@ -34,9 +34,9 @@ const showPublicShowcase = false;
       </div>
 
       <!-- Visual Customer Service Showcase -->
-      <div class="relative md:col-span-5">
-        <div class="relative mx-auto max-w-[320px] rounded-3xl border border-slate-200 bg-white p-3.5 shadow-xl sm:max-w-[360px]">
-          <div class="relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-slate-100 shadow-inner">
+      <div class="relative md:col-span-5 -mx-4 sm:mx-0">
+        <div class="relative sm:mx-auto sm:max-w-[360px] rounded-none border-y border-slate-200 bg-white sm:rounded-3xl sm:border sm:p-3.5 sm:shadow-xl">
+          <div class="relative aspect-[4/5] w-full overflow-hidden rounded-none sm:rounded-2xl bg-slate-100 shadow-inner">
             <img
               src="/images/cs-novella.jpg"
               alt="Customer Service Novella.id Ramah dan Profesional"
@@ -54,7 +54,7 @@ const showPublicShowcase = false;
               <p class="text-[10px] text-slate-300">Siap memandu penulis pemula dari naskah hingga cetak.</p>
             </div>
           </div>
-          <div class="mt-3 flex items-center justify-between px-1 text-xs">
+          <div class="px-4 py-3 sm:px-1 sm:py-0 sm:mt-3 flex items-center justify-between text-xs">
             <span class="rounded-full bg-orange/15 px-2.5 py-0.5 font-bold text-orange">Paket Mulai Rp 150rb</span>
             <span class="font-bold text-slate-500">Pendampingan Penuh</span>
           </div>
@@ -235,18 +235,6 @@ const showPublicShowcase = false;
 
   {showPublicShowcase && (
     <>
-      <!-- Section Karya Terbitan Terbaru (Dinamis dari /api/books) -->
-      <section id="buku-terbit" class="hidden mx-auto max-w-5xl px-4 py-16 sm:px-6">
-        <div class="flex items-end justify-between">
-          <div>
-            <h2 class="text-2xl font-extrabold text-navy sm:text-3xl">Karya Terbitan Terbaru</h2>
-            <p class="mt-1 text-xs text-slate-600 sm:text-sm">Buku-buku karya penulis Nusantara yang telah beredar luas.</p>
-          </div>
-          <a href="/portal" class="text-xs font-bold text-orange hover:underline">Terbitkan Karyamu &rarr;</a>
-        </div>
-        <div id="books-grid" class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"></div>
-      </section>
-
       <!-- Section Testimoni Penulis (Dinamis dari /api/testimonials) -->
       <section id="testimoni" class="hidden border-t border-slate-100 bg-[#F1F5F9]/60 py-16">
         <div class="mx-auto max-w-5xl px-4 sm:px-6">
@@ -376,37 +364,13 @@ const showPublicShowcase = false;
           });
         }
 
-        // Dynamic Books & Testimonials loader (skipped when hidden from landing)
+        // Dynamic Testimonials loader (Katalog Buku dipisahkan ke subdomain buku.novella.id)
         (async () => {
-          const booksSection = document.getElementById('buku-terbit');
           const testiSection = document.getElementById('testimoni');
-          if (!booksSection && !testiSection) return;
+          if (!testiSection) return;
           const apiBase = typeof window !== 'undefined' && window.location.port === '4321' ? 'http://localhost:3001/api' : '/api';
-          if (booksSection) try {
-            const bRes = await fetch(`${apiBase}/books`);
-            if (bRes.ok) {
-              const books = await bRes.json();
-              const grid = document.getElementById('books-grid');
-              if (grid && books.length > 0) {
-                grid.innerHTML = books.map((b) => `
-                  <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-sm hover:shadow-md transition-shadow">
-                    <div class="aspect-[3/4] rounded-xl bg-gradient-to-br from-slate-900 to-navy p-4 text-white flex flex-col justify-between">
-                      <span class="text-[9px] font-extrabold text-orange uppercase tracking-wider">${b.category}</span>
-                      <p class="font-literary text-lg font-bold italic">${b.title}</p>
-                      <span class="text-[10px] text-slate-400">${b.pages} Halaman · ${b.bookSize}</span>
-                    </div>
-                    <div class="mt-3">
-                      <h3 class="text-sm font-extrabold text-navy">${b.title}</h3>
-                      <p class="text-xs text-slate-500">${b.authorName}</p>
-                    </div>
-                  </div>
-                `).join('');
-                booksSection.classList.remove('hidden');
-              }
-            }
-          } catch {}
 
-          if (testiSection) try {
+          try {
             const tRes = await fetch(`${apiBase}/testimonials`);
             if (tRes.ok) {
               const testimonials = await tRes.json();

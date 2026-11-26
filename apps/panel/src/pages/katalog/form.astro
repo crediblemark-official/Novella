@@ -1,0 +1,737 @@
+---
+import PanelLayout from '../../layouts/PanelLayout.astro';
+---
+
+<PanelLayout title="Kelola Buku — panel.novella.id">
+  <div class="min-h-screen bg-white">
+    <!-- Top Bar (Inner Container Aligned with Main Workspace) -->
+    <header class="sticky top-0 z-30 h-14 border-b border-slate-200 bg-white/95 backdrop-blur">
+      <div class="mx-auto flex h-full max-w-[1080px] items-center justify-between gap-3 px-4 sm:px-6">
+        <div class="flex items-center gap-3 min-w-0">
+          <a
+            href="/?tab=books"
+            class="inline-flex min-h-[34px] items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-navy hover:bg-slate-50 transition-colors"
+          >
+            <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+            <span>Kembali</span>
+          </a>
+          <h1 id="book-form-title" class="text-sm font-extrabold text-navy tracking-tight truncate">Tambah Buku Baru</h1>
+        </div>
+
+        <button
+          id="book-submit-top-btn"
+          type="submit"
+          form="book-editor-form"
+          class="inline-flex min-h-[36px] items-center rounded-lg bg-orange px-5 py-1.5 text-xs font-extrabold text-white shadow-2xs hover:bg-orange-hover transition-colors cursor-pointer"
+        >
+          Simpan
+        </button>
+      </div>
+    </header>
+
+    <!-- Loading / Auth Guard -->
+    <div id="form-loading" class="py-20 text-center text-xs font-semibold text-slate-500">
+      Memverifikasi sesi staf...
+    </div>
+
+    <!-- Main 2-Column Asymmetric Form (Borderless, Aligned to Header max-w-[1080px]) -->
+    <main id="form-workspace" class="hidden mx-auto max-w-[1080px] px-4 py-6 sm:px-6">
+      <form id="book-editor-form" class="flex flex-col lg:flex-row gap-8 bg-white items-start">
+        <input id="book-id-input" type="hidden" value="" />
+
+        <!-- Left Sticky Column: Clickable Full-Bleed 3:4 Cover Upload + Status -->
+        <aside class="w-full lg:w-72 shrink-0 lg:sticky lg:top-20 bg-slate-50/80 rounded-2xl overflow-hidden">
+          <input id="book-cover-input" type="hidden" value="" />
+          <input id="book-cover-file" type="file" accept="image/jpeg,image/png,image/webp" class="hidden" />
+
+          <div
+            id="btn-upload-cover"
+            role="button"
+            tabindex="0"
+            title="Klik atau seret gambar untuk mengunggah sampul"
+            class="group relative w-full cursor-pointer select-none"
+          >
+            <div id="book-cover-preview" class="w-full"></div>
+            <div class="absolute inset-0 flex flex-col items-center justify-center gap-1.5 bg-slate-900/55 text-white opacity-0 group-hover:opacity-100 transition-opacity">
+              <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+              </svg>
+              <span id="btn-upload-cover-label" class="text-xs font-extrabold tracking-wide">Unggah Sampul</span>
+              <span class="text-[10px] text-slate-200">JPG / PNG / WebP · 3:4</span>
+            </div>
+          </div>
+
+          <div class="p-4 sm:p-5 space-y-3">
+            <div class="flex items-center justify-between gap-2 text-[11px]">
+              <span id="cover-upload-hint" class="text-slate-500">Klik sampul untuk unggah</span>
+              <button id="btn-remove-cover" type="button" class="hidden font-bold text-rose-600 hover:underline cursor-pointer">Hapus</button>
+            </div>
+            <div class="border-t border-slate-200/80 pt-3">
+              <label class="inline-flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
+                <input id="book-published-input" type="checkbox" checked class="h-4 w-4 rounded border-slate-300 text-navy focus:ring-navy" />
+                <span>Tayang di Katalog</span>
+              </label>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Right Column: Metadata & Synopsis (2-Column Grid) -->
+        <section class="flex-1 min-w-0 grid gap-4 sm:grid-cols-2 bg-white">
+          <div>
+            <label for="book-title-input" class="mb-1 block text-[10px] font-bold uppercase tracking-wider text-slate-500">Judul Buku *</label>
+            <input id="book-title-input" type="text" required placeholder="Misal: Lembayung Jogja" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-navy focus:border-navy focus:outline-none" />
+          </div>
+          <div>
+            <label for="book-author-input" class="mb-1 block text-[10px] font-bold uppercase tracking-wider text-slate-500">Nama Penulis *</label>
+            <input id="book-author-input" type="text" required placeholder="Misal: Budi Santoso" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-navy focus:border-navy focus:outline-none" />
+          </div>
+
+          <div>
+            <label for="book-category-input" class="mb-1 block text-[10px] font-bold uppercase tracking-wider text-slate-500">Kategori / Genre *</label>
+            <input id="book-category-input" type="text" list="book-category-presets" required placeholder="Misal: Novel Sastra" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-navy focus:border-navy focus:outline-none" />
+            <datalist id="book-category-presets">
+              <option value="Novel Sastra"></option>
+              <option value="Kumpulan Cerpen"></option>
+              <option value="Antologi Puisi"></option>
+              <option value="Non-Fiksi"></option>
+              <option value="Memoar"></option>
+            </datalist>
+          </div>
+          <div>
+            <label for="book-size-input" class="mb-1 block text-[10px] font-bold uppercase tracking-wider text-slate-500">Ukuran *</label>
+            <select id="book-size-input" required class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-navy focus:border-navy focus:outline-none cursor-pointer">
+              <option value="A5">A5</option>
+              <option value="Unesco">Unesco</option>
+              <option value="B5">B5</option>
+              <option value="A6 Saku">A6 Saku</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="book-pages-input" class="mb-1 block text-[10px] font-bold uppercase tracking-wider text-slate-500">Halaman *</label>
+            <input id="book-pages-input" type="number" required min="1" placeholder="120" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 font-mono text-xs font-semibold text-navy focus:border-navy focus:outline-none" />
+          </div>
+          <div>
+            <label for="book-year-input" class="mb-1 block text-[10px] font-bold uppercase tracking-wider text-slate-500">Tahun Terbit</label>
+            <input id="book-year-input" type="number" min="1900" max="2100" placeholder="2026" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 font-mono text-xs font-medium text-navy focus:border-navy focus:outline-none" />
+          </div>
+
+          <div>
+            <label for="book-isbn-input" class="mb-1 block text-[10px] font-bold uppercase tracking-wider text-slate-500">ISBN</label>
+            <input id="book-isbn-input" type="text" placeholder="978-623-..." class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 font-mono text-xs font-medium text-navy focus:border-navy focus:outline-none" />
+          </div>
+          <div>
+            <label for="book-price-input" class="mb-1 block text-[10px] font-bold uppercase tracking-wider text-slate-500">Harga (Rp)</label>
+            <input id="book-price-input" type="number" min="0" placeholder="68000" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 font-mono text-xs font-semibold text-navy focus:border-navy focus:outline-none" />
+          </div>
+
+          <div class="sm:col-span-2">
+            <label for="book-buy-input" class="mb-1 block text-[10px] font-bold uppercase tracking-wider text-slate-500">Tautan Marketplace / Beli (Opsional)</label>
+            <input id="book-buy-input" type="url" placeholder="https://shopee.co.id/..." class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-navy focus:border-navy focus:outline-none" />
+          </div>
+
+          <div class="sm:col-span-2">
+            <label for="book-author-bio-input" class="mb-1 block text-[10px] font-bold uppercase tracking-wider text-slate-500">Profil Singkat Penulis (Opsional)</label>
+            <textarea id="book-author-bio-input" rows="2" placeholder="1–2 kalimat tentang latar belakang penulis..." class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-navy focus:border-navy focus:outline-none"></textarea>
+          </div>
+
+          <div class="sm:col-span-2">
+            <label class="mb-1.5 block text-[10px] font-bold uppercase tracking-wider text-slate-500">Sinopsis Lengkap (Ketik <kbd class="rounded bg-slate-100 px-1 py-0.5 font-mono text-[9px] text-navy">/</kbd> atau blok teks untuk format)</label>
+
+            <!-- Notion-style Block Canvas -->
+            <div id="notion-canvas" class="relative min-h-[260px] rounded-xl border border-slate-200 bg-white p-3 sm:p-4 cursor-text">
+              <div id="notion-blocks-list" class="space-y-1.5"></div>
+
+              <!-- Floating Selection Bubble Toolbar (Notion-style) -->
+              <div id="bubble-toolbar" class="hidden absolute z-40 flex items-center gap-1 rounded-xl bg-navy px-2 py-1 text-white shadow-xl">
+                <button type="button" data-bubble-type="p" title="Paragraf" class="bubble-type-btn rounded-md px-2 py-1 text-[11px] font-bold hover:bg-white/15 cursor-pointer">Teks</button>
+                <button type="button" data-bubble-type="h2" title="Judul Bagian" class="bubble-type-btn rounded-md px-2 py-1 text-[11px] font-extrabold hover:bg-white/15 cursor-pointer">Judul</button>
+                <button type="button" data-bubble-type="blockquote" title="Kutipan" class="bubble-type-btn rounded-md px-2 py-1 text-[11px] font-bold hover:bg-white/15 cursor-pointer">Kutipan</button>
+                <button type="button" data-bubble-type="li" title="Daftar Poin" class="bubble-type-btn rounded-md px-2 py-1 text-[11px] font-bold hover:bg-white/15 cursor-pointer">Poin</button>
+                <span class="mx-0.5 h-4 w-px bg-white/20"></span>
+                <button type="button" data-bubble-fmt="bold" title="Tebal (Ctrl+B)" class="bubble-fmt-btn inline-flex h-7 w-7 items-center justify-center rounded-md text-xs font-extrabold hover:bg-white/15 cursor-pointer">B</button>
+                <button type="button" data-bubble-fmt="italic" title="Miring (Ctrl+I)" class="bubble-fmt-btn inline-flex h-7 w-7 items-center justify-center rounded-md font-serif text-xs italic font-bold hover:bg-white/15 cursor-pointer">I</button>
+                <button type="button" data-bubble-fmt="underline" title="Garis Bawah (Ctrl+U)" class="bubble-fmt-btn inline-flex h-7 w-7 items-center justify-center rounded-md text-xs font-bold underline hover:bg-white/15 cursor-pointer">U</button>
+                <button type="button" data-bubble-fmt="removeFormat" title="Bersihkan Format" class="bubble-fmt-btn rounded-md px-1.5 py-1 text-[10px] font-bold text-slate-300 hover:bg-white/15 hover:text-white cursor-pointer">Reset</button>
+              </div>
+
+              <!-- Slash Command Floating Menu -->
+              <div id="slash-menu" class="hidden absolute left-10 z-30 w-56 rounded-xl border border-slate-200 bg-white p-1.5 shadow-xl">
+                <p class="px-2 py-1 text-[10px] font-extrabold uppercase tracking-wider text-slate-400">Pilih Tipe Blok</p>
+                <button type="button" data-slash-type="p" class="slash-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left text-xs font-bold text-navy hover:bg-slate-100 cursor-pointer"><span>Paragraf</span><span class="font-mono text-[10px] text-slate-400">Teks</span></button>
+                <button type="button" data-slash-type="h2" class="slash-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left text-xs font-bold text-navy hover:bg-slate-100 cursor-pointer"><span>Judul Bagian</span><span class="font-mono text-[10px] text-slate-400">H2</span></button>
+                <button type="button" data-slash-type="blockquote" class="slash-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left text-xs font-bold text-navy hover:bg-slate-100 cursor-pointer"><span>Kutipan</span><span class="font-mono text-[10px] text-slate-400">Quote</span></button>
+                <button type="button" data-slash-type="li" class="slash-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left text-xs font-bold text-navy hover:bg-slate-100 cursor-pointer"><span>Daftar Poin</span><span class="font-mono text-[10px] text-slate-400">List</span></button>
+                <button type="button" data-slash-type="callout" class="slash-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left text-xs font-bold text-navy hover:bg-slate-100 cursor-pointer"><span>Catatan Sorotan</span><span class="font-mono text-[10px] text-slate-400">Callout</span></button>
+                <button type="button" data-slash-type="hr" class="slash-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left text-xs font-bold text-navy hover:bg-slate-100 cursor-pointer"><span>Garis Pemisah</span><span class="font-mono text-[10px] text-slate-400">Divider</span></button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </form>
+    </main>
+  </div>
+
+  <div id="form-toast" class="pointer-events-none fixed bottom-5 right-5 z-50 hidden rounded-xl bg-navy px-4 py-2.5 text-xs font-bold text-white shadow-lg"></div>
+
+  <script>
+    (function () {
+      const API_BASE = typeof window !== 'undefined' && (window.location.port === '4323' || window.location.port === '4321') ? 'http://localhost:3001/api' : (import.meta.env.PUBLIC_API_BASE || '/api');
+      const ADMIN_STORAGE_KEY = 'novella_admin_session';
+
+      function getAuthHeaders(): Record<string, string> {
+        const token = localStorage.getItem(ADMIN_STORAGE_KEY) || '';
+        const h: Record<string, string> = { 'Content-Type': 'application/json' };
+        if (token) { h['Authorization'] = `Bearer ${token}`; h['x-admin-token'] = token; }
+        return h;
+      }
+
+      function showToast(msg: string) {
+        const toast = document.getElementById('form-toast');
+        if (!toast) return;
+        toast.textContent = msg;
+        toast.classList.remove('hidden');
+        setTimeout(() => toast.classList.add('hidden'), 2500);
+      }
+
+      function updatePreview() {
+        const previewEl = document.getElementById('book-cover-preview');
+        if (!previewEl) return;
+        const coverUrl = (document.getElementById('book-cover-input') as HTMLInputElement | null)?.value.trim() || '';
+        const title = (document.getElementById('book-title-input') as HTMLInputElement | null)?.value.trim() || 'Judul Buku';
+        const author = (document.getElementById('book-author-input') as HTMLInputElement | null)?.value.trim() || 'Nama Penulis';
+        const category = (document.getElementById('book-category-input') as HTMLInputElement | null)?.value.trim() || 'NOVEL SASTRA';
+        const pages = (document.getElementById('book-pages-input') as HTMLInputElement | null)?.value.trim() || '120';
+
+        const removeCoverBtn = document.getElementById('btn-remove-cover');
+        if (removeCoverBtn) removeCoverBtn.classList.toggle('hidden', !coverUrl);
+        if (coverUrl) {
+          previewEl.innerHTML = `<img src="${coverUrl.replace(/"/g, '&quot;')}" alt="Pratinjau sampul" class="aspect-[3/4] w-full object-cover" />`;
+          return;
+        }
+        const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        previewEl.innerHTML = `
+          <div class="aspect-[3/4] w-full bg-gradient-to-br from-[#0D1C3D] via-navy to-slate-800 p-4 text-white flex flex-col justify-between">
+            <span class="text-[8px] font-extrabold text-orange uppercase tracking-wider truncate">${esc(category)}</span>
+            <p class="font-literary text-base font-bold italic leading-snug line-clamp-3">${esc(title)}</p>
+            <div class="flex items-center justify-between gap-1 text-[9px] text-slate-300 border-t border-white/15 pt-1.5">
+              <span class="truncate">${esc(author)}</span>
+              <span class="font-mono shrink-0">${esc(pages)}h</span>
+            </div>
+          </div>
+        `;
+      }
+
+      type BlockType = 'p' | 'h2' | 'blockquote' | 'li' | 'callout' | 'hr';
+      interface EditorBlock { type: BlockType; html: string; }
+
+      function sanitizeInlineHtml(rawHtml: string): string {
+        const doc = new DOMParser().parseFromString(rawHtml, 'text/html');
+        const allowed = new Set(['B', 'STRONG', 'I', 'EM', 'U', 'BR']);
+        const cleanNode = (node: Node): Node | null => {
+          if (node.nodeType === Node.TEXT_NODE) return node.cloneNode(true);
+          if (node.nodeType !== Node.ELEMENT_NODE) return null;
+          const el = node as HTMLElement;
+          if (!allowed.has(el.tagName)) {
+            const frag = document.createDocumentFragment();
+            el.childNodes.forEach((c) => { const n = cleanNode(c); if (n) frag.appendChild(n); });
+            return frag;
+          }
+          const out = document.createElement(el.tagName.toLowerCase());
+          el.childNodes.forEach((c) => { const n = cleanNode(c); if (n) out.appendChild(n); });
+          return out;
+        };
+        const box = document.createElement('div');
+        doc.body.childNodes.forEach((c) => { const n = cleanNode(c); if (n) box.appendChild(n); });
+        return box.innerHTML.trim();
+      }
+
+      function parseSynopsisToBlocks(raw: string): EditorBlock[] {
+        if (!raw || !raw.trim()) return [{ type: 'p', html: '' }];
+        if (!/<(p|div|h2|h3|ul|ol|li|blockquote|hr)\b/i.test(raw)) {
+          return raw.split(/\n+/).map((s) => s.trim()).filter(Boolean).map((s) => ({
+            type: 'p' as BlockType,
+            html: s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'),
+          }));
+        }
+        const doc = new DOMParser().parseFromString(raw, 'text/html');
+        const blocks: EditorBlock[] = [];
+        doc.body.childNodes.forEach((node) => {
+          if (node.nodeType === Node.TEXT_NODE && node.textContent?.trim()) {
+            blocks.push({ type: 'p', html: sanitizeInlineHtml(node.textContent.trim()) });
+            return;
+          }
+          if (node.nodeType !== Node.ELEMENT_NODE) return;
+          const el = node as HTMLElement;
+          if (el.tagName === 'HR') blocks.push({ type: 'hr', html: '' });
+          else if (el.tagName === 'H2' || el.tagName === 'H3') blocks.push({ type: 'h2', html: sanitizeInlineHtml(el.innerHTML) });
+          else if (el.tagName === 'BLOCKQUOTE') blocks.push({ type: 'blockquote', html: sanitizeInlineHtml(el.innerHTML) });
+          else if (el.tagName === 'UL' || el.tagName === 'OL') {
+            el.querySelectorAll('li').forEach((li) => blocks.push({ type: 'li', html: sanitizeInlineHtml(li.innerHTML) }));
+          } else if (el.getAttribute('data-block') === 'callout') {
+            blocks.push({ type: 'callout', html: sanitizeInlineHtml(el.innerHTML) });
+          } else {
+            blocks.push({ type: 'p', html: sanitizeInlineHtml(el.innerHTML) });
+          }
+        });
+        return blocks.length > 0 ? blocks : [{ type: 'p', html: '' }];
+      }
+
+      function serializeBlocksToHtml(blocks: EditorBlock[]): string | undefined {
+        const parts: string[] = [];
+        let listOpen = false;
+        const closeList = () => { if (listOpen) { parts.push('</ul>'); listOpen = false; } };
+
+        for (const b of blocks) {
+          if (b.type === 'hr') { closeList(); parts.push('<hr>'); continue; }
+          const clean = sanitizeInlineHtml(b.html);
+          if (!clean) continue;
+          if (b.type === 'li') {
+            if (!listOpen) { parts.push('<ul>'); listOpen = true; }
+            parts.push(`<li>${clean}</li>`);
+          } else {
+            closeList();
+            if (b.type === 'h2') parts.push(`<h2>${clean}</h2>`);
+            else if (b.type === 'blockquote') parts.push(`<blockquote>${clean}</blockquote>`);
+            else if (b.type === 'callout') parts.push(`<div data-block="callout">${clean}</div>`);
+            else parts.push(`<p>${clean}</p>`);
+          }
+        }
+        closeList();
+        return parts.length > 0 ? parts.join('') : undefined;
+      }
+
+      document.addEventListener('DOMContentLoaded', async () => {
+        const loadingEl = document.getElementById('form-loading');
+        const workspaceEl = document.getElementById('form-workspace');
+        const listEl = document.getElementById('notion-blocks-list') as HTMLElement;
+        const canvasEl = document.getElementById('notion-canvas') as HTMLElement;
+        const bubbleToolbar = document.getElementById('bubble-toolbar') as HTMLElement;
+        const slashMenu = document.getElementById('slash-menu') as HTMLElement;
+        const slashOpts = Array.from(slashMenu.querySelectorAll('.slash-opt')) as HTMLButtonElement[];
+        let blocks: EditorBlock[] = [{ type: 'p', html: '' }];
+        let slashTargetIdx: number | null = null;
+        let slashActiveIdx = 0;
+        let bubbleBlockIdx: number | null = null;
+
+        const updateBubbleToolbar = () => {
+          const sel = window.getSelection();
+          if (!sel || sel.isCollapsed || !sel.toString().trim() || sel.rangeCount === 0) {
+            bubbleToolbar.classList.add('hidden');
+            return;
+          }
+          const anchorNode = sel.anchorNode;
+          const editable = (anchorNode instanceof Element ? anchorNode : anchorNode?.parentElement)?.closest('[data-block-editable]') as HTMLElement | null;
+          if (!editable || !listEl.contains(editable)) {
+            bubbleToolbar.classList.add('hidden');
+            return;
+          }
+
+          bubbleBlockIdx = Number(editable.getAttribute('data-block-idx'));
+          const currentType = blocks[bubbleBlockIdx]?.type || 'p';
+          bubbleToolbar.querySelectorAll('.bubble-type-btn').forEach((btn) => {
+            const active = btn.getAttribute('data-bubble-type') === currentType;
+            btn.classList.toggle('bg-orange', active);
+            btn.classList.toggle('text-white', active);
+          });
+
+          const rangeRect = sel.getRangeAt(0).getBoundingClientRect();
+          const canvasRect = canvasEl.getBoundingClientRect();
+          const top = Math.max(4, rangeRect.top - canvasRect.top - 44);
+          const left = Math.max(8, Math.min(rangeRect.left - canvasRect.left, canvasRect.width - 340));
+          bubbleToolbar.style.top = `${top}px`;
+          bubbleToolbar.style.left = `${left}px`;
+          bubbleToolbar.classList.remove('hidden');
+        };
+
+        const highlightSlashOption = () => {
+          slashOpts.forEach((opt, i) => {
+            opt.classList.toggle('bg-slate-100', i === slashActiveIdx);
+          });
+        };
+
+        const applySlashType = (type: BlockType) => {
+          if (slashTargetIdx === null) return;
+          syncBlockDomValues();
+          blocks[slashTargetIdx] = { type, html: '' };
+          const target = slashTargetIdx;
+          slashTargetIdx = null;
+          slashMenu.classList.add('hidden');
+          renderBlocks(target);
+        };
+
+        const blockMeta: Record<BlockType, { placeholder: string; cls: string; prefix?: string }> = {
+          p: { placeholder: 'Tulis sinopsis, tempel teks, atau ketik / (atau ##, >, -)...', cls: 'font-literary text-sm leading-relaxed text-navy' },
+          h2: { placeholder: 'Judul bagian...', cls: 'text-base font-extrabold tracking-tight text-navy' },
+          blockquote: { placeholder: 'Tulis kutipan sastra...', cls: 'border-l-2 border-orange pl-3 font-literary text-sm italic text-slate-700' },
+          li: { placeholder: 'Item daftar...', cls: 'font-literary text-sm text-navy', prefix: '•' },
+          callout: { placeholder: 'Catatan sorotan redaksi...', cls: 'rounded-lg bg-orange/10 px-3 py-2 text-xs font-medium text-navy' },
+          hr: { placeholder: '', cls: '' },
+        };
+
+        const syncBlockDomValues = () => {
+          listEl.querySelectorAll('[data-block-editable]').forEach((el) => {
+            const idx = Number(el.getAttribute('data-block-idx'));
+            if (blocks[idx]) blocks[idx].html = (el as HTMLElement).innerHTML;
+          });
+        };
+
+        const focusBlock = (idx: number) => {
+          const target = listEl.querySelector(`[data-block-editable][data-block-idx="${idx}"]`) as HTMLElement | null;
+          if (!target) return;
+          target.focus();
+          const range = document.createRange();
+          range.selectNodeContents(target);
+          range.collapse(false);
+          const sel = window.getSelection();
+          sel?.removeAllRanges();
+          sel?.addRange(range);
+        };
+
+        const renderBlocks = (focusIdx?: number) => {
+          slashMenu.classList.add('hidden');
+          listEl.innerHTML = blocks.map((b, idx) => {
+            const meta = blockMeta[b.type];
+            const inner = b.type === 'hr'
+              ? `<div class="flex-1 py-2.5"><hr class="border-slate-200" /></div>`
+              : `<div class="flex-1 flex items-start gap-2 min-w-0">
+                  ${meta.prefix ? `<span class="mt-0.5 text-orange font-bold select-none">${meta.prefix}</span>` : ''}
+                  <div
+                    contenteditable="true"
+                    spellcheck="false"
+                    data-block-editable="true"
+                    data-block-idx="${idx}"
+                    data-placeholder="${meta.placeholder}"
+                    class="w-full min-w-0 py-1 focus:outline-none empty:before:content-[attr(data-placeholder)] empty:before:text-slate-400 ${meta.cls}"
+                  >${b.html}</div>
+                </div>`;
+
+            return `
+              <div class="group flex items-start gap-1.5 rounded-lg px-1 py-0.5 hover:bg-slate-50/80 transition-colors" data-row-idx="${idx}">
+                <div class="flex items-center gap-0.5 pt-1 opacity-40 group-hover:opacity-100 transition-opacity shrink-0">
+                  <button type="button" data-move-up="${idx}" title="Geser naik" class="h-5 w-5 rounded text-[10px] font-bold text-slate-400 hover:bg-slate-200 hover:text-navy cursor-pointer">&uarr;</button>
+                  <button type="button" data-move-down="${idx}" title="Geser turun" class="h-5 w-5 rounded text-[10px] font-bold text-slate-400 hover:bg-slate-200 hover:text-navy cursor-pointer">&darr;</button>
+                </div>
+                ${inner}
+                <button type="button" data-del-block="${idx}" title="Hapus blok" class="mt-1 h-5 w-5 rounded text-xs font-bold text-slate-300 opacity-0 group-hover:opacity-100 hover:bg-rose-50 hover:text-rose-600 cursor-pointer shrink-0">&times;</button>
+              </div>
+            `;
+          }).join('');
+
+          listEl.querySelectorAll('[data-block-editable]').forEach((el) => {
+            const idx = Number(el.getAttribute('data-block-idx'));
+            el.addEventListener('input', () => {
+              // Strip stray <br> when empty so CSS placeholder stays visible
+              if (!(el.textContent || '').trim() && el.innerHTML.trim() === '<br>') {
+                el.innerHTML = '';
+              }
+              const rawText = el.textContent || '';
+              const txt = rawText.trim();
+              blocks[idx].html = (el as HTMLElement).innerHTML;
+
+              // Markdown-style instant block shortcuts
+              if (blocks[idx].type === 'p') {
+                if (rawText === '## ' || rawText === '# ') { blocks[idx] = { type: 'h2', html: '' }; renderBlocks(idx); return; }
+                if (rawText === '> ') { blocks[idx] = { type: 'blockquote', html: '' }; renderBlocks(idx); return; }
+                if (rawText === '- ' || rawText === '* ') { blocks[idx] = { type: 'li', html: '' }; renderBlocks(idx); return; }
+                if (txt === '---') {
+                  blocks[idx] = { type: 'hr', html: '' };
+                  blocks.splice(idx + 1, 0, { type: 'p', html: '' });
+                  renderBlocks(idx + 1);
+                  return;
+                }
+              }
+
+              if (txt === '/') {
+                slashTargetIdx = idx;
+                slashActiveIdx = 0;
+                highlightSlashOption();
+                const row = el.closest('[data-row-idx]') as HTMLElement | null;
+                slashMenu.style.top = `${(row?.offsetTop || 0) + 32}px`;
+                slashMenu.classList.remove('hidden');
+              } else if (!slashMenu.classList.contains('hidden')) {
+                slashMenu.classList.add('hidden');
+              }
+            });
+
+            // Effortless multi-paragraph paste
+            el.addEventListener('paste', (e: any) => {
+              const plain = e.clipboardData?.getData('text/plain') || '';
+              if (!plain.includes('\n')) return;
+              e.preventDefault();
+              const lines = plain.split(/\n+/).map((l: string) => l.trim()).filter(Boolean);
+              if (lines.length === 0) return;
+              const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+              syncBlockDomValues();
+              const pastedBlocks = lines.map((l: string) => ({ type: 'p' as BlockType, html: esc(l) }));
+              if (!(blocks[idx].html || '').trim()) {
+                blocks.splice(idx, 1, ...pastedBlocks);
+              } else {
+                blocks.splice(idx + 1, 0, ...pastedBlocks);
+              }
+              renderBlocks(idx + pastedBlocks.length - 1);
+            });
+
+            el.addEventListener('keydown', (e: any) => {
+              if (!slashMenu.classList.contains('hidden')) {
+                if (e.key === 'ArrowDown') {
+                  e.preventDefault();
+                  slashActiveIdx = (slashActiveIdx + 1) % slashOpts.length;
+                  highlightSlashOption();
+                  return;
+                }
+                if (e.key === 'ArrowUp') {
+                  e.preventDefault();
+                  slashActiveIdx = (slashActiveIdx - 1 + slashOpts.length) % slashOpts.length;
+                  highlightSlashOption();
+                  return;
+                }
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  const chosen = slashOpts[slashActiveIdx]?.getAttribute('data-slash-type') as BlockType | null;
+                  if (chosen) applySlashType(chosen);
+                  return;
+                }
+                if (e.key === 'Escape') {
+                  e.preventDefault();
+                  slashMenu.classList.add('hidden');
+                  return;
+                }
+              }
+
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                syncBlockDomValues();
+                const nextType: BlockType = blocks[idx].type === 'li' ? 'li' : 'p';
+                blocks.splice(idx + 1, 0, { type: nextType, html: '' });
+                renderBlocks(idx + 1);
+              } else if (e.key === 'Backspace' && !(el.textContent || '').trim()) {
+                if (blocks[idx].type !== 'p') {
+                  e.preventDefault();
+                  blocks[idx].type = 'p';
+                  renderBlocks(idx);
+                } else if (blocks.length > 1) {
+                  e.preventDefault();
+                  syncBlockDomValues();
+                  blocks.splice(idx, 1);
+                  renderBlocks(Math.max(0, idx - 1));
+                }
+              } else if (e.key === 'ArrowUp' && idx > 0 && !(el.textContent || '').trim()) {
+                e.preventDefault();
+                focusBlock(idx - 1);
+              } else if (e.key === 'ArrowDown' && idx < blocks.length - 1 && !(el.textContent || '').trim()) {
+                e.preventDefault();
+                focusBlock(idx + 1);
+              }
+            });
+          });
+
+          listEl.querySelectorAll('[data-move-up]').forEach((btn) => btn.addEventListener('click', () => {
+            const idx = Number(btn.getAttribute('data-move-up'));
+            if (idx <= 0) return;
+            syncBlockDomValues();
+            [blocks[idx - 1], blocks[idx]] = [blocks[idx], blocks[idx - 1]];
+            renderBlocks(idx - 1);
+          }));
+          listEl.querySelectorAll('[data-move-down]').forEach((btn) => btn.addEventListener('click', () => {
+            const idx = Number(btn.getAttribute('data-move-down'));
+            if (idx >= blocks.length - 1) return;
+            syncBlockDomValues();
+            [blocks[idx], blocks[idx + 1]] = [blocks[idx + 1], blocks[idx]];
+            renderBlocks(idx + 1);
+          }));
+          listEl.querySelectorAll('[data-del-block]').forEach((btn) => btn.addEventListener('click', () => {
+            const idx = Number(btn.getAttribute('data-del-block'));
+            syncBlockDomValues();
+            if (blocks.length === 1) { blocks[0] = { type: 'p', html: '' }; }
+            else { blocks.splice(idx, 1); }
+            renderBlocks(Math.max(0, idx - 1));
+          }));
+
+          if (focusIdx !== undefined) focusBlock(focusIdx);
+        };
+
+        document.addEventListener('selectionchange', updateBubbleToolbar);
+
+        bubbleToolbar.querySelectorAll('.bubble-type-btn').forEach((btn) => {
+          btn.addEventListener('mousedown', (e) => e.preventDefault());
+          btn.addEventListener('click', () => {
+            if (bubbleBlockIdx === null || !blocks[bubbleBlockIdx]) return;
+            syncBlockDomValues();
+            blocks[bubbleBlockIdx].type = (btn.getAttribute('data-bubble-type') || 'p') as BlockType;
+            const target = bubbleBlockIdx;
+            bubbleToolbar.classList.add('hidden');
+            renderBlocks(target);
+          });
+        });
+
+        bubbleToolbar.querySelectorAll('.bubble-fmt-btn').forEach((btn) => {
+          btn.addEventListener('mousedown', (e) => e.preventDefault());
+          btn.addEventListener('click', () => {
+            const cmd = btn.getAttribute('data-bubble-fmt');
+            if (cmd) document.execCommand(cmd, false);
+            syncBlockDomValues();
+          });
+        });
+
+        canvasEl.addEventListener('click', (e) => {
+          if (e.target === canvasEl || e.target === listEl) {
+            focusBlock(blocks.length - 1);
+          }
+        });
+
+        document.querySelectorAll('.slash-opt').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const type = (btn.getAttribute('data-slash-type') || 'p') as BlockType;
+            applySlashType(type);
+          });
+        });
+
+        renderBlocks();
+
+        try {
+          const authRes = await fetch(`${API_BASE}/admin/verify`, { headers: getAuthHeaders(), credentials: 'include' });
+          if (!authRes.ok) { window.location.replace('/'); return; }
+          const authData = await authRes.json();
+          if (!authData.authenticated) { window.location.replace('/'); return; }
+        } catch {
+          window.location.replace('/');
+          return;
+        }
+
+        const editId = new URLSearchParams(window.location.search).get('id');
+        if (editId) {
+          try {
+            const res = await fetch(`${API_BASE}/admin/books`, { headers: getAuthHeaders() });
+            if (res.ok) {
+              const books = await res.json();
+              const book = books.find((b: any) => String(b.id) === editId);
+              if (book) {
+                (document.getElementById('book-id-input') as HTMLInputElement).value = String(book.id);
+                (document.getElementById('book-title-input') as HTMLInputElement).value = book.title || '';
+                (document.getElementById('book-author-input') as HTMLInputElement).value = book.authorName || '';
+                (document.getElementById('book-category-input') as HTMLInputElement).value = book.category || '';
+                (document.getElementById('book-pages-input') as HTMLInputElement).value = String(book.pages || 100);
+                (document.getElementById('book-size-input') as HTMLSelectElement).value = book.bookSize || 'A5';
+                (document.getElementById('book-isbn-input') as HTMLInputElement).value = book.isbn || '';
+                (document.getElementById('book-year-input') as HTMLInputElement).value = book.publishedYear ? String(book.publishedYear) : '';
+                (document.getElementById('book-price-input') as HTMLInputElement).value = book.price ? String(book.price) : '';
+                (document.getElementById('book-cover-input') as HTMLInputElement).value = book.coverUrl || '';
+                (document.getElementById('book-buy-input') as HTMLInputElement).value = book.buyUrl || '';
+                (document.getElementById('book-author-bio-input') as HTMLTextAreaElement).value = book.authorBio || '';
+                blocks = parseSynopsisToBlocks(book.synopsis || '');
+                renderBlocks();
+                (document.getElementById('book-published-input') as HTMLInputElement).checked = Boolean(book.isPublished);
+                const titleEl = document.getElementById('book-form-title');
+                if (titleEl) titleEl.textContent = `Edit Buku: ${book.title}`;
+              }
+            }
+          } catch {}
+        }
+
+        ['book-title-input', 'book-author-input', 'book-category-input', 'book-pages-input', 'book-cover-input'].forEach((id) => {
+          document.getElementById(id)?.addEventListener('input', updatePreview);
+        });
+        updatePreview();
+
+        // Cover upload to ImageKit + GDriveS3 backup (click or drag-and-drop on cover)
+        const coverFileInput = document.getElementById('book-cover-file') as HTMLInputElement | null;
+        const coverDropZone = document.getElementById('btn-upload-cover') as HTMLElement | null;
+        const coverUploadLabel = document.getElementById('btn-upload-cover-label') as HTMLElement | null;
+        const coverUploadHint = document.getElementById('cover-upload-hint') as HTMLElement | null;
+
+        const uploadCoverFile = async (file: File) => {
+          if (coverUploadLabel) coverUploadLabel.textContent = 'Mengunggah...';
+          if (coverUploadHint) coverUploadHint.textContent = 'Mengunggah sampul...';
+
+          try {
+            const fd = new FormData();
+            fd.append('file', file);
+            const headers: Record<string, string> = {};
+            const token = localStorage.getItem(ADMIN_STORAGE_KEY) || '';
+            if (token) { headers['Authorization'] = `Bearer ${token}`; headers['x-admin-token'] = token; }
+
+            const res = await fetch(`${API_BASE}/admin/books/cover`, {
+              method: 'POST',
+              headers,
+              credentials: 'include',
+              body: fd,
+            });
+            const data = await res.json();
+            if (res.ok && data?.url) {
+              (document.getElementById('book-cover-input') as HTMLInputElement).value = data.url;
+              updatePreview();
+              if (coverUploadHint) coverUploadHint.textContent = 'Sampul terpasang';
+              showToast('Sampul berhasil diunggah!');
+            } else {
+              if (coverUploadHint) coverUploadHint.textContent = 'Klik sampul untuk unggah';
+              showToast(data?.error || 'Gagal mengunggah sampul.');
+            }
+          } catch {
+            if (coverUploadHint) coverUploadHint.textContent = 'Klik sampul untuk unggah';
+            showToast('Gagal mengunggah sampul.');
+          } finally {
+            if (coverUploadLabel) coverUploadLabel.textContent = 'Unggah Sampul';
+            if (coverFileInput) coverFileInput.value = '';
+          }
+        };
+
+        coverDropZone?.addEventListener('click', () => coverFileInput?.click());
+        coverDropZone?.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); coverFileInput?.click(); }
+        });
+        coverDropZone?.addEventListener('dragover', (e) => e.preventDefault());
+        coverDropZone?.addEventListener('drop', (e) => {
+          e.preventDefault();
+          const f = e.dataTransfer?.files?.[0];
+          if (f) uploadCoverFile(f);
+        });
+        coverFileInput?.addEventListener('change', () => {
+          const f = coverFileInput.files?.[0];
+          if (f) uploadCoverFile(f);
+        });
+        document.getElementById('btn-remove-cover')?.addEventListener('click', () => {
+          (document.getElementById('book-cover-input') as HTMLInputElement).value = '';
+          if (coverUploadHint) coverUploadHint.textContent = 'Klik sampul untuk unggah';
+          updatePreview();
+        });
+
+        loadingEl?.classList.add('hidden');
+        workspaceEl?.classList.remove('hidden');
+
+        document.getElementById('book-editor-form')?.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const idVal = (document.getElementById('book-id-input') as HTMLInputElement).value.trim();
+          const yearRaw = (document.getElementById('book-year-input') as HTMLInputElement).value.trim();
+          const priceRaw = (document.getElementById('book-price-input') as HTMLInputElement).value.trim();
+          const payload = {
+            title: (document.getElementById('book-title-input') as HTMLInputElement).value.trim(),
+            authorName: (document.getElementById('book-author-input') as HTMLInputElement).value.trim(),
+            category: (document.getElementById('book-category-input') as HTMLInputElement).value.trim(),
+            pages: Number((document.getElementById('book-pages-input') as HTMLInputElement).value),
+            bookSize: (document.getElementById('book-size-input') as HTMLSelectElement).value.trim(),
+            isbn: (document.getElementById('book-isbn-input') as HTMLInputElement).value.trim() || undefined,
+            publishedYear: yearRaw ? Number(yearRaw) : undefined,
+            price: priceRaw ? Number(priceRaw) : undefined,
+            coverUrl: (document.getElementById('book-cover-input') as HTMLInputElement).value.trim() || undefined,
+            buyUrl: (document.getElementById('book-buy-input') as HTMLInputElement).value.trim() || undefined,
+            authorBio: (document.getElementById('book-author-bio-input') as HTMLTextAreaElement).value.trim() || undefined,
+            synopsis: (() => { syncBlockDomValues(); return serializeBlocksToHtml(blocks); })(),
+            isPublished: (document.getElementById('book-published-input') as HTMLInputElement).checked,
+          };
+
+          const url = idVal ? `${API_BASE}/admin/books/${idVal}` : `${API_BASE}/admin/books`;
+          const method = idVal ? 'PATCH' : 'POST';
+          const res = await fetch(url, { method, headers: getAuthHeaders(), body: JSON.stringify(payload) });
+          if (res.ok) {
+            window.location.href = '/?tab=books';
+          } else {
+            showToast('Gagal menyimpan data buku.');
+          }
+        });
+      });
+    })();
+  </script>
+</PanelLayout>

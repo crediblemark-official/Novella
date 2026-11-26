@@ -37,7 +37,11 @@ try {
 
 const isProduction = process.env.NODE_ENV === 'production';
 const frontendDistDir = process.env.FRONTEND_DIST_DIR || join(import.meta.dir, '../../frontend/dist');
+const katalogDistDir = process.env.KATALOG_DIST_DIR || join(import.meta.dir, '../../katalog/dist');
+const panelDistDir = process.env.PANEL_DIST_DIR || join(import.meta.dir, '../../panel/dist');
 const hasStaticFrontend = existsSync(frontendDistDir);
+const hasStaticKatalog = existsSync(katalogDistDir);
+const hasStaticPanel = existsSync(panelDistDir);
 
 export const app = new Elysia()
   .use(
@@ -112,8 +116,39 @@ export const app = new Elysia()
   .use(settingsModule)
   .use(showcaseModule);
 
-// In production, serve built frontend static files.
+// In production, serve built frontend static files (and route buku.* / panel.* subdomains if present).
 // In dev/test, fallback '/' returns API status for backward test compatibility.
+if ((hasStaticKatalog || hasStaticPanel) && isProduction) {
+  app.onRequest(async ({ request }) => {
+    const rawHost = request.headers.get('x-forwarded-host') || request.headers.get('host') || '';
+    const host = (rawHost.split(',')[0] || '').trim().toLowerCase();
+    const targetDist =
+      host.startsWith('buku.') && hasStaticKatalog
+        ? katalogDistDir
+        : host.startsWith('panel.') && hasStaticPanel
+          ? panelDistDir
+          : null;
+    if (!targetDist) return;
+
+    const url = new URL(request.url);
+    if (url.pathname.startsWith('/api') || url.pathname.startsWith('/swagger')) return;
+
+    const cleanPath = url.pathname.replace(/^\/+/, '');
+    const candidates = cleanPath
+      ? [join(targetDist, cleanPath), join(targetDist, cleanPath, 'index.html')]
+      : [join(targetDist, 'index.html')];
+
+    for (const filePath of candidates) {
+      if (filePath.startsWith(targetDist) && existsSync(filePath)) {
+        const file = Bun.file(filePath);
+        if ((await file.stat()).isFile()) {
+          return new Response(file);
+        }
+      }
+    }
+  });
+}
+
 if (hasStaticFrontend && isProduction) {
   app.use(
     await staticPlugin({

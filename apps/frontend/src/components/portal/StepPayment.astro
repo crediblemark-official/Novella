@@ -85,6 +85,21 @@
       <div id="payment-bank-accounts" class="divide-y divide-slate-100 border-y border-slate-200/80">
         <div class="text-center text-xs text-slate-400 py-4">Memuat data rekening...</div>
       </div>
+
+      <!-- QRIS Statis (Ditampilkan jika diaktifkan di Pengaturan Admin) -->
+      <div id="payment-qris-box" class="hidden rounded-xl border border-slate-200 bg-slate-50/70 p-4 text-center space-y-2.5">
+        <div class="flex items-center justify-between text-left">
+          <div>
+            <span class="inline-block rounded bg-navy px-2 py-0.5 text-[10px] font-extrabold tracking-wider text-white">QRIS STATIS</span>
+            <p id="payment-qris-merchant" class="mt-1 text-xs font-bold text-navy"></p>
+          </div>
+          <a id="payment-qris-download" href="#" target="_blank" rel="noopener noreferrer" download class="rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-[11px] font-bold text-navy hover:border-navy">Unduh QRIS</a>
+        </div>
+        <div class="mx-auto w-48 overflow-hidden rounded-xl border border-slate-200 bg-white p-2">
+          <img id="payment-qris-img" src="" alt="QRIS Pembayaran Novella.id" class="w-full h-auto object-contain" />
+        </div>
+        <p class="text-[10px] text-slate-500">Pindai melalui aplikasi m-Banking atau e-Wallet (GoPay, OVO, DANA, ShopeePay).</p>
+      </div>
     </div>
   </div>
 </div>

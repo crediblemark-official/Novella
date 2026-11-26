@@ -1,9 +1,18 @@
 import { formatRp, syncTopScrollbar } from './admin-table';
+import { openConfirmDialog } from './admin-dialogs';
 
-const API_BASE = typeof window !== 'undefined' && window.location.port === '4321' ? 'http://localhost:3001/api' : '/api';
+const API_BASE = typeof window !== 'undefined' && (window.location.port === '4323' || window.location.port === '4321') ? 'http://localhost:3001/api' : (import.meta.env.PUBLIC_API_BASE || '/api');
 const ADMIN_STORAGE_KEY = 'novella_admin_session';
 let allAuthors: any[] = [];
-let authorSearchBound = false;
+let authorEventsBound = false;
+
+function showAuthorsToast(msg: string): void {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+  toast.textContent = msg;
+  toast.classList.remove('hidden');
+  setTimeout(() => toast.classList.add('hidden'), 3000);
+}
 
 function getAuthHeaders(): Record<string, string> {
   const token = localStorage.getItem(ADMIN_STORAGE_KEY) || '';
@@ -47,7 +56,10 @@ function renderAuthorsTable(query = ''): void {
           <span class="font-mono text-[11px] font-bold text-emerald-700 ml-1">(${formatRp(a.totalSpend)})</span>
         </td>
         <td class="px-4 py-3 sm:pr-6 text-right align-middle whitespace-nowrap">
-          <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition-colors" title="Chat WhatsApp Penulis" aria-label="Chat WhatsApp Penulis"><svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2z"/></svg></a>
+          <div class="inline-flex items-center justify-end gap-1.5">
+            <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition-colors" title="Chat WhatsApp Penulis" aria-label="Chat WhatsApp Penulis"><svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2z"/></svg></a>
+            <button type="button" data-delete-author-id="${a.id}" class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-rose-200 bg-white text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer" title="Hapus Data Penulis" aria-label="Hapus Data Penulis"><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></button>
+          </div>
         </td>
       </tr>`;
   }).join('');
@@ -55,10 +67,33 @@ function renderAuthorsTable(query = ''): void {
 }
 
 export async function fetchAdminAuthors(): Promise<void> {
-  if (!authorSearchBound) {
-    authorSearchBound = true;
+  if (!authorEventsBound) {
+    authorEventsBound = true;
     document.getElementById('authors-search-input')?.addEventListener('input', (e) => {
       renderAuthorsTable((e.target as HTMLInputElement).value);
+    });
+    document.getElementById('authors-tbody')?.addEventListener('click', async (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-delete-author-id]');
+      const id = btn?.getAttribute('data-delete-author-id');
+      if (!id) return;
+      const author = allAuthors.find((a) => a.id === id);
+      const label = author?.name || author?.email || 'penulis ini';
+      if (!(await openConfirmDialog('Hapus Data Penulis', `Hapus akun penulis "${label}" dari daftar?`, 'Hapus', true))) return;
+      try {
+        const res = await fetch(`${API_BASE}/admin/authors/${encodeURIComponent(id)}`, {
+          method: 'DELETE',
+          headers: getAuthHeaders(),
+        });
+        if (res.ok) {
+          allAuthors = allAuthors.filter((a) => a.id !== id);
+          renderAuthorsTable((document.getElementById('authors-search-input') as HTMLInputElement)?.value || '');
+          showAuthorsToast('Data penulis dihapus.');
+        } else {
+          showAuthorsToast('Gagal menghapus data penulis.');
+        }
+      } catch {
+        showAuthorsToast('Gagal terhubung ke server.');
+      }
     });
   }
   try {

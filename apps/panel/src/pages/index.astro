@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import PanelLayout from '../layouts/PanelLayout.astro';
 import AdminAuthGuard from '../components/admin/AdminAuthGuard.astro';
 import AdminSidebar from '../components/admin/AdminSidebar.astro';
 import AdminOrdersPanel from '../components/admin/AdminOrdersPanel.astro';
@@ -10,7 +10,7 @@ import AdminAuthorsPanel from '../components/admin/AdminAuthorsPanel.astro';
 import AdminDialogs from '../components/admin/AdminDialogs.astro';
 ---
 
-<BaseLayout title="Redaksi Workspace — Novella.id" activeNav="admin" showNavbar={false} showFooter={false}>
+<PanelLayout title="Redaksi Workspace — panel.novella.id">
   <!-- Auth Checking Spinner -->
   <div id="admin-loading-screen" class="flex min-h-screen items-center justify-center bg-slate-50 px-4">
     <div class="text-center">
@@ -90,4 +90,4 @@ import AdminDialogs from '../components/admin/AdminDialogs.astro';
     import { initAdminController } from '../scripts/admin-controller';
     initAdminController();
   </script>
-</BaseLayout>
+</PanelLayout>

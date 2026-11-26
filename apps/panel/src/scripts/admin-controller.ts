@@ -4,7 +4,7 @@ import { fetchAdminBooks, deleteAdminBook, fetchAdminTestimonials, deleteAdminTe
 import { fetchAdminAuthors, exportOrdersCsv } from './admin-authors';
 import { bindAdminDialogEvents, openTrackingDialog, openPricingDialog, openConfirmDialog } from './admin-dialogs';
 
-const API_BASE = typeof window !== 'undefined' && window.location.port === '4321' ? 'http://localhost:3001/api' : '/api';
+const API_BASE = typeof window !== 'undefined' && (window.location.port === '4323' || window.location.port === '4321') ? 'http://localhost:3001/api' : (import.meta.env.PUBLIC_API_BASE || '/api');
 const ADMIN_STORAGE_KEY = 'novella_admin_session';
 
 let allOrders: any[] = [];
@@ -155,8 +155,10 @@ export function initAdminController() {
   document.getElementById('btn-close-drawer')?.addEventListener('click', closeDrawer);
   document.getElementById('admin-drawer-backdrop')?.addEventListener('click', closeDrawer);
 
-  mainTabs.forEach((tab) => tab.addEventListener('click', () => {
-    const target = tab.getAttribute('data-main-tab');
+  const activateMainTab = (target: string | null) => {
+    if (!target) return;
+    const matched = Array.from(mainTabs).find((t) => t.getAttribute('data-main-tab') === target);
+    if (!matched) return;
     mainTabs.forEach((t) => {
       const on = t.getAttribute('data-main-tab') === target;
       ['bg-navy', 'text-white', 'font-bold'].forEach((c) => t.classList.toggle(c, on));
@@ -164,9 +166,14 @@ export function initAdminController() {
     });
     panels.forEach((p) => p.classList.add('hidden'));
     document.getElementById(`panel-${target}`)?.classList.remove('hidden');
-    if (topTitle) topTitle.textContent = tab.getAttribute('data-tab-label') || 'Pesanan';
+    if (topTitle) topTitle.textContent = matched.getAttribute('data-tab-label') || 'Pesanan';
     closeDrawer();
-  }));
+  };
+
+  mainTabs.forEach((tab) => tab.addEventListener('click', () => activateMainTab(tab.getAttribute('data-main-tab'))));
+
+  const initialTab = new URLSearchParams(window.location.search).get('tab');
+  if (initialTab) activateMainTab(initialTab);
 
   // Login & Logout
   document.getElementById('admin-login-form')?.addEventListener('submit', (e) => {

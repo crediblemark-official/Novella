@@ -139,8 +139,8 @@ export function resolvePaperRate(paper: string = 'bp57', printType: 'BW' | 'FC',
 }
 
 export function calculatePrice(params: PricingParams): PricingResult {
-  const pages = Math.max(24, Math.min(600, params.pages || 100));
-  const copies = Math.max(5, Math.min(1000, params.copies || 5));
+  const pages = Math.max(24, Math.min(600, Math.round(params.pages || 100)));
+  const copies = Math.max(5, Math.min(1000, Math.round(params.copies || 5)));
   const sizeKey = params.bookSize || 'A5';
   const cat = (sizeKey === 'B5' || sizeKey === 'A4') ? 'B5' : (sizeKey === 'A6' || sizeKey === 'A6 Saku') ? 'A6' : 'A5';
   const sizeConfig = BOOK_SIZES[sizeKey] || BOOK_SIZES['A5']!;
@@ -164,12 +164,12 @@ export function calculatePrice(params: PricingParams): PricingResult {
   }
 
   const addonsCost = addonItems.reduce((acc, curr) => acc + curr.price, 0);
-  const totalPrice = Math.max(BASE_PRICE, totalPrintCost + prepressServiceFee + addonsCost);
+  const totalPrice = Math.max(BASE_PRICE, totalPrintCost + prepressServiceFee) + addonsCost;
   const originalPrice = totalPrintCost + originalPrepressFee + addonsCost;
   const pricePerBook = Math.round(totalPrice / copies);
 
   const extraCopies = Math.max(0, copies - BASE_COPIES) * costPerBook;
-  const extraPages = copies * Math.max(0, pages - BASE_PAGES) * pageRate;
+  const extraPages = Math.min(copies, BASE_COPIES) * Math.max(0, pages - BASE_PAGES) * pageRate;
   const sizeCost = Math.max(0, (pageRate - 250) * pages * copies) + (isHardCover ? hardCoverRate * copies : 0);
 
   const suggestions = findPriceSuggestions(
@@ -239,7 +239,7 @@ function findPriceSuggestions(
   let bestCopyScore = -Infinity;
 
   for (const c of candidates) {
-    const candTotal = Math.max(BASE_PRICE, (c * costPerBook) + prepressServiceFee + addonsCost);
+    const candTotal = Math.max(BASE_PRICE, (c * costPerBook) + prepressServiceFee) + addonsCost;
     if (candTotal % 50_000 === 0) {
       const isPreset = presetChips.includes(c);
       const isMultipleOf100k = candTotal % 100_000 === 0;

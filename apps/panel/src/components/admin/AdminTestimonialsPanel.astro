@@ -1,0 +1,106 @@
+---
+/**
+ * AdminTestimonialsPanel: Full-Width Edge-to-Edge Testimoni Workspace
+ */
+---
+
+<div id="panel-testimonials" class="admin-panel hidden w-full">
+  <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-slate-50/60 px-4 py-3 sm:px-6">
+    <div class="flex flex-wrap items-center gap-2.5">
+      <span id="testimonials-count" class="text-xs font-bold text-slate-600">Memuat testimoni...</span>
+      <div id="testi-filter-pills" class="flex items-center gap-1.5">
+        <button type="button" data-testi-filter="ALL" class="testi-filter-pill rounded-full bg-navy px-2.5 py-1 text-[11px] font-bold text-white cursor-pointer transition-colors">Semua</button>
+        <button type="button" data-testi-filter="PENDING" class="testi-filter-pill rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-bold text-slate-600 hover:border-navy hover:text-navy cursor-pointer transition-colors">Menunggu</button>
+        <button type="button" data-testi-filter="ACTIVE" class="testi-filter-pill rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-bold text-slate-600 hover:border-navy hover:text-navy cursor-pointer transition-colors">Tayang</button>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <input
+        id="testi-search-input"
+        type="search"
+        placeholder="Cari penulis, kota, kutipan..."
+        class="min-h-[34px] w-44 sm:w-56 rounded-lg border border-slate-300 bg-white px-3 py-1 text-xs font-medium text-navy placeholder:text-slate-400 focus:border-navy focus:outline-none"
+      />
+      <button
+        id="btn-toggle-add-testi"
+        type="button"
+        class="inline-flex min-h-[34px] items-center gap-1.5 rounded-lg bg-navy px-3.5 py-1.5 text-xs font-bold text-white hover:bg-slate-800 transition-colors cursor-pointer"
+      >
+        <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+        <span>Tambah</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Full-Width Hairline Table -->
+  <div class="w-full overflow-x-auto bg-white">
+    <table class="w-full text-left text-xs">
+      <thead class="border-b border-slate-200 bg-slate-50/80 text-[11px] font-extrabold uppercase tracking-wider text-slate-600">
+        <tr>
+          <th class="px-4 py-3 sm:pl-6">Nama Penulis</th>
+          <th class="px-4 py-3">Profesi / Asal</th>
+          <th class="px-4 py-3">Rating</th>
+          <th class="px-4 py-3">Kutipan</th>
+          <th class="px-4 py-3">Status</th>
+          <th class="px-4 py-3 sm:pr-6 text-right">Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="testimonials-tbody" class="divide-y divide-slate-200/80 border-b border-slate-200">
+        <tr><td colspan="6" class="px-4 py-8 text-center text-slate-500">Memuat data testimoni...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal Tambah / Edit Testimoni (Desktop Dialog / Mobile Bottom-Sheet) -->
+  <dialog id="dlg-admin-testimonial" class="m-auto w-[calc(100%-2rem)] max-w-md rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 text-left shadow-2xl backdrop:bg-slate-900/45 backdrop:backdrop-blur-[2px] max-sm:fixed max-sm:inset-x-0 max-sm:bottom-0 max-sm:top-auto max-sm:m-0 max-sm:w-full max-sm:max-w-none max-sm:rounded-b-none max-sm:rounded-t-2xl">
+    <div class="mx-auto mb-3 h-1 w-10 rounded-full bg-slate-200 sm:hidden"></div>
+    <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-3">
+      <h3 id="testi-modal-title" class="text-sm font-extrabold text-navy">Tambah Testimoni</h3>
+      <button id="dlg-admin-testi-close" type="button" aria-label="Tutup" class="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-navy cursor-pointer">&times;</button>
+    </div>
+
+    <form id="add-testi-form" class="mt-4 space-y-3.5">
+      <input id="testi-id-input" type="hidden" value="" />
+      <div class="grid gap-3 sm:grid-cols-2">
+        <div>
+          <label for="testi-author-input" class="mb-1 block text-[10px] font-bold uppercase tracking-wider text-slate-500">Nama Penulis *</label>
+          <input id="testi-author-input" type="text" required placeholder="Misal: Budi Santoso" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-navy focus:border-navy focus:outline-none" />
+        </div>
+        <div>
+          <label for="testi-role-input" class="mb-1 block text-[10px] font-bold uppercase tracking-wider text-slate-500">Profesi / Kota *</label>
+          <input id="testi-role-input" type="text" required placeholder="Misal: Pelajar SMA, Jakarta" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-navy focus:border-navy focus:outline-none" />
+        </div>
+      </div>
+
+      <div>
+        <label class="mb-1 block text-[10px] font-bold uppercase tracking-wider text-slate-500">Penilaian</label>
+        <input id="testi-rating-input" type="hidden" value="5" />
+        <div id="testi-rating-stars" class="flex items-center gap-1.5">
+          {[1, 2, 3, 4, 5].map((star) => (
+            <button type="button" data-star-val={star} aria-label={`${star} bintang`} class="testi-star-btn p-1 rounded-lg hover:bg-slate-100 cursor-pointer transition-colors">
+              <svg class="h-5 w-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <label for="testi-quote-input" class="mb-1 block text-[10px] font-bold uppercase tracking-wider text-slate-500">Kutipan Testimoni *</label>
+        <textarea id="testi-quote-input" required rows="3" placeholder="Kutipan testimoni penulis..." class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-medium leading-relaxed text-navy focus:border-navy focus:outline-none"></textarea>
+      </div>
+
+      <label class="inline-flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
+        <input id="testi-active-input" type="checkbox" checked class="h-4 w-4 rounded border-slate-300 text-navy focus:ring-navy" />
+        <span>Tayangkan secara publik</span>
+      </label>
+
+      <div class="flex items-center justify-end gap-2 border-t border-slate-100 pt-3">
+        <button id="dlg-admin-testi-cancel" type="button" class="min-h-[38px] rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50 cursor-pointer">Batal</button>
+        <button type="submit" class="min-h-[38px] rounded-xl bg-orange px-5 py-2 text-xs font-extrabold text-white hover:bg-orange-hover cursor-pointer transition-colors">Simpan</button>
+      </div>
+    </form>
+  </dialog>
+</div>
