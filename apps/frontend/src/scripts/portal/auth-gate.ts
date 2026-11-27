@@ -85,7 +85,7 @@ function applyUserSession(user: any) {
   document.getElementById('portal-main-content')?.classList.remove('hidden');
 
   const isEditing = typeof window !== 'undefined' && window.location.search.includes('edit_profile=1');
-  if (merged.phone && merged.address && !isEditing) {
+  if (!isEditing) {
     showWizard(getStepFromUrl());
     loadAuthorOrders();
     restoreDraftInputs();
@@ -102,7 +102,7 @@ async function syncUserWithDatabase(email: string) {
       const data = await res.json();
       if (data.user) applyUserSession(data.user);
     }
-  } catch {}
+  } catch { }
 }
 
 export function bindAuthEvents() {
@@ -151,7 +151,7 @@ export function bindAuthEvents() {
       const t = setTimeout(() => c.abort(), 1500);
       await fetch(`${API_BASE}/auth/sign-out`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include', signal: c.signal });
       clearTimeout(t);
-    } catch {}
+    } catch { }
 
     localStorage.removeItem(AUTH_USER_KEY);
     sessionStorage.removeItem('novella_portal_draft');
@@ -173,7 +173,7 @@ export async function restoreSession() {
         syncUserWithDatabase(user.email);
         return;
       }
-    } catch {}
+    } catch { }
   }
 
   try {
@@ -188,7 +188,7 @@ export async function restoreSession() {
             const uData = await uRes.json();
             if (uData.user) fullUser = uData.user;
           }
-        } catch {}
+        } catch { }
 
         if (fullUser.role === 'admin') {
           localStorage.setItem(AUTH_USER_KEY, JSON.stringify(fullUser));

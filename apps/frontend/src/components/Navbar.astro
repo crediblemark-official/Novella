@@ -2,17 +2,15 @@
 interface Props {
   activeNav?: 'landing' | 'portal' | 'admin';
 }
-
-const { activeNav = 'landing' } = Astro.props;
 ---
 
 <header class="sticky top-0 z-40 border-b border-slate-200/80 bg-white/95 backdrop-blur">
-  <div class="mx-auto flex max-w-5xl items-center justify-between px-4 py-3.5 sm:px-6">
+  <div class="mx-auto flex max-w-[1088px] items-center justify-between px-4 py-3.5 sm:px-6">
     <div class="flex items-center gap-6">
       <a href="/" class="flex items-center focus:outline-none" aria-label="Beranda Novella.id">
         <img src="/images/logo.png" alt="Novella.id Logo" class="h-9 w-auto object-contain" />
       </a>
-      <nav class="hidden md:flex items-center gap-5 text-xs font-bold text-slate-600">
+      <nav class="hidden md:flex items-center gap-6 text-sm font-bold text-slate-600">
         <a href="/#cara-kerja" class="transition-colors hover:text-navy">Cara Kerja</a>
         <a
           href="https://buku.novella.id"
@@ -21,12 +19,6 @@ const { activeNav = 'landing' } = Astro.props;
           class="transition-colors hover:text-navy"
         >
           Katalog Buku
-        </a>
-        <a
-          href="/portal"
-          class={`transition-colors ${activeNav === 'portal' ? 'text-orange font-extrabold' : 'hover:text-navy'}`}
-        >
-          Portal Penerbitan
         </a>
       </nav>
     </div>
@@ -37,7 +29,7 @@ const { activeNav = 'landing' } = Astro.props;
         <div id="nav-guest-links" class="flex items-center">
           <a
             href="/login"
-            class="rounded-full border border-slate-300 bg-white px-3.5 py-1.5 text-xs font-bold text-slate-700 hover:border-navy hover:text-navy transition-colors"
+            class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 hover:border-navy hover:text-navy transition-colors"
           >
             Masuk
           </a>
@@ -127,7 +119,7 @@ const { activeNav = 'landing' } = Astro.props;
               <svg class="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
               </svg>
-              <span>Portal Penerbitan</span>
+              <span>Portal Simulasi Harga</span>
             </a>
 
             <a
@@ -162,7 +154,7 @@ const { activeNav = 'landing' } = Astro.props;
       <!-- CTA -->
       <a
         href="/portal"
-        class="rounded-full bg-orange px-4 py-2 text-[13px] font-extrabold text-white shadow-sm transition-colors hover:bg-orange-hover whitespace-nowrap"
+        class="rounded-full bg-orange px-5 py-2.5 text-sm font-extrabold text-white shadow-sm transition-colors hover:bg-orange-hover whitespace-nowrap"
       >
         Terbitkan Buku
       </a>
@@ -235,20 +227,19 @@ const { activeNav = 'landing' } = Astro.props;
 
     <!-- Mobile Guest Links -->
     <div id="mobile-guest-links" class="grid grid-cols-2 gap-2">
-      <a href="/login" class="rounded-xl border border-slate-300 bg-white py-2 text-center text-xs font-bold text-slate-700 hover:border-navy">Masuk</a>
-      <a href="/daftar" class="rounded-xl border border-orange bg-white py-2 text-center text-xs font-bold text-orange hover:bg-orange/5">Daftar</a>
+      <a href="/login" class="rounded-xl border border-slate-300 bg-white py-2.5 text-center text-sm font-bold text-slate-700 hover:border-navy">Masuk</a>
+      <a href="/daftar" class="rounded-xl border border-orange bg-white py-2.5 text-center text-sm font-bold text-orange hover:bg-orange/5">Daftar</a>
     </div>
 
     <!-- Mobile Navigation Links -->
-    <nav class="space-y-1 border-t border-slate-100 pt-4 text-xs font-bold text-slate-700">
+    <nav class="space-y-1 border-t border-slate-100 pt-4 text-sm font-bold text-slate-700">
       <a href="/#cara-kerja" class="mobile-nav-link block rounded-xl px-3 py-2.5 hover:bg-slate-100">Cara Kerja</a>
       <a href="https://buku.novella.id" target="_blank" rel="noopener noreferrer" class="mobile-nav-link block rounded-xl px-3 py-2.5 hover:bg-slate-100">Katalog Buku</a>
-      <a href="/portal" class="mobile-nav-link block rounded-xl px-3 py-2.5 hover:bg-slate-100">Portal Penerbitan</a>
     </nav>
   </div>
 
   <div class="border-t border-slate-100 p-4 space-y-2">
-    <a href="/portal" class="block w-full rounded-xl bg-orange py-2.5 text-center text-xs font-extrabold text-white shadow-sm hover:bg-orange-hover">
+    <a href="/portal" class="block w-full rounded-xl bg-orange py-3 text-center text-sm font-extrabold text-white shadow-sm hover:bg-orange-hover">
       Terbitkan Buku
     </a>
     <button id="mobile-logout-btn" type="button" class="hidden w-full rounded-xl border border-rose-200 py-2 text-center text-xs font-bold text-rose-600 hover:bg-rose-50 cursor-pointer">

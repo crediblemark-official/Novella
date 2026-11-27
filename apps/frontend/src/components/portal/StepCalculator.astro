@@ -4,7 +4,6 @@
  * Perhitungan estimasi biaya transparan dengan standar penerbitan Novella.id.
  */
 import StepCalculatorSpecs from './StepCalculatorSpecs.astro';
-import StepCalculatorAddons from './StepCalculatorAddons.astro';
 import MobileStickyBar from './MobileStickyBar.astro';
 ---
 
@@ -35,82 +34,42 @@ import MobileStickyBar from './MobileStickyBar.astro';
         </div>
       </div>
 
-      <!-- Info Paket Dasar Penerbitan Rp 150.000 (Tanpa Box) -->
-      <div class="border-y border-slate-200/80 py-2 text-sm text-slate-700 space-y-1">
-        <div class="flex items-center justify-between gap-2">
-          <div class="flex items-center gap-1.5 min-w-0">
-            <span class="text-orange shrink-0">
-              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
-            </span>
-            <p class="font-extrabold text-navy text-[15px] truncate">Paket Dasar</p>
-          </div>
-          <span class="shrink-0 rounded-full bg-orange/15 px-2.5 py-0.5 text-xs font-extrabold text-orange">Hemat Rp 300rb</span>
-        </div>
-        <p class="text-sm leading-snug text-slate-700">
-          <strong class="text-navy">Rp 150.000</strong> (<span class="line-through text-slate-500">Rp 450.000</span>) · <strong class="text-navy">5 eks</strong> · <strong class="text-navy">100 hal</strong> · <strong class="text-navy">A5/Unesco</strong> · <strong class="text-navy">BP 57 / HVS 70</strong>.
-        </p>
-      </div>
-
-      <!-- Halaman -->
-      <div class="space-y-1.5">
-        <div class="flex items-center justify-between gap-2">
-          <div class="flex items-baseline gap-2 min-w-0">
+      <!-- Halaman & Cetak (2 Kolom Grid) -->
+      <div class="border-t border-slate-100 pt-3 grid sm:grid-cols-2 gap-3">
+        <!-- Halaman -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between gap-2">
             <h2 class="text-base font-extrabold text-navy shrink-0">Halaman</h2>
-            <span class="text-sm text-slate-500 truncate">Maks. 100 hal (Dasar)</span>
-          </div>
-          <div class="inline-flex items-center rounded-lg border border-slate-200 bg-slate-50/80 p-0.5 shadow-2xs shrink-0">
-            <button id="btn-page-minus" type="button" class="flex h-8 w-8 items-center justify-center rounded-md bg-white text-base font-extrabold text-navy shadow-xs hover:bg-slate-100 cursor-pointer active:scale-95 transition-all" aria-label="Kurangi halaman">−</button>
-            <div class="flex items-center px-1.5">
-              <input id="input-pages" type="number" min="24" max="600" value="100" class="h-8 w-11 bg-transparent text-center font-mono text-[15px] font-extrabold text-navy focus:outline-none" />
-              <span class="text-sm font-bold text-slate-600">hal</span>
+            <div class="inline-flex items-center rounded-lg border border-slate-200 bg-slate-50/80 p-0.5 shadow-2xs shrink-0">
+              <button id="btn-page-minus" type="button" class="flex h-8 w-8 items-center justify-center rounded-md bg-white text-base font-extrabold text-navy shadow-xs hover:bg-slate-100 cursor-pointer active:scale-95 transition-all" aria-label="Kurangi halaman">−</button>
+              <div class="flex items-center px-1.5">
+                <input id="input-pages" type="number" min="24" max="600" value="100" class="h-8 w-11 bg-transparent text-center font-mono text-[15px] font-extrabold text-navy focus:outline-none" />
+                <span class="text-sm font-bold text-slate-600">hal</span>
+              </div>
+              <button id="btn-page-plus" type="button" class="flex h-8 w-8 items-center justify-center rounded-md bg-white text-base font-extrabold text-navy shadow-xs hover:bg-slate-100 cursor-pointer active:scale-95 transition-all" aria-label="Tambah halaman">+</button>
             </div>
-            <button id="btn-page-plus" type="button" class="flex h-8 w-8 items-center justify-center rounded-md bg-white text-base font-extrabold text-navy shadow-xs hover:bg-slate-100 cursor-pointer active:scale-95 transition-all" aria-label="Tambah halaman">+</button>
           </div>
         </div>
-        <div class="flex flex-wrap gap-1.5">
-          <button type="button" data-val="60" class="page-chip inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer transition-all duration-150 active:scale-[0.98]">60 hal</button>
-          <button type="button" data-val="100" class="page-chip inline-flex items-center justify-center gap-1 rounded-lg border-2 border-navy bg-navy px-2.5 py-1 text-xs font-bold text-white shadow-xs cursor-pointer transition-all duration-150 active:scale-[0.98]">
-            <span>100 hal</span>
-            <svg class="h-3 w-3 text-amber-400 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-          </button>
-          <button type="button" data-val="150" class="page-chip inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer transition-all duration-150 active:scale-[0.98]">150 hal</button>
-          <button type="button" data-val="200" class="page-chip inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer transition-all duration-150 active:scale-[0.98]">200 hal</button>
-        </div>
-      </div>
 
-      <!-- Cetak -->
-      <div class="border-t border-slate-100 pt-3 space-y-1.5">
-        <div class="flex items-center justify-between gap-2">
-          <div class="flex items-baseline gap-2 min-w-0">
+        <!-- Cetak -->
+        <div class="space-y-1.5 sm:border-l sm:border-slate-100 sm:pl-3">
+          <div class="flex items-center justify-between gap-2">
             <h2 class="text-base font-extrabold text-navy shrink-0">Cetak</h2>
-            <span class="text-sm text-slate-500 truncate">Min. 5 eks</span>
-          </div>
-          <div class="inline-flex items-center rounded-lg border border-slate-200 bg-slate-50/80 p-0.5 shadow-2xs shrink-0">
-            <button id="btn-copy-minus" type="button" class="flex h-8 w-8 items-center justify-center rounded-md bg-white text-base font-extrabold text-navy shadow-xs hover:bg-slate-100 cursor-pointer active:scale-95 transition-all" aria-label="Kurangi eksemplar">−</button>
-            <div class="flex items-center px-1.5">
-              <input id="input-copies" type="number" min="5" max="1000" value="5" class="h-8 w-11 bg-transparent text-center font-mono text-[15px] font-extrabold text-navy focus:outline-none" />
-              <span class="text-sm font-bold text-slate-600">eks</span>
+            <div class="inline-flex items-center rounded-lg border border-slate-200 bg-slate-50/80 p-0.5 shadow-2xs shrink-0">
+              <button id="btn-copy-minus" type="button" class="flex h-8 w-8 items-center justify-center rounded-md bg-white text-base font-extrabold text-navy shadow-xs hover:bg-slate-100 cursor-pointer active:scale-95 transition-all" aria-label="Kurangi eksemplar">−</button>
+              <div class="flex items-center px-1.5">
+                <input id="input-copies" type="number" min="5" max="1000" value="5" class="h-8 w-11 bg-transparent text-center font-mono text-[15px] font-extrabold text-navy focus:outline-none" />
+                <span class="text-sm font-bold text-slate-600">eks</span>
+              </div>
+              <button id="btn-copy-plus" type="button" class="flex h-8 w-8 items-center justify-center rounded-md bg-white text-base font-extrabold text-navy shadow-xs hover:bg-slate-100 cursor-pointer active:scale-95 transition-all" aria-label="Tambah eksemplar">+</button>
             </div>
-            <button id="btn-copy-plus" type="button" class="flex h-8 w-8 items-center justify-center rounded-md bg-white text-base font-extrabold text-navy shadow-xs hover:bg-slate-100 cursor-pointer active:scale-95 transition-all" aria-label="Tambah eksemplar">+</button>
           </div>
-        </div>
-        <div class="flex flex-wrap gap-1.5">
-          <button type="button" data-val="5" class="copy-chip inline-flex items-center justify-center gap-1 rounded-lg border-2 border-navy bg-navy px-2.5 py-1 text-xs font-bold text-white shadow-xs cursor-pointer transition-all duration-150 active:scale-[0.98]">
-            <span>5 eks</span>
-            <svg class="h-3 w-3 text-amber-400 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-          </button>
-          <button type="button" data-val="10" class="copy-chip inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer transition-all duration-150 active:scale-[0.98]">10 eks</button>
-          <button type="button" data-val="25" class="copy-chip inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer transition-all duration-150 active:scale-[0.98]">25 eks</button>
-          <button type="button" data-val="50" class="copy-chip inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer transition-all duration-150 active:scale-[0.98]">50 eks</button>
-          <button type="button" data-val="100" class="copy-chip inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer transition-all duration-150 active:scale-[0.98]">100 eks</button>
+          <p class="text-xs sm:text-sm font-medium text-slate-600">Minimal 5 eks dan kelipatan 10 eks</p>
         </div>
       </div>
 
       <!-- 3. Format Ukuran, Kertas & Cover -->
       <StepCalculatorSpecs />
-
-      <!-- 4. Layanan Tambahan / Addon -->
-      <StepCalculatorAddons />
     </div>
 
     <!-- Sisi Kanan: Tiket Estimasi (5 Kolom Docked) -->

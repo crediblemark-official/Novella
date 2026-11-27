@@ -124,7 +124,7 @@ export async function loadBankAccounts() {
 
     const waFab = document.getElementById('portal-wa-fab') as HTMLAnchorElement | null;
     if (waFab && data.adminWa) {
-      const msg = encodeURIComponent('Halo Admin Novella.id, saya sedang berada di Portal Penerbitan dan ingin berkonsultasi.');
+      const msg = encodeURIComponent('Halo Admin Novella.id, saya sedang berada di Portal Simulasi Harga dan ingin berkonsultasi.');
       waFab.href = `https://wa.me/${data.adminWa}?text=${msg}`;
     }
   } catch {}
