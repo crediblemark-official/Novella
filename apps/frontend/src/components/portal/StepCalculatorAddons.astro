@@ -1,96 +1,93 @@
 ---
 /**
  * StepCalculatorAddons: Layanan Tambahan (Add-on) Resmi Novella.id
- * Hairline-divided compact list (anti-card-box), fokus pada nama layanan dan tarif resmi.
+ * Hairline-divided compact list (anti-card-box), teks padat & tarif resmi.
  */
 ---
 
-<div class="border-t border-slate-100 pt-4 space-y-2">
+<div class="border-t border-slate-100 pt-3 space-y-1.5">
   <div class="flex flex-wrap items-center justify-between gap-x-2 gap-y-0.5">
-    <div class="flex items-center gap-2">
-      <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-navy text-xs font-extrabold text-white">5</span>
-      <h2 class="text-base font-extrabold text-navy">Layanan Tambahan (Add-on)</h2>
-    </div>
-    <span class="text-xs text-slate-600 font-semibold">Opsional</span>
+    <h2 class="text-base font-extrabold text-navy">Add-on</h2>
+    <span class="text-sm text-slate-600 font-semibold">Opsional</span>
   </div>
 
   <div class="divide-y divide-slate-100 border-y border-slate-200/80 sm:grid sm:grid-cols-2 sm:gap-x-4 sm:divide-y-0 sm:border-y-0">
-    <button type="button" data-addon="E-Sertifikat Penulis" class="addon-btn flex w-full items-center justify-between gap-2 py-2.5 px-2 sm:border-b sm:border-slate-100 text-left hover:bg-slate-50/80 transition-colors cursor-pointer">
-      <span class="text-sm font-bold text-navy truncate">E-Sertifikat Penulis</span>
+    <button type="button" data-addon="E-Sertifikat Penulis" class="addon-btn flex w-full items-center justify-between gap-2 py-2 px-1.5 sm:border-b sm:border-slate-100 text-left hover:bg-slate-50/80 transition-colors cursor-pointer">
+      <span class="text-[15px] font-bold text-navy truncate">E-Sertifikat</span>
       <span class="flex items-center gap-2 shrink-0">
-        <span class="text-xs font-mono font-bold text-orange">+Rp 10rb/lbr</span>
+        <span class="text-sm font-mono font-bold text-orange">+Rp 10rb/lbr</span>
         <span class="addon-check flex h-6 w-6 items-center justify-center rounded-full border border-slate-300 text-xs font-bold text-slate-500 bg-white">+</span>
       </span>
     </button>
 
-    <button type="button" data-addon="File Ebook Tanpa Watermark" class="addon-btn flex w-full items-center justify-between gap-2 py-2.5 px-2 sm:border-b sm:border-slate-100 text-left hover:bg-slate-50/80 transition-colors cursor-pointer">
-      <span class="text-sm font-bold text-navy truncate">Ebook Tanpa Watermark</span>
+    <button type="button" data-addon="File Ebook Tanpa Watermark" class="addon-btn flex w-full items-center justify-between gap-2 py-2 px-1.5 sm:border-b sm:border-slate-100 text-left hover:bg-slate-50/80 transition-colors cursor-pointer">
+      <span class="text-[15px] font-bold text-navy truncate">Ebook Tanpa Watermark</span>
       <span class="flex items-center gap-2 shrink-0">
-        <span class="text-xs font-mono font-bold text-orange">+Rp 250rb</span>
+        <span class="text-sm font-mono font-bold text-orange">+Rp 250rb</span>
         <span class="addon-check flex h-6 w-6 items-center justify-center rounded-full border border-slate-300 text-xs font-bold text-slate-500 bg-white">+</span>
       </span>
     </button>
 
-    <button type="button" data-addon="Revisi Ringan Cover" class="addon-btn flex w-full items-center justify-between gap-2 py-2.5 px-2 sm:border-b sm:border-slate-100 text-left hover:bg-slate-50/80 transition-colors cursor-pointer">
-      <span class="text-sm font-bold text-navy truncate">Revisi Ringan Cover</span>
+    <button type="button" data-addon="Revisi Ringan Cover" class="addon-btn flex w-full items-center justify-between gap-2 py-2 px-1.5 sm:border-b sm:border-slate-100 text-left hover:bg-slate-50/80 transition-colors cursor-pointer">
+      <span class="text-[15px] font-bold text-navy truncate">Revisi Cover</span>
       <span class="flex items-center gap-2 shrink-0">
-        <span class="text-xs font-mono font-bold text-orange">+Rp 10rb/kali</span>
+        <span class="text-sm font-mono font-bold text-orange">+Rp 10rb/kali</span>
         <span class="addon-check flex h-6 w-6 items-center justify-center rounded-full border border-slate-300 text-xs font-bold text-slate-500 bg-white">+</span>
       </span>
     </button>
 
-    <button type="button" data-addon="Revisi Ringan Layout" class="addon-btn flex w-full items-center justify-between gap-2 py-2.5 px-2 sm:border-b sm:border-slate-100 text-left hover:bg-slate-50/80 transition-colors cursor-pointer">
-      <span class="text-sm font-bold text-navy truncate">Revisi Ringan Layout</span>
+    <button type="button" data-addon="Revisi Ringan Layout" class="addon-btn flex w-full items-center justify-between gap-2 py-2 px-1.5 sm:border-b sm:border-slate-100 text-left hover:bg-slate-50/80 transition-colors cursor-pointer">
+      <span class="text-[15px] font-bold text-navy truncate">Revisi Layout</span>
       <span class="flex items-center gap-2 shrink-0">
-        <span class="text-xs font-mono font-bold text-orange">+Rp 10rb/kali</span>
+        <span class="text-sm font-mono font-bold text-orange">+Rp 10rb/kali</span>
         <span class="addon-check flex h-6 w-6 items-center justify-center rounded-full border border-slate-300 text-xs font-bold text-slate-500 bg-white">+</span>
       </span>
     </button>
 
-    <button type="button" data-addon="Request Model Cover (Sedang)" class="addon-btn flex w-full items-center justify-between gap-2 py-2.5 px-2 sm:border-b sm:border-slate-100 text-left hover:bg-slate-50/80 transition-colors cursor-pointer">
-      <span class="text-sm font-bold text-navy truncate">Request Model Cover (Sedang)</span>
+    <button type="button" data-addon="Request Model Cover (Sedang)" class="addon-btn flex w-full items-center justify-between gap-2 py-2 px-1.5 sm:border-b sm:border-slate-100 text-left hover:bg-slate-50/80 transition-colors cursor-pointer">
+      <span class="text-[15px] font-bold text-navy truncate">Custom Cover</span>
       <span class="flex items-center gap-2 shrink-0">
-        <span class="text-xs font-mono font-bold text-orange">+Rp 500rb</span>
+        <span class="text-sm font-mono font-bold text-orange">+Rp 500rb</span>
         <span class="addon-check flex h-6 w-6 items-center justify-center rounded-full border border-slate-300 text-xs font-bold text-slate-500 bg-white">+</span>
       </span>
     </button>
 
-    <button type="button" data-addon="Request Model Layout (Sedang)" class="addon-btn flex w-full items-center justify-between gap-2 py-2.5 px-2 sm:border-b sm:border-slate-100 text-left hover:bg-slate-50/80 transition-colors cursor-pointer">
-      <span class="text-sm font-bold text-navy truncate">Request Model Layout (Sedang)</span>
+    <button type="button" data-addon="Request Model Layout (Sedang)" class="addon-btn flex w-full items-center justify-between gap-2 py-2 px-1.5 sm:border-b sm:border-slate-100 text-left hover:bg-slate-50/80 transition-colors cursor-pointer">
+      <span class="text-[15px] font-bold text-navy truncate">Custom Layout</span>
       <span class="flex items-center gap-2 shrink-0">
-        <span class="text-xs font-mono font-bold text-orange">+Rp 1jt</span>
+        <span class="text-sm font-mono font-bold text-orange">+Rp 1jt</span>
         <span class="addon-check flex h-6 w-6 items-center justify-center rounded-full border border-slate-300 text-xs font-bold text-slate-500 bg-white">+</span>
       </span>
     </button>
 
-    <button type="button" data-addon="Cetak 2 Dummy" class="addon-btn flex w-full items-center justify-between gap-2 py-2.5 px-2 sm:border-b sm:border-slate-100 text-left hover:bg-slate-50/80 transition-colors cursor-pointer">
-      <span class="text-sm font-bold text-navy truncate">Cetak 2 Dummy</span>
+    <button type="button" data-addon="Cetak 2 Dummy" class="addon-btn flex w-full items-center justify-between gap-2 py-2 px-1.5 sm:border-b sm:border-slate-100 text-left hover:bg-slate-50/80 transition-colors cursor-pointer">
+      <span class="text-[15px] font-bold text-navy truncate">Cetak 2 Dummy</span>
       <span class="flex items-center gap-2 shrink-0">
-        <span class="text-xs font-mono font-bold text-orange">+Rp 200rb</span>
+        <span class="text-sm font-mono font-bold text-orange">+Rp 200rb</span>
         <span class="addon-check flex h-6 w-6 items-center justify-center rounded-full border border-slate-300 text-xs font-bold text-slate-500 bg-white">+</span>
       </span>
     </button>
 
-    <button type="button" data-addon="Pembatas Buku Custom" class="addon-btn flex w-full items-center justify-between gap-2 py-2.5 px-2 sm:border-b sm:border-slate-100 text-left hover:bg-slate-50/80 transition-colors cursor-pointer">
-      <span class="text-sm font-bold text-navy truncate">Pembatas Buku Custom</span>
+    <button type="button" data-addon="Pembatas Buku Custom" class="addon-btn flex w-full items-center justify-between gap-2 py-2 px-1.5 sm:border-b sm:border-slate-100 text-left hover:bg-slate-50/80 transition-colors cursor-pointer">
+      <span class="text-[15px] font-bold text-navy truncate">Pembatas Buku</span>
       <span class="flex items-center gap-2 shrink-0">
-        <span class="text-xs font-mono font-bold text-orange">+Rp 25rb/pkt</span>
+        <span class="text-sm font-mono font-bold text-orange">+Rp 25rb/pkt</span>
         <span class="addon-check flex h-6 w-6 items-center justify-center rounded-full border border-slate-300 text-xs font-bold text-slate-500 bg-white">+</span>
       </span>
     </button>
 
-    <button type="button" data-addon="Penyuntingan (Proofreading)" class="addon-btn flex w-full items-center justify-between gap-2 py-2.5 px-2 sm:border-b sm:border-slate-100 text-left hover:bg-slate-50/80 transition-colors cursor-pointer">
-      <span class="text-sm font-bold text-navy truncate">Penyuntingan (Proofreading)</span>
+    <button type="button" data-addon="Penyuntingan (Proofreading)" class="addon-btn flex w-full items-center justify-between gap-2 py-2 px-1.5 sm:border-b sm:border-slate-100 text-left hover:bg-slate-50/80 transition-colors cursor-pointer">
+      <span class="text-[15px] font-bold text-navy truncate">Proofreading</span>
       <span class="flex items-center gap-2 shrink-0">
-        <span class="text-xs font-mono font-bold text-orange">+Rp 100rb</span>
+        <span class="text-sm font-mono font-bold text-orange">+Rp 100rb</span>
         <span class="addon-check flex h-6 w-6 items-center justify-center rounded-full border border-slate-300 text-xs font-bold text-slate-500 bg-white">+</span>
       </span>
     </button>
 
-    <button type="button" data-addon="Video Promosi" class="addon-btn flex w-full items-center justify-between gap-2 py-2.5 px-2 sm:border-b sm:border-slate-100 text-left hover:bg-slate-50/80 transition-colors cursor-pointer">
-      <span class="text-sm font-bold text-navy truncate">Video Promosi</span>
+    <button type="button" data-addon="Video Promosi" class="addon-btn flex w-full items-center justify-between gap-2 py-2 px-1.5 sm:border-b sm:border-slate-100 text-left hover:bg-slate-50/80 transition-colors cursor-pointer">
+      <span class="text-[15px] font-bold text-navy truncate">Video Promosi</span>
       <span class="flex items-center gap-2 shrink-0">
-        <span class="text-xs font-mono font-bold text-orange">+Rp 250rb</span>
+        <span class="text-sm font-mono font-bold text-orange">+Rp 250rb</span>
         <span class="addon-check flex h-6 w-6 items-center justify-center rounded-full border border-slate-300 text-xs font-bold text-slate-500 bg-white">+</span>
       </span>
     </button>
