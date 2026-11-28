@@ -141,4 +141,21 @@ describe('Pricing Engine', () => {
     });
     expect(subBaseWithAddon.totalPrice).toBe(160_000);
   });
+
+  it('applies Unesco Hard Cover rate (Rp 35.000/copy) instead of A5 rate (Rp 25.000/copy)', () => {
+    // 100 pages, 5 copies, Unesco BW Hard Cover:
+    // pageRate = 250 - 10 = 240; hardCoverRate = 35.000
+    // costPerBook = (100 * 240) + 35.000 = 59.000
+    // totalPrintCost = 5 * 59.000 = 295.000; + prepress 25.000 = 320.000
+    const unescoHc = calculatePrice({
+      pages: 100,
+      copies: 5,
+      bookSize: 'Unesco',
+      printType: 'BW',
+      paperType: 'bp57',
+      coverType: 'Hard Cover',
+      addons: [],
+    });
+    expect(unescoHc.totalPrice).toBe(320_000);
+  });
 });

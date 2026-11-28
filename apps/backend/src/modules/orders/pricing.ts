@@ -150,7 +150,8 @@ export function calculatePrice(params: PricingParams): PricingResult {
   const { rate, label: paperLabel } = resolvePaperRate(params.paperType || 'bp57', printType, cat);
   let pageRate = isHardCover ? Math.max(50, rate - (printType === 'FC' ? 50 : 10)) : rate;
 
-  const hardCoverRate = isHardCover ? (HARD_COVER_RATES[cat] || 25_000) : 0;
+  const hardCoverSizeKey = sizeKey === 'Unesco' ? 'Unesco' : cat;
+  const hardCoverRate = isHardCover ? (HARD_COVER_RATES[hardCoverSizeKey] || 25_000) : 0;
   const costPerBook = (pages * pageRate) + hardCoverRate;
   const totalPrintCost = copies * costPerBook;
 
